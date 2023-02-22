@@ -1,0 +1,154 @@
+#center {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+#navbar {
+  /* From https://css.glass */
+  background: rgba(25, 23, 36, 0.84) !important;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
+  backdrop-filter: blur(5.5px) !important;
+  -webkit-backdrop-filter: blur(5.5px) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.192) !important;
+}
+.active-button {
+  color: #c4a7e7 !important;
+  background: #373249 !important;
+  border: none !important;
+  padding: 0.5rem !important;
+  border-radius: 15px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.25rem;
+}
+.active-button:hover {
+  background: #443d5a !important;
+}
+.sidebar-button {
+  color: #dbccec !important;
+  background: none !important;
+  border-radius: none !important;
+  border: none !important;
+  padding: 0.5rem !important;
+  border-radius: 15px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.25rem;
+}
+
+.sidebar-button:hover {
+  color: #c4a7e7 !important;
+  background: #373249 !important;
+  border: none !important;
+}
+.danger-button {
+  color: #e66666 !important;
+  background: none !important;
+  border-radius: none !important;
+  border: none !important;
+  font-size: 16px !important;
+  padding: 0.5rem !important;
+}
+.danger-button:hover {
+  background: #493247 !important;
+}
+.post-footer-icon {
+  color: #dbccec !important;
+}
+.text-color {
+  color: #cccadf !important;
+}
+.bg-light-color {
+  background-color: #322e4f !important;
+  border: none !important;
+}
+.bg-darker-color {
+  background-color: #1f1d2d !important;
+  border: none !important;
+}
+.post-button {
+  color: rgb(52, 0, 59) !important;
+  background-image: linear-gradient(
+    to right,
+    #edbbff,
+    #ffb7e0,
+    #ffbdbc,
+    #ffcda1,
+    #ffe099
+  );
+  border-radius: 15px !important;
+  border: none !important;
+  font-size: 18px !important;
+}
+.post-like-button {
+  color: rgb(52, 0, 59) !important;
+  background-image: linear-gradient(
+    to right,
+    #edbbff,
+    #ffb7e0,
+    #ffbdbc,
+    #ffcda1,
+    #ffe099
+  );
+  border: none !important;
+  font-size: 18px !important;
+}
+.post-like-button:active {
+  transform: scale(1.07);
+}
+.center-flex {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+img.background {
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+  width: 100%;
+  height: 100%;
+  -webkit-filter: blur(3px); /* Safari 6.0 - 9.0 */
+  filter: blur(3px);
+  opacity: 0.3;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  object-fit: cover;
+}
+.bg-img {
+  position: fixed;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+  width: 100%;
+  height: 100%;
+  opacity: 0.2;
+}
+.glass {
+  /* From https://css.glass */
+  background: rgba(25, 23, 36, 0.6) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
+  backdrop-filter: blur(8.9px) !important;
+  -webkit-backdrop-filter: blur(8.9px) !important;
+}
+.glass-card {
+  /* From https://css.glass */
+  background: rgba(25, 23, 36, 0.6) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
+
+  -webkit-backdrop-filter: blur(8.9px) !important;
+}
+.btn:focus,
+.btn:active {
+  outline: none !important;
+  box-shadow: none;
+}

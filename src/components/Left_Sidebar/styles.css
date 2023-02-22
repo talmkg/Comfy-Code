@@ -1,0 +1,31 @@
+.sidebar-button-div {
+  display: grid;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  text-decoration: none;
+}
+.buttons {
+}
+
+.modal-content {
+  background-color: #262337 !important;
+  box-sizing: "content-box" !important;
+}
+.form-control {
+  color: rgb(209, 209, 209) !important;
+}
+.form-control:focus {
+  box-shadow: none !important;
+  color: white !important;
+}
+#dropdown-buttons:hover {
+  background-color: #454163 !important;
+}
+.custom-nav {
+  background: rgb(31, 29, 45);
+  background: linear-gradient(
+    0deg,
+    rgba(31, 29, 45, 1) 75%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
