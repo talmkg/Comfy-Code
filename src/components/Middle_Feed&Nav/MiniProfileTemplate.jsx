@@ -16,7 +16,7 @@ const MiniProfileTemplate = (member) => {
         marginLeft: "65px",
       }}
     >
-      <div className="position-relative " style={{}}>
+      <div className="position-relative ">
         <Row
           className="g-0 rounded-top"
           style={{
@@ -33,8 +33,8 @@ const MiniProfileTemplate = (member) => {
           <Row
             style={{
               backdropFilter: "blur(2px)",
-
               borderTopRightRadius: "15px",
+              borderTopLeftRadius: "15px",
             }}
             className="p-0 m-0"
           >
@@ -42,8 +42,8 @@ const MiniProfileTemplate = (member) => {
               xs={9}
               className="position-relative"
               style={{
-                backdropFilter: "blur(2px)",
                 borderTopLeftRadius: "15px",
+                backdropFilter: "blur(2px)",
               }}
             >
               <div
