@@ -32,8 +32,8 @@ function UsersModal(props) {
             className="rounded-3 w-100"
             style={{ background: "#373249", padding: "0.5rem" }}
           >
-            {LoggedInUser.follows[0] ? (
-              LoggedInUser.follows.map((user, index) => {
+            {LoggedInUser?.follows[0] ? (
+              LoggedInUser?.follows?.map((user, index) => {
                 const invite_action = () => {
                   console.log("inviting..");
                   dispatch(inviteToGroup(id, user._id));
@@ -61,7 +61,7 @@ function UsersModal(props) {
 
                     <div>
                       <Button
-                        className="post-like-button p-1 d-flex align-items-center justify-content-center"
+                        className="gradient-button p-1 d-flex align-items-center justify-content-center"
                         style={{
                           borderRadius: "50%",
                           width: "30px",

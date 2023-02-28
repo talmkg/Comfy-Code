@@ -45,6 +45,7 @@ const mainReducer = (state = initialState, action) => {
         ...state,
         LoggedInUser: action.payload,
       };
+
     case FETCH_ALL_USERS:
       return {
         ...state,
@@ -55,6 +56,7 @@ const mainReducer = (state = initialState, action) => {
         ...state,
         loading: action.payload,
       };
+
     default:
       return state;
   }

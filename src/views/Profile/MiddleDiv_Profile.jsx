@@ -22,15 +22,16 @@ const MiddleDiv_Profile = (userProps) => {
   const user = userProps;
   const myGroups = useSelector((state) => state?.usersGroups);
   const params = useParams();
-  const userId = params.userId;
+
   useEffect(() => {
-    dispatch(fetchLoginnedUser());
-    dispatch(fetchUsersGroups());
-    dispatch(fetchSomeonesGroups(userId, setUsersGroups));
-    console.log(usersGroups);
+    if (params.userId) {
+      dispatch(fetchSomeonesGroups(params.userId, setUsersGroups));
+    } else {
+      dispatch(fetchLoginnedUser());
+      dispatch(fetchUsersGroups());
+    }
   }, []);
 
-  const width = "100%";
   let objectDate = new Date(user.createdAt);
   let day = objectDate.getDate();
   let month = objectDate.getMonth();
@@ -55,7 +56,7 @@ const MiddleDiv_Profile = (userProps) => {
             left: 0,
             opacity: "0.5",
             height: "100%",
-            width: "100vw", //fixed hitorus background
+            width: "100vw",
           }}
         />
         <div
@@ -68,9 +69,10 @@ const MiddleDiv_Profile = (userProps) => {
                 className="rounded-top position-relative "
                 style={{
                   height: "40%",
-                  background: `linear-gradient(0deg, rgba(25,25,41,0.8) 50%, rgba(255,255,255,0) 100%), url(${user?.background})`,
-                  objectFit: "cover",
+                  backgroundImage: `linear-gradient(0deg, rgba(25,25,41,0.8) 50%, rgba(255,255,255,0) 100%), url(${user?.background})`,
+
                   backgroundSize: "cover",
+                  backgroundPosition: "center",
                   backgroundRepeat: "no-repeat",
                 }}
               >
@@ -96,7 +98,7 @@ const MiddleDiv_Profile = (userProps) => {
                     </div>
                   </div>
                 </div>
-                {userId ? (
+                {params.userId ? (
                   <div
                     style={{
                       position: "absolute",
@@ -121,7 +123,6 @@ const MiddleDiv_Profile = (userProps) => {
                 {user.bio ? user.bio : "Nothing here... yet."}
               </div>
               <div
-                className=""
                 style={{
                   borderBottom: "1px solid rgba(255, 255, 255, 0.192)",
                   height: "20%",
@@ -144,15 +145,14 @@ const MiddleDiv_Profile = (userProps) => {
                   <Col xs={12} lg={3} className="center-flex text-color">
                     <div>
                       <div className="text-center">
-                        Member of {user?.additionalInfo?.memberOf?.length}{" "}
-                        group('s)
+                        Member of {myGroups?.memberOf?.length} group('s)
                       </div>
                     </div>
                   </Col>
                   <Col xs={12} lg={3} className="center-flex text-color">
                     <div>
                       <div className="text-center"></div>Leader of{" "}
-                      {user?.additionalInfo?.leaderOf?.length} group('s)
+                      {myGroups.leaderOf?.length} group('s)
                       <div></div>
                     </div>
                   </Col>
@@ -184,17 +184,17 @@ const MiddleDiv_Profile = (userProps) => {
                   style={{
                     maxHeight: "600px",
 
-                    // overflow: "hidden visible",
+                    overflow: "hidden visible",
                   }}
                 >
-                  <h4 className="text-color"> Activity</h4>
-                  {console.log(myGroups)}
-                  {userId ? (
+                  {/* <h4 className="text-color">Groups</h4> */}
+
+                  {params.userId ? (
                     <>
                       {usersGroups?.map((post, i) => {
                         return (
                           <Col xs={12} key={i}>
-                            <Post {...post} width={width} />
+                            <Post {...post} width="100%" />
                           </Col>
                         );
                       })}
@@ -204,7 +204,7 @@ const MiddleDiv_Profile = (userProps) => {
                       {myGroups?.memberOf?.map((post, i) => {
                         return (
                           <Col xs={12} key={i}>
-                            <Post {...post} width={width} />
+                            <Post {...post} width="100%" />
                           </Col>
                         );
                       })}

@@ -13,14 +13,14 @@ const Follow_Button = (id) => {
   const Unfollow = () => {
     dispatch(unfollow(id.id));
   };
-  if (id.id === LoggedInUser._id) {
+  if (id.id === LoggedInUser?._id) {
     return <></>;
   } else {
-    let obj = LoggedInUser.follows.find((o) => o._id === id.id);
+    let obj = LoggedInUser?.follows.find((o) => o._id === id.id);
     if (obj) {
       return (
         <Button
-          className="post-like-button p-1 d-flex align-items-center justify-content-center me-2"
+          className="gradient-button p-1 d-flex align-items-center justify-content-center me-2"
           style={{
             borderRadius: "50%",
             width: "40px",
@@ -34,7 +34,7 @@ const Follow_Button = (id) => {
     } else {
       return (
         <Button
-          className="post-like-button p-1 d-flex align-items-center justify-content-center me-2"
+          className="gradient-button p-1 d-flex align-items-center justify-content-center me-2"
           style={{
             borderRadius: "50%",
             width: "40px",

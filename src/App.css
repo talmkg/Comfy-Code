@@ -70,21 +70,7 @@
   background-color: #1f1d2d !important;
   border: none !important;
 }
-.post-button {
-  color: rgb(52, 0, 59) !important;
-  background-image: linear-gradient(
-    to right,
-    #edbbff,
-    #ffb7e0,
-    #ffbdbc,
-    #ffcda1,
-    #ffe099
-  );
-  border-radius: 15px !important;
-  border: none !important;
-  font-size: 18px !important;
-}
-.post-like-button {
+.gradient-button {
   color: rgb(52, 0, 59) !important;
   background-image: linear-gradient(
     to right,
@@ -97,8 +83,8 @@
   border: none !important;
   font-size: 18px !important;
 }
-.post-like-button:active {
-  transform: scale(1.07);
+.gradient-button:active {
+  transform: scale(1.01);
 }
 .center-flex {
   display: flex !important;
@@ -106,6 +92,7 @@
   align-items: center !important;
 }
 img.background {
+  /*LOGIN PAGE BG*/
   position: absolute;
   left: 0px;
   right: 0px;
@@ -115,7 +102,7 @@ img.background {
   height: 100%;
   -webkit-filter: blur(3px); /* Safari 6.0 - 9.0 */
   filter: blur(3px);
-  opacity: 0.3;
+  opacity: 0.5;
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: cover;
@@ -144,9 +131,9 @@ img.background {
   background: rgba(25, 23, 36, 0.6) !important;
   border-radius: 16px !important;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
-
   -webkit-backdrop-filter: blur(8.9px) !important;
 }
+
 .btn:focus,
 .btn:active {
   outline: none !important;

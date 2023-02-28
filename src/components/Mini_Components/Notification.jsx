@@ -43,12 +43,9 @@ const Notification = (props) => {
         </div>
         <div className=" text-center">
           {alreadyInGroup ? (
-            <Button className="m-1 post-like-button">Joined</Button>
+            <Button className="m-1 gradient-button">Joined</Button>
           ) : (
-            <Button
-              className="m-1 post-like-button"
-              onClick={joinTheTeamAction}
-            >
+            <Button className="m-1 gradient-button" onClick={joinTheTeamAction}>
               Join
             </Button>
           )}

@@ -1,21 +1,14 @@
 import { Button, Modal, InputGroup, Form, Dropdown } from "react-bootstrap";
 import { FaUpload } from "react-icons/fa";
 import { MdOutlineEdit } from "react-icons/md";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import React from "react";
 import { AiOutlineQuestionCircle, AiOutlinePlus } from "react-icons/ai";
 import { FaRegPaperPlane } from "react-icons/fa";
-import { BiUserPlus } from "react-icons/bi";
 import "./styles.css";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  createGroup,
-  createPost,
-  fetchAllUsers,
-  LOGIN,
-  TOKEN,
-} from "../../redux/actions";
-import { Link, redirect, useNavigate } from "react-router-dom";
+import { createGroup, GLOBAL_LOADING, LOGIN, TOKEN } from "../../redux/actions";
+import { Link, useNavigate } from "react-router-dom";
 import UsersModal from "../Mini_Components/InviteModal";
 
 function MyVerticallyCenteredModal(props) {
@@ -48,7 +41,8 @@ function MyVerticallyCenteredModal(props) {
             onClick={props.onHide}
           ></button>
           <Button
-            className="btn post-button d-flex align-items-center justify-content-around"
+            className="btn gradient-button d-flex align-items-center justify-content-around"
+            style={{ borderRadius: "15px" }}
             onClick={createAPost}
           >
             <span className="d-flex align-items-center me-1">Post</span>
@@ -113,54 +107,24 @@ function MyVerticallyCenteredModal(props) {
     </>
   );
 }
-const Left_Sidebar = (active) => {
-  const navigate = useNavigate();
+const Left_Sidebar = () => {
   const [modalShow, setModalShow] = React.useState(false);
   const LoggedInUser = useSelector((state) => state?.LoggedInUser[0]);
   const dispatch = useDispatch();
-
   const Logout = () => {
     dispatch({
       type: LOGIN,
-      payload: undefined,
+      payload: [],
     });
     dispatch({
       type: TOKEN,
-      payload: undefined,
+      payload: [],
     });
     window.location.assign("/login");
   };
-  const activePage = active.active;
-  let Profile = false;
-  let Home = false;
-  if (activePage) {
-    if (activePage === "Profile") {
-      Profile = true;
-    }
-    if (activePage === "Home") {
-      Home = true;
-    }
-  }
 
   if (!LoggedInUser) {
-    return (
-      <div></div>
-
-      //   <div
-      //   className="position-sticky"
-      //   style={{
-      //     backgroundColor: "#191724",
-      //     width: "20vw",
-      //     height: "100vh",
-      //     right: 0,
-      //     top: 0,
-      //     bottom: 0,
-      //     borderLeft: "1px solid rgba(255, 255, 255, 0.192)",
-
-      //     overflow: "hidden",
-      //   }}
-      // ></div>
-    );
+    return <div></div>;
   } else {
     return (
       <>
@@ -216,7 +180,7 @@ const Left_Sidebar = (active) => {
               </div>
               <div>
                 <Link to="/home" className="sidebar-button-div">
-                  <Button className={Home ? "active-button" : "sidebar-button"}>
+                  <Button className="sidebar-button">
                     <span>Home</span>
                   </Button>
                 </Link>
@@ -245,9 +209,7 @@ const Left_Sidebar = (active) => {
               </div>
               <div>
                 <Link to="/profile" className="sidebar-button-div pb-2">
-                  <Button
-                    className={Profile ? "active-button" : "sidebar-button"}
-                  >
+                  <Button className="sidebar-button">
                     <span>Profile</span>
                   </Button>
                 </Link>
@@ -255,7 +217,7 @@ const Left_Sidebar = (active) => {
               <hr className="text-light mx-2 me-2" />
               <div className="d-flex justify-content-center">
                 <Button
-                  className="buttons post-button center-flex m-1 w-50"
+                  className="gradient-button center-flex m-1 w-50 rounded-5"
                   onClick={() => setModalShow(true)}
                 >
                   <span className="d-flex align-items-center me-1">

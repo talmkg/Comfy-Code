@@ -3,12 +3,18 @@ import { Form, Button, Alert } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { BsCodeSlash } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllUsers, LOGIN } from "../../redux/actions";
+import {
+  fetchAllUsers,
+  GLOBAL_LOADING,
+  LOADING,
+  LOGIN,
+} from "../../redux/actions";
 import { getToken } from "../../redux/actions";
-import { Link, redirect, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
 const Login = () => {
   const LoggedInUser = useSelector((state) => state?.LoggedInUser[0]);
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState(false);
   const navigate = useNavigate();
@@ -19,15 +25,19 @@ const Login = () => {
   const dispatch = useDispatch();
   const onSubmit = (e) => {
     e.preventDefault();
-    dispatch(getToken(username, password, setErrorMessage));
+    dispatch(getToken(email, password, setErrorMessage));
+    dispatch({
+      type: LOADING,
+      payload: true,
+    });
   };
   const [passwordShown, setPasswordShown] = useState(false);
   const togglePassword = () => {
     setPasswordShown(!passwordShown);
   };
+
   useEffect(() => {
     if (LoggedInUser !== undefined) {
-      dispatch(fetchAllUsers());
       navigate(LoggedInUser?._id ? "/home" : "/login");
     }
   });
@@ -39,15 +49,20 @@ const Login = () => {
         style={{ backgroundColor: "#191724", height: "100vh" }}
       >
         <img
-          class="background"
-          src="https://res.cloudinary.com/dp3i1dce4/image/upload/v1675716761/ynAD1u_altaak.webp"
-          style={{ zIndex: "0" }}
+          className="background"
+          src="https://res.cloudinary.com/dp3i1dce4/image/upload/v1677531145/ComfyCode/login_srmfgs.jpg"
         />
-        <div className="rounded-3 p-4 text-light glass" id="main-window">
+        <div
+          className="rounded-3 p-4 text-color glass"
+          id="center"
+          style={{ width: "600px" }}
+        >
           <div className="d-flex justify-content-center">
             <div className="text-center pb-3">
               <BsCodeSlash size={40} className="m-2" />
-              <h3 className="text-center logo">Comfy Code</h3>
+              <code className="text-center text-color code">
+                <h3>Comfy Code</h3>
+              </code>
             </div>
           </div>
           {errorMessage ? (
@@ -59,14 +74,14 @@ const Login = () => {
           )}
           <Form>
             <Form.Group className="mb-3" controlId="formBasicEmail">
-              <Form.Label>Username</Form.Label>
+              <Form.Label>Email</Form.Label>
               <Form.Control
-                type="username"
+                type="email"
                 className="bg-transparent"
                 style={{ border: "none" }}
-                placeholder="Enter your username"
-                value={username}
-                onChange={(e) => onChangeHandler(e.target.value, setUsername)}
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => onChangeHandler(e.target.value, setEmail)}
               />
             </Form.Group>
 
@@ -90,14 +105,21 @@ const Login = () => {
                 style={{ userSelect: "none" }}
               />
             </Form.Group>
-            <div className="d-flex justify-content-end pt-2">
+            <div className="d-flex justify-content-center pt-2">
               <Link to="/">
                 <Button
+                  size="lg"
                   type="submit"
                   onClick={onSubmit}
-                  style={{ backgroundColor: "#433d66", border: "none" }}
+                  style={{
+                    backgroundColor: "#433d66",
+                    border: "none",
+                    borderRadius: "20px",
+                    width: "150px",
+                  }}
+                  className="gradient-button"
                 >
-                  Login
+                  Sign In
                 </Button>
               </Link>
             </div>

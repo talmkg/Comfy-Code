@@ -52,11 +52,12 @@ const Post = (props) => {
   return (
     <>
       <Card
-        className="text-light mt-3 mb-3 glass-card"
+        className="text-light mt-3 mb-3 "
         style={{
           maxWidth: width ? width : "50%",
           width: "100%",
           cursor: "pointer",
+          backgroundColor: "#29263a",
         }}
       >
         <Card.Body className="pb-5">

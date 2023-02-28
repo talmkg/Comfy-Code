@@ -109,7 +109,7 @@ const MiniProfileTemplate = (member) => {
             </div>
           </Col>
           <Col xs={12}>
-            <Button className="w-100 rounded-0 rounded-bottom post-like-button d-flex align-items-center justify-content-center ">
+            <Button className="w-100 rounded-0 rounded-bottom gradient-button center-flex">
               <span className="me-2">Send a message</span>
               <FaRegPaperPlane />
             </Button>

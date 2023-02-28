@@ -6,10 +6,14 @@ export const LOADING = "LOADING";
 export const LOGIN = "LOGIN";
 export const SAVE_USERS_POSTS = "SAVE_USERS_POSTS";
 export const FETCH_NOTIFICATIONS = "FETCH_NOTIFICATIONS";
+
 //get all groups
 export const getGroups = () => {
   return async (dispatch, getState) => {
-    console.log("Fetching posts...");
+    dispatch({
+      type: LOADING,
+      payload: true,
+    });
     try {
       const response = await fetch("http://localhost:3002/groups");
       if (response.ok) {
@@ -31,7 +35,7 @@ export const getGroups = () => {
     }
   };
 };
-export const getToken = (username, password, setErrorMessage) => {
+export const getToken = (email, password, setErrorMessage) => {
   console.log("Fetching");
   return async (dispatch, getState) => {
     dispatch({
@@ -39,7 +43,7 @@ export const getToken = (username, password, setErrorMessage) => {
       payload: true,
     });
     const data = {
-      username: username,
+      email: email,
       password: password,
     };
     const options = {
@@ -126,7 +130,6 @@ export const fetchUsersGroups = () => {
       fetch(`http://localhost:3002/users/profile/groups`, options)
         .then((response) => response.json())
         .then((groups) => {
-          console.log(groups);
           if (groups) {
             dispatch({
               type: SAVE_USERS_POSTS,
@@ -146,17 +149,17 @@ export const fetchUsersGroups = () => {
 export const fetchSomeonesGroups = (userId, setSomeonesGroups) => {
   return async (dispatch, getState) => {
     try {
-      fetch(`http://localhost:3002/users/${userId}/groups`)
-        .then((response) => response.json())
-        .then((groups) => {
-          console.log(groups);
-          if (groups.length > 0) {
-            setSomeonesGroups(groups);
-            console.log("users groups are fetched <3");
-          } else {
-            console.log("Error fetching specific user.");
-          }
-        });
+      // fetch(`http://localhost:3002/users/${userId}/groups`)
+      //   .then((response) => response.json())
+      //   .then((groups) => {
+      //     console.log(groups);
+      //     if (groups.length > 0) {
+      //       setSomeonesGroups(groups);
+      //       console.log("users groups are fetched <3");
+      //     } else {
+      //       console.log("Error fetching specific user.");
+      //     }
+      //   });
     } catch (error) {
       console.log(error);
     }
@@ -312,9 +315,11 @@ export const inviteToGroup = (group_id, user_id) => {
 };
 export const fetchLoginnedUser = () => {
   return async (dispatch, getState) => {
-    console.log("fetching the user...");
+    dispatch({
+      type: LOADING,
+      payload: true,
+    });
     const token = dispatch(getTokenFromStore());
-    console.log("token inside fetchLoginnedUser", token);
     const options = {
       headers: {
         "Content-Type": "application/json",
@@ -328,11 +333,12 @@ export const fetchLoginnedUser = () => {
           .then((response) => response.json())
           .then((LoggedInUser) => {
             if (LoggedInUser) {
-              console.log("User fetched", LoggedInUser);
+              console.log("User fetched.");
               dispatch({
                 type: LOGIN,
                 payload: LoggedInUser,
               });
+
               dispatch({
                 type: LOADING,
                 payload: false,
@@ -384,6 +390,7 @@ export const deleteGroup = (group_id) => {
     }
   };
 };
+//get the token from the store
 export function getTokenFromStore() {
   return (dispatch, getState) => {
     const token = getState().token;
@@ -442,22 +449,23 @@ export const getNotifications = () => {
         Authorization: `Bearer ${token}`,
       },
     };
-    console.log("Loading notifications...");
+    // console.log("Loading notifications...");
     try {
-      const response = await fetch(
-        "http://localhost:3002/notifications",
-        options
-      );
-      if (response.ok) {
-        let notifications = await response.json();
-        console.log("notifications updated.");
-        dispatch({
-          type: FETCH_NOTIFICATIONS,
-          payload: notifications,
-        });
-      } else {
-        console.log("Error fetching data");
-      }
+      // const response = await fetch(
+      //   "http://localhost:3002/notifications",
+      //   options
+      // );
+      // if (response.ok) {
+      //   let notifications = await response.json();
+      //   console.log("notifications updated.");
+      //   dispatch({
+      //     type: FETCH_NOTIFICATIONS,
+      //     payload: notifications,
+      //   });
+      // } else {
+      //   console.log("Error fetching data");
+      // }
+      console.log("Notifications fetch --- empty");
     } catch (error) {
       console.log(error);
     }
