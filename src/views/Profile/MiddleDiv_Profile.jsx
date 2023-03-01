@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { Col, Container, Row, Spinner } from "react-bootstrap";
 import { MdCalendarToday, MdOutlineCake } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -7,6 +7,7 @@ import Post from "../../components/Middle_Feed&Nav/Post";
 import Big_Follow_Button from "../../components/Mini_Components/Big_Follow_Button";
 import Follow_Button from "../../components/Mini_Components/Follow_Button";
 import User_Card from "../../components/Mini_Components/User_Card";
+
 import {
   fetchLoginnedUser,
   fetchMyGroups,
@@ -17,6 +18,7 @@ import {
 import { getTokenFromStore } from "../../redux/store";
 import "./styles.css";
 const MiddleDiv_Profile = (userProps) => {
+  const loading = useSelector((state) => state.loading);
   const [usersGroups, setUsersGroups] = useState([]);
   const dispatch = useDispatch();
   const user = userProps;
@@ -60,9 +62,16 @@ const MiddleDiv_Profile = (userProps) => {
           }}
         />
         <div
-          className=" w-100 h-100 pt-4"
+          className=" w-100 h-100 pt-4 position-relative"
           style={{ backdropFilter: "blur(3px)" }}
         >
+          {loading ? (
+            <div id="center" style={{ zIndex: "99" }}>
+              <Spinner className="text-light" />
+            </div>
+          ) : (
+            <></>
+          )}
           <div className="d-flex justify-content-center">
             <div className="glass w-75" style={{ height: "60vh" }}>
               <div

@@ -61,6 +61,24 @@ function PostModal(props) {
           <div className="pt-2">
             <p>{data.description}</p>
           </div>
+          <Row className="text-color">
+            {data?.hashtags?.map((hashtag, i) => {
+              return (
+                <div
+                  key={i}
+                  className="rounded-3 p-1 px-2 pe-2 mb-2 mx-1"
+                  style={{
+                    backgroundColor: "#55466D",
+                    cursor: "pointer",
+                    width: "max-content",
+                  }}
+                  id={hashtag._id}
+                >
+                  {hashtag.title}
+                </div>
+              );
+            })}
+          </Row>
           <div>
             {data.imageUrl ? (
               <img

@@ -1,4 +1,4 @@
-import { Card, Dropdown } from "react-bootstrap";
+import { Card, Dropdown, Row } from "react-bootstrap";
 import React, { useEffect, useState } from "react";
 import "./styles.css";
 import { AiOutlinePlus, AiOutlinePlusCircle } from "react-icons/ai";
@@ -38,6 +38,7 @@ const Post = (props) => {
     imageUrl,
     createdAt,
     updatedAt,
+    hashtags,
     team,
     _id,
     width,
@@ -150,6 +151,24 @@ const Post = (props) => {
             <h5 className="m-0 pt-2 pb-2">{title}</h5>
           </div>
           <Card.Text className="text opacity-75">{description}</Card.Text>
+          <Row className="text-color">
+            {hashtags?.map((hashtag, index) => {
+              return (
+                <div
+                  key={index}
+                  className="rounded-3 p-1 px-2 pe-2 mb-2 mx-1"
+                  style={{
+                    backgroundColor: "#55466D",
+                    cursor: "pointer",
+                    width: "max-content",
+                  }}
+                  id={hashtag._id}
+                >
+                  {hashtag.title}
+                </div>
+              );
+            })}
+          </Row>
           <div
             className="position-absolute p-2 opacity-75"
             style={{

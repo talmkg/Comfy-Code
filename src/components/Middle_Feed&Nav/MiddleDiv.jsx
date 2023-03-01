@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 import React, { useEffect } from "react";
 import { fetchLoginnedUser, getGroups } from "../../redux/actions";
 import { useDispatch } from "react-redux";
-import PropagateLoader from "react-spinners/PropagateLoader";
 const MiddleDiv = () => {
   const dispatch = useDispatch();
   const groups = useSelector((state) => state.groups.groups);
@@ -23,33 +22,21 @@ const MiddleDiv = () => {
         style={{
           maxWidth: "65vw",
           width: "100%",
-          minHeight: "100vh",
+          // minHeight: "150vh",
           background: "transparent",
           backgroundColor: "#191724",
+          //added this
         }}
       >
-        {/* <img
-          src="https://e0.pxfuel.com/wallpapers/511/547/desktop-wallpaper-dark-anime-background-scenery-stunning-aesthetic-landscape.jpg"
-          style={{
-            zIndex: "0",
-            position: "fixed",
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover",
-            opacity: 0.4,
-            left: 0,
-            right: 0,
-            height: "100%",
-          }}
-        /> */}
         <div
-          className="h-100 position-relative"
+          className="h-100 "
           style={{
             backdropFilter: "blur(5px)",
-            overflow: "hidden",
+            // overflow: "hidden",
           }}
         >
           <div
-            className="w-100 text-light  "
+            className="w-100 text-light sticky-top"
             style={{
               position: "sticky",
               top: "0",
@@ -114,7 +101,10 @@ const MiddleDiv = () => {
               </div>
             </Navbar>
           </div>
-          <div className="position-relative">
+          <div
+            className="position-relative pb-3"
+            style={{ overflow: "hidden" }}
+          >
             {loading ? (
               <div id="center" style={{ zIndex: "99" }}>
                 <Spinner className="text-light" />

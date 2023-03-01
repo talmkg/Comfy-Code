@@ -7,10 +7,8 @@ import Profile from "./views/Profile/Profile";
 import Right_Sidebar from "./components/Right_Sidebar/Right_Sidebar";
 import Left_Sidebar from "./components/Left_Sidebar/Left_Sidebar";
 import { useSelector } from "react-redux";
-import loader from "./Files/loader.gif";
-function App() {
-  const global_loading = useSelector((state) => state?.global_loading);
 
+function App() {
   return (
     <>
       <Router>

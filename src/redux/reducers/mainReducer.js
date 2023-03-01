@@ -6,6 +6,7 @@ import {
   LOGIN,
   SAVE_USERS_POSTS,
   FETCH_NOTIFICATIONS,
+  FETCH_HASHTAGS,
 } from "../actions";
 
 const initialState = {
@@ -16,6 +17,7 @@ const initialState = {
   LoggedInUser: [],
   usersGroups: [],
   notifications: [],
+  hashtags: [],
 };
 
 const mainReducer = (state = initialState, action) => {
@@ -34,6 +36,11 @@ const mainReducer = (state = initialState, action) => {
       return {
         ...state,
         usersGroups: action.payload,
+      };
+    case FETCH_HASHTAGS:
+      return {
+        ...state,
+        hashtags: action.payload,
       };
     case FETCH_GROUPS:
       return {

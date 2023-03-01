@@ -1,4 +1,5 @@
 export const FETCH_GROUPS = "FETCH_GROUPS";
+export const FETCH_HASHTAGS = "FETCH_HASHTAGS";
 export const TOKEN = "TOKEN";
 export const FETCH_ALL_USERS = "FETCH_ALL_USERS";
 export const JOIN_TEAM = "JOIN_TEAM";
@@ -119,6 +120,10 @@ export const fetchUserById = (userid, setUser) => {
 };
 export const fetchUsersGroups = () => {
   return async (dispatch, getState) => {
+    dispatch({
+      type: LOADING,
+      payload: true,
+    });
     const token = dispatch(getTokenFromStore());
     const options = {
       headers: {
@@ -134,6 +139,10 @@ export const fetchUsersGroups = () => {
             dispatch({
               type: SAVE_USERS_POSTS,
               payload: groups,
+            });
+            dispatch({
+              type: LOADING,
+              payload: false,
             });
             console.log("users groups are fetched <3");
           } else {
@@ -165,12 +174,13 @@ export const fetchSomeonesGroups = (userId, setSomeonesGroups) => {
     }
   };
 };
-export const createGroup = (title, description, onHide) => {
+export const createGroup = (title, description, hashtags, onHide) => {
   console.log("Fetching");
   const postUrl = `http://localhost:3002/groups/`;
   const dataToSendForPost = {
     title: title,
     description: description,
+    hashtags: hashtags,
   };
   return async (dispatch) => {
     const token = dispatch(getTokenFromStore());
@@ -471,3 +481,22 @@ export const getNotifications = () => {
     }
   };
 };
+// export const getHashtags = () => {
+//   return async (dispatch, getState) => {
+//     try {
+//       const response = await fetch("http://localhost:3002/hashtags");
+//       if (response.ok) {
+//         let hashtags = await response.json();
+//         dispatch({
+//           type: FETCH_HASHTAGS,
+//           payload: hashtags,
+//         });
+//       } else {
+//         console.log("Error fetching data");
+//       }
+//       console.log("Hashtags fetched");
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   };
+// };

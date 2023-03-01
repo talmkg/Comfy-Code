@@ -70,3 +70,7 @@
 .dropdown-buttons:hover {
   background-color: #454163 !important;
 }
+
+/* * {
+  outline: 1px solid #f00 !important;
+} */
