@@ -1,6 +1,10 @@
 import { Button } from "react-bootstrap";
-import { AiOutlinePlus, AiOutlineCheck } from "react-icons/ai";
-import { RxCross2 } from "react-icons/rx";
+import {
+  AiOutlinePlus,
+  AiOutlineCheck,
+  AiOutlineUserDelete,
+  AiOutlineUserAdd,
+} from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { follow, unfollow } from "../../redux/actions";
 
@@ -28,7 +32,7 @@ const Follow_Button = (id) => {
           }}
           onClick={Unfollow}
         >
-          <RxCross2 size={20} />
+          <AiOutlineUserDelete size={25} />
         </Button>
       );
     } else {
@@ -42,7 +46,7 @@ const Follow_Button = (id) => {
           }}
           onClick={Follow}
         >
-          <AiOutlinePlus size={20} />
+          <AiOutlineUserAdd size={25} />
         </Button>
       );
     }

@@ -34,7 +34,10 @@ body::-webkit-scrollbar-thumb {
 }
 /*bootstrap fix*/
 .btn:focus,
-.btn:active {
+.btn:active,
+.form-select,
+.form-select:focus,
+.form-select:active {
   outline: none !important;
   box-shadow: none !important;
 }

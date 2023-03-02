@@ -7,6 +7,9 @@ import {
   SAVE_USERS_POSTS,
   FETCH_NOTIFICATIONS,
   FETCH_HASHTAGS,
+  CONNECTED_TO_SOCKET,
+  GENERAL_CHAT_HISTORY,
+  SOCKET_USERS_LIST,
 } from "../actions";
 
 const initialState = {
@@ -18,6 +21,9 @@ const initialState = {
   usersGroups: [],
   notifications: [],
   hashtags: [],
+  socket_connected: false,
+  general_chat_history: [],
+  socket_users_list: [],
 };
 
 const mainReducer = (state = initialState, action) => {
@@ -26,6 +32,22 @@ const mainReducer = (state = initialState, action) => {
       return {
         ...state,
         token: action.payload,
+      };
+
+    case CONNECTED_TO_SOCKET:
+      return {
+        ...state,
+        socket_connected: action.payload,
+      };
+    case GENERAL_CHAT_HISTORY:
+      return {
+        ...state,
+        general_chat_history: action.payload,
+      };
+    case SOCKET_USERS_LIST:
+      return {
+        ...state,
+        socket_users_list: action.payload,
       };
     case FETCH_NOTIFICATIONS:
       return {

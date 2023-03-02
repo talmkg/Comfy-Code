@@ -26,3 +26,24 @@
     rgba(255, 255, 255, 0) 100%
   );
 }
+/* .switch-button {
+  background-color: #2e2a42 !important;
+  color: white !important;
+} */
+
+.switch-button-public {
+  background-color: #55466d !important;
+  border: 0 !important;
+}
+.switch-button-private {
+  background-color: #3f3452 !important;
+  border: 0 !important;
+}
+.select-language {
+  background-color: #55466d !important;
+  color: white;
+}
+.choose-image .form-control {
+  background-color: #3f3452 !important;
+  border: none;
+}

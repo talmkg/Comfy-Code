@@ -28,13 +28,7 @@ const MiddleDiv = () => {
           //added this
         }}
       >
-        <div
-          className="h-100 "
-          style={{
-            backdropFilter: "blur(5px)",
-            // overflow: "hidden",
-          }}
-        >
+        <div className="h-100">
           <div
             className="w-100 text-light sticky-top"
             style={{

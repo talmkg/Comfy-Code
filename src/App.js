@@ -6,9 +6,26 @@ import Identifier from "./views/Identifier";
 import Profile from "./views/Profile/Profile";
 import Right_Sidebar from "./components/Right_Sidebar/Right_Sidebar";
 import Left_Sidebar from "./components/Left_Sidebar/Left_Sidebar";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  CONNECTED_TO_SOCKET,
+  connectToSocketFunction,
+  GENERAL_CHAT_HISTORY,
+  SOCKET,
+} from "./redux/actions";
+import { io } from "socket.io-client";
+import { useEffect } from "react";
 
 function App() {
+  const LoggedInUser = useSelector((state) => state?.LoggedInUser[0]);
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (LoggedInUser) {
+      dispatch(connectToSocketFunction(LoggedInUser));
+    }
+  }, []);
+
   return (
     <>
       <Router>

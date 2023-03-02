@@ -83,6 +83,7 @@
   border: none !important;
   font-size: 18px !important;
 }
+
 .gradient-button:active {
   transform: scale(1.01);
 }

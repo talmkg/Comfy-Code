@@ -1,3 +1,7 @@
+import { io } from "socket.io-client";
+
+import sound from "../../Sounds/notification.mp3";
+
 export const FETCH_GROUPS = "FETCH_GROUPS";
 export const FETCH_HASHTAGS = "FETCH_HASHTAGS";
 export const TOKEN = "TOKEN";
@@ -7,6 +11,11 @@ export const LOADING = "LOADING";
 export const LOGIN = "LOGIN";
 export const SAVE_USERS_POSTS = "SAVE_USERS_POSTS";
 export const FETCH_NOTIFICATIONS = "FETCH_NOTIFICATIONS";
+export const CONNECTED_TO_SOCKET = "CONNECTED_TO_SOCKET";
+export const GENERAL_CHAT_HISTORY = "GENERAL_CHAT_HISTORY";
+export const SOCKET_USERS_LIST = "SOCKET_USERS_LIST";
+
+const socket = io("http://localhost:3002", { transports: ["websocket"] });
 
 //get all groups
 export const getGroups = () => {
@@ -174,7 +183,7 @@ export const fetchSomeonesGroups = (userId, setSomeonesGroups) => {
     }
   };
 };
-export const createGroup = (title, description, hashtags, onHide) => {
+export const createGroup = (title, description, hashtags, formData, onHide) => {
   console.log("Fetching");
   const postUrl = `http://localhost:3002/groups/`;
   const dataToSendForPost = {
@@ -199,10 +208,35 @@ export const createGroup = (title, description, hashtags, onHide) => {
 
     try {
       const response = await fetch(postUrl, optionsPost);
+
       if (response.ok) {
+        if (formData) {
+          console.log("uploading cover...");
+          const uploadCover = async () => {
+            const res = await response.json();
+            console.log("RES 217", res);
+            const cover = fetch(
+              `http://localhost:3002/groups/${res._id}/cover`,
+              {
+                method: "PUT",
+                body: formData,
+              }
+            );
+            const cover_res = await cover;
+            if (cover_res) {
+              console.log(cover_res);
+              console.log("succ uploaded the cover");
+              dispatch(getGroups());
+              onHide();
+            }
+          };
+          uploadCover();
+          onHide();
+        } else {
+          dispatch(getGroups());
+          onHide();
+        }
         console.log("Succesfully posted <3");
-        dispatch(getGroups());
-        onHide();
       } else {
         console.log(
           "sorry, an error occured while trying to create this post."
@@ -409,8 +443,10 @@ export function getTokenFromStore() {
 }
 //FOLLOW SOMEONE
 export const follow = (userid) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
     const token = dispatch(getTokenFromStore());
+    const LoggedInUser = getState().LoggedInUser[0];
+
     const options = {
       method: "PUT",
       headers: {
@@ -423,6 +459,9 @@ export const follow = (userid) => {
     if (teamResponse.ok) {
       console.log("You followed this user <3");
       dispatch(fetchLoginnedUser());
+      dispatch(
+        sendNotification(userid, `${LoggedInUser.username} followed you`)
+      );
     } else {
       console.log("huh?!");
     }
@@ -430,8 +469,10 @@ export const follow = (userid) => {
 };
 //UNFOLLOW
 export const unfollow = (userid) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
     const token = dispatch(getTokenFromStore());
+    const LoggedInUser = getState().LoggedInUser[0];
+
     const options = {
       method: "PUT",
       headers: {
@@ -444,6 +485,9 @@ export const unfollow = (userid) => {
     if (teamResponse.ok) {
       console.log("You unfollowed this user <3");
       dispatch(fetchLoginnedUser());
+      dispatch(
+        sendNotification(userid, `${LoggedInUser.username} unfollowed you`)
+      );
     } else {
       console.log("huh?!");
     }
@@ -452,51 +496,136 @@ export const unfollow = (userid) => {
 //get notifications
 export const getNotifications = () => {
   return async (dispatch, getState) => {
-    const token = dispatch(getTokenFromStore());
+    const token = getState().token;
     const options = {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     };
-    // console.log("Loading notifications...");
     try {
-      // const response = await fetch(
-      //   "http://localhost:3002/notifications",
-      //   options
-      // );
-      // if (response.ok) {
-      //   let notifications = await response.json();
-      //   console.log("notifications updated.");
-      //   dispatch({
-      //     type: FETCH_NOTIFICATIONS,
-      //     payload: notifications,
-      //   });
-      // } else {
-      //   console.log("Error fetching data");
-      // }
-      console.log("Notifications fetch --- empty");
+      const response = await fetch(
+        "http://localhost:3002/notifications/me",
+        options
+      );
+      if (response.ok) {
+        let notifications = await response.json();
+        console.log("notifications updated.");
+        dispatch({
+          type: FETCH_NOTIFICATIONS,
+          payload: notifications,
+        });
+        console.log(notifications);
+      } else {
+        console.log("Error fetching data");
+      }
     } catch (error) {
       console.log(error);
     }
   };
 };
-// export const getHashtags = () => {
-//   return async (dispatch, getState) => {
-//     try {
-//       const response = await fetch("http://localhost:3002/hashtags");
-//       if (response.ok) {
-//         let hashtags = await response.json();
-//         dispatch({
-//           type: FETCH_HASHTAGS,
-//           payload: hashtags,
-//         });
-//       } else {
-//         console.log("Error fetching data");
-//       }
-//       console.log("Hashtags fetched");
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   };
-// };
+
+export const sendMessage = (LoggedInUser, message) => {
+  return async (dispatch, getState) => {
+    const general_chat_history = getState().general_chat_history;
+    console.log(general_chat_history);
+    const newMessage = {
+      username: LoggedInUser.username,
+      pfp: LoggedInUser.pfp,
+      user_id: LoggedInUser._id,
+      text: message,
+    };
+    socket.emit("sendMessage", newMessage);
+    dispatch({
+      type: GENERAL_CHAT_HISTORY,
+      payload: [general_chat_history[0].concat(newMessage)],
+    });
+  };
+};
+
+export const connectToSocketFunction = (LoggedInUser) => {
+  console.log("check1");
+  return async (dispatch, getState) => {
+    console.log("check1.5");
+    const general_chat_history = getState().general_chat_history;
+    const notifications = getState().notifications;
+    try {
+      console.log("check2");
+      socket.emit("setUsername", LoggedInUser);
+
+      //
+      //
+      socket.on("welcome", (welcomeMessage) => {
+        console.log("welcome message");
+        socket.on("loggedIn", (onlineUsersList) => {
+          console.log("connected");
+
+          dispatch({
+            type: CONNECTED_TO_SOCKET,
+            payload: true,
+          });
+          dispatch({
+            type: SOCKET_USERS_LIST,
+            payload: onlineUsersList,
+          });
+        });
+        socket.on("updateOnlineUsersList", (onlineUsersList) => {
+          console.log("users list updated");
+          dispatch({
+            type: SOCKET_USERS_LIST,
+            payload: onlineUsersList,
+          });
+        });
+        socket.on("notification", (notification) => {
+          const audio = new Audio(sound);
+          audio.play();
+          console.log("you've got new notification");
+          dispatch({
+            type: FETCH_NOTIFICATIONS,
+            payload: [...notifications, notification],
+          });
+        });
+      });
+
+      socket.on("newMessage", (newMessage) => {
+        dispatch({
+          type: GENERAL_CHAT_HISTORY,
+          payload: [general_chat_history[0].concat(newMessage)],
+        });
+      });
+      socket.emit("requestChatHistory");
+      socket.on("chatHistory", (chatHistory) => {
+        dispatch({
+          type: GENERAL_CHAT_HISTORY,
+          payload: [chatHistory],
+        });
+      });
+    } catch (error) {
+      console.log(error);
+      console.log("oopsie");
+    }
+  };
+};
+
+export const sendNotification = (userid, text) => {
+  console.log("sending the notification");
+  return async (dispatch, getState) => {
+    const LoggedInUser = getState().LoggedInUser[0];
+    const socket_users_list = getState().socket_users_list;
+
+    const toSockedIdFilter = socket_users_list.filter(
+      (user) => user._id === userid
+    );
+    console.log("right user", toSockedIdFilter);
+
+    const newMessage = {
+      from: socket.id,
+      from_mongo: LoggedInUser,
+      to_mongo: userid,
+      to: toSockedIdFilter[0].socketId,
+      text: text,
+    };
+
+    socket.emit("notification", newMessage);
+  };
+};

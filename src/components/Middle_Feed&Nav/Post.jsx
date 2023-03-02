@@ -39,6 +39,7 @@ const Post = (props) => {
     createdAt,
     updatedAt,
     hashtags,
+
     team,
     _id,
     width,
@@ -61,7 +62,7 @@ const Post = (props) => {
           backgroundColor: "#29263a",
         }}
       >
-        <Card.Body className="pb-5">
+        <Card.Body className="pb-5 position-relative">
           <div className="d-flex align-items-center">
             <img
               src={leader[0]?.pfp}
@@ -151,7 +152,38 @@ const Post = (props) => {
             <h5 className="m-0 pt-2 pb-2">{title}</h5>
           </div>
           <Card.Text className="text opacity-75">{description}</Card.Text>
-          <Row className="text-color">
+          {imageUrl ? (
+            <div
+              className="w-100"
+              style={{
+                backgroundImage: `linear-gradient(180deg, rgba(255,0,0,0) 0%, rgba(25,23,36,1) 100%), url(${imageUrl})`,
+                height: "200px",
+                backgroundPosition: "center",
+                // objectFit: "cover",
+                backgroundSize:
+                  "cover" /* Resize the background image to cover the entire container */,
+              }}
+            >
+              {" "}
+            </div>
+          ) : (
+            <></>
+          )}
+
+          {/* {imageUrl ? (
+              <img
+                src={imageUrl}
+                className="w-100"
+                style={{  }}
+              />
+            ) : (
+              <></>
+            )} */}
+
+          <Row
+            className="text-color pe-1 px-1"
+            style={{ marginTop: imageUrl ? "1rem" : "0rem" }}
+          >
             {hashtags?.map((hashtag, index) => {
               return (
                 <div
@@ -182,7 +214,12 @@ const Post = (props) => {
             {team.length ? team.length : 0}
             /5
           </div>
-          <div className="position-absolute d-flex" style={{ bottom: "-10%" }}>
+
+          <div
+            className="position-absolute d-flex"
+            style={{ bottom: imageUrl ? "-6%" : "-10%" }}
+            //if we wrap it in one more div, we will have proper parent div
+          >
             {team.map((member, i) => {
               return <PostsMiniProfile {...member} key={i} />;
             })}

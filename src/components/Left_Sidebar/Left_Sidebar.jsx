@@ -10,18 +10,24 @@ import {
 import { FaUpload } from "react-icons/fa";
 import { MdOutlineEdit } from "react-icons/md";
 import { useEffect, useState } from "react";
+
 import React from "react";
 import {
   AiOutlineQuestionCircle,
   AiOutlinePlus,
   AiOutlinePlusCircle,
+  AiFillLock,
 } from "react-icons/ai";
+import { BsLock, BsUnlock } from "react-icons/bs";
 import { FaRegPaperPlane } from "react-icons/fa";
 import "./styles.css";
 import { useDispatch, useSelector } from "react-redux";
 import { createGroup, getHashtags, LOGIN, TOKEN } from "../../redux/actions";
 import { Link, useNavigate } from "react-router-dom";
 import UsersModal from "../Mini_Components/InviteModal";
+import TeamSizeSelect from "../Mini_Components/TeamSizeSelect/TeamSizeSelect";
+import languages from "../../Data/Languages/Languages.json";
+import $ from "jquery";
 
 function MyVerticallyCenteredModal(props) {
   const [usersModalShow, setUsersModalShow] = React.useState(false);
@@ -42,13 +48,21 @@ function MyVerticallyCenteredModal(props) {
   const dispatch = useDispatch();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+
   const [hashtags, setHashtags] = useState([]);
+  const [isPrivate, setPrivate] = useState(false);
+  const [maxMembers, setMaxMembers] = useState(5);
+  const [image, setImage] = useState(undefined);
+
   const [isCustomHashtagInputActive, setCustomHashtagInputActive] =
     useState(false);
   const [customHashtagInput, setCustomHashtagInput] = useState("");
   const createAPost = () => {
-    //now we need to pass all required data there
-    dispatch(createGroup(title, description, hashtags, onHide));
+    console.log("image check: ", image);
+    const formData = new FormData();
+    formData.append("cover", image);
+
+    dispatch(createGroup(title, description, hashtags, formData, onHide));
     setTitle("");
     setDescription("");
     setHashtags([]);
@@ -81,10 +95,19 @@ function MyVerticallyCenteredModal(props) {
     setReduxHashtags([...Hashtags, hashtag]);
     console.log("if its here, then its added", hashtags);
     setCustomHashtagInput("");
-
-    //    it works, but color dont change - it doesnt trigger refresh
   };
-
+  const changePrivacy = () => {
+    setPrivate(isPrivate === true ? false : true);
+  };
+  // const openFileOption = () => {
+  //   document.getElementById("chooseImage").click();
+  // };
+  const imageChangeHandler = (e) => {
+    setImage(e.target.files[0]);
+  };
+  useEffect(() => {
+    console.log(image);
+  });
   return (
     <>
       <Modal
@@ -122,6 +145,7 @@ function MyVerticallyCenteredModal(props) {
               onChange={(e) => onChangeHandler(e.target.value, setTitle)}
             />
           </Form.Group>
+
           <div
             className="me-3 mx-3"
             style={{ borderBottom: "1px solid gray" }}
@@ -143,7 +167,7 @@ function MyVerticallyCenteredModal(props) {
               Add suitable hashtags
             </span>
           </div>
-          <div className="p-3 pt-2">
+          <div className="p-3 pt-2 pb-0">
             <Row className="text-color">
               {Hashtags.map((hashtag, index) => {
                 const addHashtagInside = function () {
@@ -223,6 +247,93 @@ function MyVerticallyCenteredModal(props) {
               </div>
             </Row>
           </div>
+          <div className="w-100">
+            <div
+              className="d-flex justify-content-around align-items-center w-100 pb-3"
+              // style={{ height: "4vh" }}
+            >
+              <div className="w-25 text-center">
+                <div className="p-1" style={{ color: "#686f7f" }}>
+                  Privacy
+                </div>
+                {isPrivate ? (
+                  <>
+                    <Button
+                      className="center-flex switch-button-private w-100"
+                      onClick={changePrivacy}
+                    >
+                      <span className="me-2">Private</span> <BsLock size={18} />
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      className="center-flex switch-button-public w-100"
+                      onClick={changePrivacy}
+                    >
+                      <span className="me-2">Public</span>{" "}
+                      <BsUnlock size={18} />
+                    </Button>
+                  </>
+                )}
+              </div>
+              <div className="w-25 text-center">
+                <div className="p-1" style={{ color: "#686f7f" }}>
+                  Language
+                </div>
+                <Form.Select
+                  style={{ border: "none" }}
+                  className="text-color select-language"
+                >
+                  {languages.map((language, index) => {
+                    if (language.name === "English") {
+                      return (
+                        <option value={[index]} selected>
+                          {language.name}
+                        </option>
+                      );
+                    } else {
+                      return (
+                        <>
+                          <option value={[index]}>{language.name}</option>
+                        </>
+                      );
+                    }
+                  })}
+                </Form.Select>
+              </div>
+              <div className=" w-25 text-center">
+                <div className="p-1" style={{ color: "#686f7f" }}>
+                  Team Size
+                </div>
+                <div className="parentdiv w-100">
+                  <TeamSizeSelect min={0} max={10} />
+                </div>
+              </div>
+            </div>
+            <div className="p-2 pt-0 pb-3 choose-image text-center">
+              <div className="p-1" style={{ color: "#686f7f" }}>
+                Add cover for your project
+              </div>
+              <Form.Control
+                type="file"
+                id="chooseImage"
+                onChange={(e) => imageChangeHandler(e)}
+                accept=".jpg, .jpeg, .png"
+                multiple
+              />
+            </div>
+            {/* //
+//
+//
+//
+//
+//
+
+//
+//
+// */}
+          </div>
           <div className=" d-flex justify-content-center text-color">
             <div>
               <h5 className="text-center mb-2">Team:</h5>
@@ -237,13 +348,14 @@ function MyVerticallyCenteredModal(props) {
           </div>
 
           {/*MINI BUTTONS */}
-          <div className="d-flex justify-content-between text-color pe-3 px-3 pb-3 pt-1">
+          <div className="d-flex justify-content-between align-items-center text-color pe-3 px-3 pb-3 pt-1">
             <div className="">
-              <FaUpload size={25} className="me-2" />
-              {/* <BsEmojiSmile size={25} className="me-2" /> */}
+              <FaUpload size={28} className="me-2" />
+              {/* <BsEmojiSmile size={28} className="me-2" /> */}
             </div>
+
             <div>
-              <AiOutlineQuestionCircle size={25} />
+              <AiOutlineQuestionCircle size={28} />
             </div>
           </div>
         </div>

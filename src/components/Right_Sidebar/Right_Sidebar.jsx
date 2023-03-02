@@ -4,14 +4,19 @@ import { FiSettings } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect } from "react";
 import "./style.css";
-import { getNotifications } from "../../redux/actions";
+import {
+  GENERAL_CHAT_HISTORY,
+  getNotifications,
+  sendMessage,
+  sendNotification,
+} from "../../redux/actions";
 import Notification from "../Mini_Components/Notification";
 import { useState } from "react";
 import { io } from "socket.io-client";
 import MiniProfileTemplate from "../Middle_Feed&Nav/MiniProfileTemplate";
 import { Link } from "react-router-dom";
+import sound from "../../Sounds/notification.mp3";
 
-const socket = io("http://localhost:3002", { transports: ["websocket"] });
 const Right_Sidebar = () => {
   const dispatch = useDispatch();
   const options = [
@@ -25,68 +30,28 @@ const Right_Sidebar = () => {
   ];
   const d = new Date();
   let day = options[d.getDay()];
-  const LoggedInUser = useSelector((state) => state?.LoggedInUser[0]);
-  let groups = useSelector((state) => state.groups.groups);
-  const myGroups = useSelector((state) => state?.usersGroups);
-  const Notifications = useSelector(
-    (state) => state?.notifications?.notifications
-  );
-  const username = LoggedInUser?.username;
   const [message, setMessage] = useState("");
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [onlineUsers, setOnlineUsers] = useState([]);
-  const [realChatHistory, setRealChatHistory] = useState([]);
-
-  useEffect(() => {
-    if (LoggedInUser) {
-      socket.on("welcome", (welcomeMessage) => {
-        socket.on("loggedIn", (onlineUsersList) => {
-          setLoggedIn(true);
-          setOnlineUsers(onlineUsersList);
-        });
-        socket.on("updateOnlineUsersList", (onlineUsersList) => {
-          setOnlineUsers(onlineUsersList);
-        });
-      });
-      //when new message comes   ----------------------------
-      socket.on("newMessage", (newMessage) => {
-        setRealChatHistory([...realChatHistory, newMessage]);
-      });
-      socket.emit("requestChatHistory");
-      socket.on("chatHistory", (chatHistory) => {
-        setRealChatHistory(chatHistory);
-      });
-    }
-  }, [LoggedInUser]);
-
+  const LoggedInUser = useSelector((state) => state?.LoggedInUser[0]);
+  const loggedIn = useSelector((state) => state?.socket_connected);
+  const myGroups = useSelector((state) => state?.usersGroups);
+  const Notifications = useSelector((state) => state?.notifications);
+  let realChatHistory = useSelector((state) => state?.general_chat_history[0]);
   const scrollToBottom = () => {
     const generalChat = document.getElementById("generalChat");
     generalChat.scrollTop = generalChat.scrollHeight;
   };
-
-  const submitUsername = () => {
-    socket.emit("setUsername", { username });
+  const dispatchSendMessage = () => {
+    dispatch(sendMessage(LoggedInUser, message));
   };
-  const sendMessage = () => {
-    const newMessage = {
-      username: LoggedInUser.username,
-      pfp: LoggedInUser.pfp,
-      user_id: LoggedInUser._id,
-      text: message,
-      // createdAt: new Date().toLocaleString("en-US"),
-    };
-    socket.emit("sendMessage", newMessage);
-    setRealChatHistory([...realChatHistory, newMessage]);
-  };
-  useEffect(() => {
-    submitUsername();
-    // dispatch(getNotifications());
-  }, []);
   useEffect(() => {
     if (LoggedInUser) {
       scrollToBottom();
     }
   });
+  useEffect(() => {
+    dispatch(getNotifications());
+    console.log();
+  }, []);
   if (!LoggedInUser) {
     return <div></div>;
   } else {
@@ -132,15 +97,17 @@ const Right_Sidebar = () => {
               >
                 <div>
                   <div>
-                    <Row className="g-0 pe-1 px-1">
+                    <Row className="g-0 pe-2 px-2">
                       {Notifications ? (
                         Notifications?.map((notification, i) => {
                           return (
-                            <Notification
-                              {...notification}
-                              key={i}
-                              myGroups={myGroups}
-                            />
+                            <>
+                              <Notification
+                                {...notification}
+                                key={i}
+                                myGroups={myGroups}
+                              />
+                            </>
                           );
                         })
                       ) : (
@@ -182,51 +149,53 @@ const Right_Sidebar = () => {
               >
                 <div className="d-flex flex-column justify-content-between">
                   <ListGroup>
-                    {realChatHistory.map((message, index) => (
-                      <ListGroup.Item
-                        key={index}
-                        className="mt-1 mb-1 rounded text-color d-flex justify-content-between"
-                        style={{ backgroundColor: "#2A273D" }}
-                      >
-                        <div>
-                          <span
-                            className="text-color pe-1 position-relative"
-                            id="profile-picture-post"
-                          >
-                            <img
-                              src={message.pfp}
-                              style={{
-                                width: "35px",
-                                borderRadius: "50%",
-                                position: "relative",
-                              }}
-                              className="me-2"
-                            />
-                            {LoggedInUser._id === message.user_id ? (
-                              <Link
-                                to={`/profile`}
-                                style={{ textDecoration: "none" }}
-                                className="text-color"
-                              >
-                                {message.username}
-                              </Link>
-                            ) : (
-                              <Link
-                                to={`/profile/${message.user_id}`}
-                                style={{ textDecoration: "none" }}
-                                className="text-color"
-                              >
-                                {message.username}
-                              </Link>
-                            )}
+                    {realChatHistory?.map((message, index) => {
+                      return (
+                        <ListGroup.Item
+                          key={index}
+                          className="mt-1 mb-1 rounded text-color d-flex justify-content-between"
+                          style={{ backgroundColor: "#2A273D" }}
+                        >
+                          <div>
+                            <span
+                              className="text-color pe-1 position-relative"
+                              id="profile-picture-post"
+                            >
+                              <img
+                                src={message.pfp}
+                                style={{
+                                  width: "35px",
+                                  borderRadius: "50%",
+                                  position: "relative",
+                                }}
+                                className="me-2"
+                              />
+                              {LoggedInUser._id === message.user_id ? (
+                                <Link
+                                  to={`/profile`}
+                                  style={{ textDecoration: "none" }}
+                                  className="text-color"
+                                >
+                                  {message.username}
+                                </Link>
+                              ) : (
+                                <Link
+                                  to={`/profile/${message.user_id}`}
+                                  style={{ textDecoration: "none" }}
+                                  className="text-color"
+                                >
+                                  {message.username}
+                                </Link>
+                              )}
 
-                            <span className="me-2 mx-2">|</span>
+                              <span className="me-2 mx-2">|</span>
 
-                            <span className="text-light">{message.text}</span>
-                          </span>
-                        </div>
-                      </ListGroup.Item>
-                    ))}
+                              <span className="text-light">{message.text}</span>
+                            </span>
+                          </div>
+                        </ListGroup.Item>
+                      );
+                    })}
                   </ListGroup>
                 </div>
               </div>
@@ -235,7 +204,7 @@ const Right_Sidebar = () => {
               <Form
                 onSubmit={(e) => {
                   e.preventDefault();
-                  sendMessage();
+                  dispatchSendMessage();
                   setMessage("");
                 }}
               >
