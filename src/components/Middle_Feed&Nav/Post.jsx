@@ -59,7 +59,7 @@ const Post = (props) => {
           maxWidth: width ? width : "50%",
           width: "100%",
           cursor: "pointer",
-          backgroundColor: "#29263a",
+          backgroundColor: "#232133",
         }}
       >
         <Card.Body className="pb-5 position-relative">
@@ -190,7 +190,7 @@ const Post = (props) => {
                   key={index}
                   className="rounded-3 p-1 px-2 pe-2 mb-2 mx-1"
                   style={{
-                    backgroundColor: "#55466D",
+                    backgroundColor: "#46395b",
                     cursor: "pointer",
                     width: "max-content",
                   }}

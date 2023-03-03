@@ -15,16 +15,16 @@ import {
 } from "./redux/actions";
 import { io } from "socket.io-client";
 import { useEffect } from "react";
+import Settings from "./views/Settings/Settings";
 
 function App() {
   const LoggedInUser = useSelector((state) => state?.LoggedInUser[0]);
-
   const dispatch = useDispatch();
   useEffect(() => {
     if (LoggedInUser) {
       dispatch(connectToSocketFunction(LoggedInUser));
     }
-  }, []);
+  }, [LoggedInUser]);
 
   return (
     <>
@@ -36,6 +36,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/home" element={<Home />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/settings" element={<Settings />} />
             <Route path="/profile/:userId" element={<Profile />} />
           </Routes>
           <Right_Sidebar />

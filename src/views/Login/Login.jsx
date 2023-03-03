@@ -13,7 +13,7 @@ import { getToken } from "../../redux/actions";
 import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const LoggedInUser = useSelector((state) => state?.LoggedInUser[0]);
+  const LoggedInUser = useSelector((state) => state?.LoggedInUser);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState(false);
@@ -37,8 +37,14 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (LoggedInUser !== undefined) {
-      navigate(LoggedInUser?._id ? "/home" : "/login");
+    if (LoggedInUser[0] !== undefined) {
+      navigate(LoggedInUser[0]?._id ? "/home" : "/login");
+    }
+    if (Array.isArray(LoggedInUser[0])) {
+      console.log("isarray");
+      if (LoggedInUser.length === 0) {
+        navigate(LoggedInUser[0]?._id ? "/home" : "/login");
+      }
     }
   });
 

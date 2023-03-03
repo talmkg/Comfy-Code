@@ -588,9 +588,11 @@ export const connectToSocketFunction = (LoggedInUser) => {
       });
 
       socket.on("newMessage", (newMessage) => {
+        console.log(general_chat_history);
+        const freshhistory = getState().general_chat_history;
         dispatch({
           type: GENERAL_CHAT_HISTORY,
-          payload: [general_chat_history[0].concat(newMessage)],
+          payload: [freshhistory[0].concat(newMessage)],
         });
       });
       socket.emit("requestChatHistory");

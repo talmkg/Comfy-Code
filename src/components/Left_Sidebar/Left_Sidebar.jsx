@@ -27,7 +27,6 @@ import { Link, useNavigate } from "react-router-dom";
 import UsersModal from "../Mini_Components/InviteModal";
 import TeamSizeSelect from "../Mini_Components/TeamSizeSelect/TeamSizeSelect";
 import languages from "../../Data/Languages/Languages.json";
-import $ from "jquery";
 
 function MyVerticallyCenteredModal(props) {
   const [usersModalShow, setUsersModalShow] = React.useState(false);
@@ -195,7 +194,7 @@ function MyVerticallyCenteredModal(props) {
                     <div
                       className=" rounded-3 p-1 px-2 pe-2 mb-2 mx-1"
                       style={{
-                        backgroundColor: "#55466D",
+                        backgroundColor: "#46395b",
                         cursor: "pointer",
                         width: "max-content",
                         height: "35px",
@@ -212,7 +211,7 @@ function MyVerticallyCenteredModal(props) {
                 className="d-flex align-items-center rounded-3 p-1 px-2 pe-2 mb-2 mx-1"
                 id="custom_hashtag_input"
                 style={{
-                  backgroundColor: "#55466d",
+                  backgroundColor: "#46395b",
                   cursor: "pointer",
                   width: "200px",
                   height: "35px",
@@ -323,16 +322,6 @@ function MyVerticallyCenteredModal(props) {
                 multiple
               />
             </div>
-            {/* //
-//
-//
-//
-//
-//
-
-//
-//
-// */}
           </div>
           <div className=" d-flex justify-content-center text-color">
             <div>
@@ -372,6 +361,7 @@ const Left_Sidebar = () => {
   const [modalShow, setModalShow] = React.useState(false);
   const LoggedInUser = useSelector((state) => state?.LoggedInUser[0]);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const Logout = () => {
     dispatch({
       type: LOGIN,
@@ -381,7 +371,8 @@ const Left_Sidebar = () => {
       type: TOKEN,
       payload: [],
     });
-    window.location.assign("/login");
+
+    navigate("/login");
   };
 
   if (!LoggedInUser) {
@@ -476,6 +467,13 @@ const Left_Sidebar = () => {
                 </Link>
               </div>
               <hr className="text-light mx-2 me-2" />
+              <div>
+                <Link to="/settings" className="sidebar-button-div pb-2">
+                  <Button className="sidebar-button">
+                    <span>Settings</span>
+                  </Button>
+                </Link>
+              </div>
               <div className="d-flex justify-content-center">
                 <Button
                   className="gradient-button center-flex m-1 w-50 rounded-5"

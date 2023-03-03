@@ -50,7 +50,6 @@ const Right_Sidebar = () => {
   });
   useEffect(() => {
     dispatch(getNotifications());
-    console.log();
   }, []);
   if (!LoggedInUser) {
     return <div></div>;

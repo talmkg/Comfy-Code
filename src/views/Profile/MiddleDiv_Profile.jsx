@@ -56,14 +56,14 @@ const MiddleDiv_Profile = (userProps) => {
             position: "fixed",
             right: 0,
             left: 0,
-            opacity: "0.5",
+            opacity: "0.2",
             height: "100%",
             width: "100vw",
           }}
         />
         <div
           className=" w-100 h-100 pt-4 position-relative"
-          style={{ backdropFilter: "blur(3px)" }}
+          style={{ backdropFilter: "blur(4px)" }}
         >
           {loading ? (
             <div id="center" style={{ zIndex: "99" }}>

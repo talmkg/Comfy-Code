@@ -1,0 +1,26 @@
+.edit-prof-buttons {
+  border-radius: 20px;
+  color: black !important;
+  background: #ddb7df !important;
+  border: 0 !important;
+}
+.edit-prof-buttons:hover {
+  background: #c39fc5 !important;
+}
+.custom-input-settings {
+  background: #232133 !important;
+  border: 0 !important;
+  height: 2.5rem;
+}
+#datePicker {
+  background: #232133 !important;
+}
+.bottom-center {
+  position: absolute;
+  bottom: 0%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.rdp {
+  --rdp-background-color: #a67bafc9 !important;
+}

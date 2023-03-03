@@ -32,15 +32,15 @@
 } */
 
 .switch-button-public {
-  background-color: #55466d !important;
+  background-color: #46395b !important;
   border: 0 !important;
 }
 .switch-button-private {
-  background-color: #3f3452 !important;
+  background-color: #362e44 !important;
   border: 0 !important;
 }
 .select-language {
-  background-color: #55466d !important;
+  background-color: #46395b !important;
   color: white;
 }
 .choose-image .form-control {
