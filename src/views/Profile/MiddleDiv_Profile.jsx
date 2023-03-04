@@ -42,7 +42,7 @@ const MiddleDiv_Profile = (userProps) => {
   return (
     <>
       <div
-        className="flex-fill text-light"
+        className="flex-fill text-color"
         style={{
           maxWidth: "65vw",
           width: "100%",
@@ -87,7 +87,7 @@ const MiddleDiv_Profile = (userProps) => {
               >
                 <div
                   className="mx-4 d-flex align-items-center"
-                  style={{ position: "absolute", bottom: "-20%" }}
+                  style={{ position: "absolute", bottom: "-10%" }}
                 >
                   <img
                     src={user?.pfp}
@@ -98,11 +98,11 @@ const MiddleDiv_Profile = (userProps) => {
                     }}
                     className="rounded-circle me-3"
                   />
-                  <div>
-                    <div style={{ fontSize: "18px" }}>
+                  <div className="text-light">
+                    <div style={{ fontSize: "20px" }}>
                       {user?.name} {user?.surname}
                     </div>
-                    <div className="text-color" style={{ fontSize: "16px" }}>
+                    <div className="text-light" style={{ fontSize: "18px" }}>
                       @{user?.username}
                     </div>
                   </div>
@@ -122,19 +122,28 @@ const MiddleDiv_Profile = (userProps) => {
                 )}
               </div>
               <div
-                className=" center-flex"
+                className="position-relative"
                 style={{
                   overflow: "hidden",
                   borderBottom: "1px solid rgba(255, 255, 255, 0.192)",
-                  height: "20%",
+                  height: "25%",
                 }}
               >
-                {user.bio ? user.bio : "Nothing here... yet."}
+                {user.bio ? (
+                  <div
+                    className="p-3 center-flex h-100 w-100 "
+                    style={{ fontSize: "16px" }}
+                  >
+                    {user.bio}
+                  </div>
+                ) : (
+                  "Nothing here... yet."
+                )}
               </div>
               <div
                 style={{
                   borderBottom: "1px solid rgba(255, 255, 255, 0.192)",
-                  height: "20%",
+                  height: "15%",
                 }}
               >
                 <Row className="h-100">
@@ -184,21 +193,17 @@ const MiddleDiv_Profile = (userProps) => {
           {/* style={{ maxHeight: "100%", overflow: "hidden" }} */}
           <div
             className="d-flex justify-content-center"
-            style={{ maxHeight: "100%", overflow: "hidden" }}
+            style={{ maxHeight: "100%", minHeight: "35vh", overflow: "hidden" }}
           >
             <div className="d-flex justify-content-center pt-3 pb-3 w-100">
               <div className="w-75 d-flex justify-content-center">
                 <Row
                   className="d-flex justify-content-center glass p-3 g-0 scrollbar w-100"
                   style={{
-                    maxHeight: "600px",
-
                     overflow: "hidden visible",
                   }}
                 >
-                  {/* <h4 className="text-color">Groups</h4> */}
-
-                  {params.userId ? (
+                  {/* {params.userId ? (
                     <>
                       {usersGroups?.map((post, i) => {
                         return (
@@ -218,7 +223,7 @@ const MiddleDiv_Profile = (userProps) => {
                         );
                       })}
                     </>
-                  )}
+                  )} */}
                 </Row>
               </div>
             </div>

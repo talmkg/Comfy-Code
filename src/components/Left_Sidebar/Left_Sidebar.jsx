@@ -7,7 +7,7 @@ import {
   Row,
   Col,
 } from "react-bootstrap";
-import { FaUpload } from "react-icons/fa";
+import { FaUpload, FaUsers } from "react-icons/fa";
 import { MdOutlineEdit } from "react-icons/md";
 import { useEffect, useState } from "react";
 
@@ -104,9 +104,7 @@ function MyVerticallyCenteredModal(props) {
   const imageChangeHandler = (e) => {
     setImage(e.target.files[0]);
   };
-  useEffect(() => {
-    console.log(image);
-  });
+
   return (
     <>
       <Modal
@@ -287,15 +285,15 @@ function MyVerticallyCenteredModal(props) {
                   {languages.map((language, index) => {
                     if (language.name === "English") {
                       return (
-                        <option value={[index]} selected>
+                        <option key={index} value={[index]} selected>
                           {language.name}
                         </option>
                       );
                     } else {
                       return (
-                        <>
-                          <option value={[index]}>{language.name}</option>
-                        </>
+                        <option key={index} value={[index]}>
+                          {language.name}
+                        </option>
                       );
                     }
                   })}
@@ -474,15 +472,18 @@ const Left_Sidebar = () => {
                   </Button>
                 </Link>
               </div>
+
               <div className="d-flex justify-content-center">
                 <Button
-                  className="gradient-button center-flex m-1 w-50 rounded-5"
+                  className="gradient-button center-flex m-11 w-75 rounded-5"
                   onClick={() => setModalShow(true)}
                 >
-                  <span className="d-flex align-items-center me-1">
+                  <span className="d-flex align-items-center mx-1">
                     <MdOutlineEdit size={22} />
                   </span>
-                  <span className="d-flex align-items-center">Post</span>
+                  <span className="d-flex align-items-center">
+                    Create a group
+                  </span>
                 </Button>
               </div>
             </div>

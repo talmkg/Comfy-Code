@@ -100,13 +100,13 @@ const Right_Sidebar = () => {
                       {Notifications ? (
                         Notifications?.map((notification, i) => {
                           return (
-                            <>
+                            <div key={i}>
                               <Notification
                                 {...notification}
                                 key={i}
                                 myGroups={myGroups}
                               />
-                            </>
+                            </div>
                           );
                         })
                       ) : (

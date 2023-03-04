@@ -10,6 +10,7 @@ import {
   CONNECTED_TO_SOCKET,
   GENERAL_CHAT_HISTORY,
   SOCKET_USERS_LIST,
+  FETCH_BADGES,
 } from "../actions";
 
 const initialState = {
@@ -24,6 +25,7 @@ const initialState = {
   socket_connected: false,
   general_chat_history: [],
   socket_users_list: [],
+  badges: [],
 };
 
 const mainReducer = (state = initialState, action) => {
@@ -84,6 +86,11 @@ const mainReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: action.payload,
+      };
+    case FETCH_BADGES:
+      return {
+        ...state,
+        badges: action.payload,
       };
 
     default:

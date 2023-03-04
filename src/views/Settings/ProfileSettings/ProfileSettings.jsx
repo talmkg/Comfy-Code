@@ -1,13 +1,17 @@
 import { useState } from "react";
 import { Button, Form, InputGroup } from "react-bootstrap";
 import { MdDone } from "react-icons/md";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "./styles.css";
 //datepicker
 import { format } from "date-fns";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import { useEffect } from "react";
+import {
+  updateMyProfile,
+  updateMyProfilePicture,
+} from "../../../redux/actions";
 //
 
 const css = `
@@ -32,21 +36,67 @@ const css = `
 
 const ProfileSettings = () => {
   const LoggedInUser = useSelector((state) => state.LoggedInUser[0]);
-  const [username, setUsername] = useState(LoggedInUser.username);
+  const [username, setUsername] = useState(LoggedInUser?.username);
   const [location, setLocation] = useState(LoggedInUser?.location);
   const [birthday, setBirthday] = useState(LoggedInUser?.birthday);
+  const [name, setName] = useState(LoggedInUser?.name);
+  const [surname, setSurname] = useState(LoggedInUser?.surname);
   const [bio, setBio] = useState(LoggedInUser?.bio);
+  const [pfp, setPfp] = useState(LoggedInUser?.pfp);
+  const [pfpchangeindicator, setpfpchangeindicator] = useState(false);
   //datepicker
   const [selected, setSelected] = useState(undefined);
   //
   const [active, setActive] = useState(false);
-
+  const dispatch = useDispatch();
   useEffect(() => {
     if (selected) {
       setBirthday(selected.toLocaleDateString("en-US"));
     }
   }, [selected]);
+  const updateUsersData = () => {
+    const data = {};
+    if (username !== LoggedInUser?.username) {
+      data["username"] =
+        username !== LoggedInUser.username ? username : LoggedInUser.username;
+    }
+    if (location !== LoggedInUser?.location) {
+      data["location"] =
+        location !== LoggedInUser.location ? location : LoggedInUser.location;
+    }
+    if (birthday !== LoggedInUser?.birthday) {
+      data["birthday"] =
+        birthday !== LoggedInUser.birthday ? birthday : LoggedInUser.birthday;
+    }
+    if (bio !== LoggedInUser?.bio) {
+      data["bio"] = bio !== LoggedInUser.bio ? bio : LoggedInUser.bio;
+    }
+    if (name !== LoggedInUser?.name) {
+      data["name"] = name !== LoggedInUser.name ? name : LoggedInUser.name;
+    }
+    if (surname !== LoggedInUser?.surname) {
+      data["surname"] =
+        surname !== LoggedInUser.surname ? surname : LoggedInUser.surname;
+    }
 
+    if (pfp !== LoggedInUser?.pfp) {
+      const formData = new FormData();
+      formData.append("pfp", pfp);
+      dispatch(updateMyProfilePicture(formData));
+      setpfpchangeindicator(false);
+    }
+    if (
+      username !== LoggedInUser.username ||
+      bio !== LoggedInUser?.bio ||
+      location !== LoggedInUser?.location ||
+      birthday !== LoggedInUser?.birthday ||
+      name !== LoggedInUser?.name ||
+      surname !== LoggedInUser?.surname
+    ) {
+      dispatch(updateMyProfile(data));
+      console.log(data);
+    }
+  };
   const setBirthdayFunc = () => {
     if (active === false) {
       setActive(true);
@@ -64,6 +114,15 @@ const ProfileSettings = () => {
       elem.classList.add("d-none");
     }
   };
+  const selectPFP = () => {
+    document.getElementById("choosePFP").click();
+  };
+
+  const setStatePFP = (e) => {
+    setpfpchangeindicator(true);
+    setPfp(e.target.files[0]);
+  };
+
   return (
     <>
       <style>{css}</style>
@@ -83,13 +142,27 @@ const ProfileSettings = () => {
               className="position-absolute h-100 w-25 d-flex align-items-center"
               style={{ left: 0 }}
             >
-              <div className="d-flex flex-column justify-content-center align-items-center">
+              <div className="d-flex flex-column justify-content-center align-items-center mx-2">
                 <img
                   src={LoggedInUser.pfp}
-                  style={{ borderRadius: "50%" }}
-                  className="w-75 pb-2"
+                  style={{
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                    width: "120px",
+                    height: "120px",
+                  }}
+                  className=" pb-2"
                 />
-                <Button className="edit-prof-buttons">Change avatar</Button>
+                <Button className="edit-prof-buttons" onClick={selectPFP}>
+                  Change avatar
+                </Button>
+                <Form.Control
+                  style={{ display: "none" }}
+                  onChange={(e) => setStatePFP(e)}
+                  type="file"
+                  id="choosePFP"
+                  accept=".jpg, .jpeg, .png"
+                />
               </div>
             </div>
             <div className="position-absolute p-3" style={{ top: 0, right: 0 }}>
@@ -106,6 +179,26 @@ const ProfileSettings = () => {
               placeholder="Enter your new username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
+            />
+          </Form.Group>
+          <Form.Group className="pt-3">
+            <Form.Label>Name</Form.Label>
+            <Form.Control
+              type="name"
+              className="custom-input-settings"
+              placeholder="Enter your new username"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </Form.Group>
+          <Form.Group className="pt-3">
+            <Form.Label>Surname</Form.Label>
+            <Form.Control
+              type="surname"
+              className="custom-input-settings"
+              placeholder="Enter your new username"
+              value={surname}
+              onChange={(e) => setSurname(e.target.value)}
             />
           </Form.Group>
           <Form.Group className="pt-3">
@@ -165,9 +258,15 @@ const ProfileSettings = () => {
         {username !== LoggedInUser.username ||
         bio !== LoggedInUser?.bio ||
         location !== LoggedInUser?.location ||
-        birthday !== LoggedInUser?.birthday ? (
+        birthday !== LoggedInUser?.birthday ||
+        name !== LoggedInUser?.name ||
+        surname !== LoggedInUser?.surname ||
+        pfpchangeindicator === true ? (
           <div className="position-fixed bottom-center d-flex align-items-end justify-content-center">
-            <Button className="gradient-button rounded-3 d-flex align-items-center">
+            <Button
+              className="gradient-button rounded-3 d-flex align-items-center"
+              onClick={updateUsersData}
+            >
               <span className="pe-1">Save</span> <MdDone size={20} />
             </Button>
           </div>

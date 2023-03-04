@@ -14,6 +14,7 @@ export const FETCH_NOTIFICATIONS = "FETCH_NOTIFICATIONS";
 export const CONNECTED_TO_SOCKET = "CONNECTED_TO_SOCKET";
 export const GENERAL_CHAT_HISTORY = "GENERAL_CHAT_HISTORY";
 export const SOCKET_USERS_LIST = "SOCKET_USERS_LIST";
+export const FETCH_BADGES = "FETCH_BADGES";
 
 const socket = io("http://localhost:3002", { transports: ["websocket"] });
 
@@ -249,7 +250,6 @@ export const createGroup = (title, description, hashtags, formData, onHide) => {
 };
 export const putUserById = (userid, data) => {
   console.log("Fetching");
-
   return async (dispatch, getState) => {
     const options = {
       method: "PUT",
@@ -544,22 +544,16 @@ export const sendMessage = (LoggedInUser, message) => {
 };
 
 export const connectToSocketFunction = (LoggedInUser) => {
-  console.log("check1");
   return async (dispatch, getState) => {
-    console.log("check1.5");
     const general_chat_history = getState().general_chat_history;
     const notifications = getState().notifications;
     try {
-      console.log("check2");
       socket.emit("setUsername", LoggedInUser);
 
       //
       //
       socket.on("welcome", (welcomeMessage) => {
-        console.log("welcome message");
         socket.on("loggedIn", (onlineUsersList) => {
-          console.log("connected");
-
           dispatch({
             type: CONNECTED_TO_SOCKET,
             payload: true,
@@ -570,7 +564,6 @@ export const connectToSocketFunction = (LoggedInUser) => {
           });
         });
         socket.on("updateOnlineUsersList", (onlineUsersList) => {
-          console.log("users list updated");
           dispatch({
             type: SOCKET_USERS_LIST,
             payload: onlineUsersList,
@@ -579,7 +572,7 @@ export const connectToSocketFunction = (LoggedInUser) => {
         socket.on("notification", (notification) => {
           const audio = new Audio(sound);
           audio.play();
-          console.log("you've got new notification");
+
           dispatch({
             type: FETCH_NOTIFICATIONS,
             payload: [...notifications, notification],
@@ -629,5 +622,116 @@ export const sendNotification = (userid, text) => {
     };
 
     socket.emit("notification", newMessage);
+  };
+};
+export const fetchBadges = () => {
+  return async (dispatch, getState) => {
+    dispatch({
+      type: LOADING,
+      payload: true,
+    });
+    try {
+      const response = await fetch("http://localhost:3002/badges");
+      if (response.ok) {
+        let badges = await response.json();
+        console.log("badges updated.");
+        dispatch({
+          type: FETCH_BADGES,
+          payload: badges,
+        });
+      } else {
+        console.log("Error fetching data");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+export const updateMyProfile = (data) => {
+  console.log("Fetching");
+  return async (dispatch, getState) => {
+    const token = getState().token;
+    const user = getState().LoggedInUser[0];
+    const options = {
+      method: "PUT",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    try {
+      fetch(`http://localhost:3002/users/${user._id}`, options)
+        .then((response) => response.json())
+        .then((user) => {
+          if (user) {
+            console.log("user edited succesfully");
+            dispatch(fetchLoginnedUser());
+          } else {
+            console.log("Error fetching user.");
+          }
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+export const updateMyProfilePicture = (data) => {
+  console.log("changing pfp");
+
+  return async (dispatch, getState) => {
+    dispatch({
+      type: LOADING,
+      payload: true,
+    });
+    const token = getState().token;
+    const user = getState().LoggedInUser[0];
+    console.log("token check", token);
+    const options = {
+      method: "PUT",
+      body: data,
+    };
+    try {
+      fetch(`http://localhost:3002/users/${user._id}/pfp`, options).then(
+        (user) => {
+          if (user) {
+            console.log("user edited succesfully");
+            dispatch(fetchLoginnedUser());
+          } else {
+            console.log("Error fetching user.");
+          }
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+export const updateMyProfileBackground = (data) => {
+  console.log("Fetching");
+  return async (dispatch, getState) => {
+    const token = getState().token;
+    const options = {
+      method: "PUT",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    try {
+      fetch(`http://localhost:3002/users/background`, options)
+        .then((response) => response.json())
+        .then((user) => {
+          if (user) {
+            console.log("user edited succesfully");
+            dispatch(fetchLoginnedUser());
+          } else {
+            console.log("Error fetching user.");
+          }
+        });
+    } catch (error) {
+      console.log(error);
+    }
   };
 };

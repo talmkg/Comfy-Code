@@ -21,7 +21,6 @@ const Settings = () => {
     setPrevious(current_button);
     setCurrentWindow(page_element);
     const elem = document.getElementById(`${current_button}`);
-    console.log("id found", elem);
     if (prev) {
       const elem_prev = document.getElementById(`${prev}`);
       elem_prev.classList.remove("active-side-settings-button");
