@@ -8,7 +8,11 @@ import {
   Col,
 } from "react-bootstrap";
 import { FaUpload, FaUsers } from "react-icons/fa";
-import { MdOutlineEdit } from "react-icons/md";
+import {
+  MdOutlineEdit,
+  MdOutlineExplore,
+  MdOutlineNotificationsNone,
+} from "react-icons/md";
 import { useEffect, useState } from "react";
 
 import React from "react";
@@ -20,6 +24,9 @@ import {
 } from "react-icons/ai";
 import { BsLock, BsUnlock } from "react-icons/bs";
 import { FaRegPaperPlane } from "react-icons/fa";
+import { GrHomeRounded } from "react-icons/gr";
+import { CgProfile } from "react-icons/cg";
+import { FiSettings } from "react-icons/fi";
 import "./styles.css";
 import { useDispatch, useSelector } from "react-redux";
 import { createGroup, getHashtags, LOGIN, TOKEN } from "../../redux/actions";
@@ -27,6 +34,8 @@ import { Link, useNavigate } from "react-router-dom";
 import UsersModal from "../Mini_Components/InviteModal";
 import TeamSizeSelect from "../Mini_Components/TeamSizeSelect/TeamSizeSelect";
 import languages from "../../Data/Languages/Languages.json";
+import { BiHome, BiLogOut } from "react-icons/bi";
+import { IoChatbubblesOutline } from "react-icons/io5";
 
 function MyVerticallyCenteredModal(props) {
   const [usersModalShow, setUsersModalShow] = React.useState(false);
@@ -351,6 +360,7 @@ function MyVerticallyCenteredModal(props) {
 }
 const Left_Sidebar = () => {
   const [modalShow, setModalShow] = React.useState(false);
+  const [isOptions, setIsOptions] = useState(false);
   const LoggedInUser = useSelector((state) => state?.LoggedInUser[0]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -366,62 +376,146 @@ const Left_Sidebar = () => {
 
     navigate("/login");
   };
-
+  const options = () => {
+    console.log("toggle");
+    const elem = document.getElementById("toggle");
+    elem.click();
+  };
+  useEffect(() => {
+    console.log(isOptions);
+  });
   if (!LoggedInUser) {
     return <div></div>;
   } else {
     return (
       <>
-        <div
-          // className="position-sticky glass"
-          className="position-sticky"
-          style={{
-            backgroundColor: "#1F1D2D",
-            width: "15vw",
-            minWidth: "250px",
-            height: "100vh",
-            left: 0,
-            top: 0,
-            bottom: 0,
-            zIndex: "99",
-            borderRight: "1px solid rgba(255, 255, 255, 0.192)",
-          }}
-          id="main"
-        >
-          <div className="mt-3">
-            <div className="w-100">
-              <div className="text-center pt-4 pb-2">
-                <Dropdown
-                  drop="down-centered"
-                  key="down-centered"
-                  id="dropdown-button-drop-down-centered"
-                >
-                  <Dropdown.Toggle className="bg-light-color">
-                    @{LoggedInUser?.username}
-                  </Dropdown.Toggle>
-
-                  <Dropdown.Menu className="text-light bg-light-color">
-                    <Dropdown.Item
-                      onClick={Logout}
-                      className="text-center text-light"
-                      id="dropdown-buttons"
-                    >
-                      Log out
-                    </Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
-              </div>
-              <div className="d-flex justify-content-center pb-5 pt-2">
+        <div id="left-sidebar">
+          <div className="h-100 w-100">
+            <div className="w-100 h-100 " id="left-sidebar-content-sm">
+              <div className="d-flex justify-content-center position-relative">
                 <img
+                  id="pfp-left-sidebar"
                   src={LoggedInUser?.pfp}
+                  style={{
+                    borderRadius: "25%",
+                    objectFit: "cover",
+                    width: "60px",
+                    height: "60px",
+                  }}
+                  onClick={(e) => {
+                    setIsOptions(isOptions ? false : true);
+                  }}
+                />
+                <div
+                  id="center-bottom"
+                  style={{
+                    backgroundColor: "#2a273d",
+                    height: "max-content",
+                    width: "150px",
+                    display: isOptions ? "block" : "none",
+                  }}
+                  className="rounded-2 p-1 "
+                >
+                  <Button
+                    size="sm"
+                    className="options-left-sidebar-button danger-button"
+                    onClick={Logout}
+                  >
+                    <BiLogOut size={20} className="me-2" />
+                    Sign out
+                  </Button>
+                </div>
+              </div>
+              <div>
+                <Link to="/home" className="center-flex">
+                  <Button className="sidebar-button-rounded">
+                    <BiHome size={25} />
+                  </Button>
+                </Link>
+              </div>
+              <div>
+                <div className="center-flex">
+                  <Button className="sidebar-button-rounded">
+                    <MdOutlineNotificationsNone size={25} />
+                  </Button>
+                </div>
+              </div>
+              <div>
+                <div className="center-flex">
+                  <Button className="sidebar-button-rounded">
+                    <IoChatbubblesOutline size={25} />
+                  </Button>
+                </div>
+              </div>
+
+              <div>
+                <div className="center-flex">
+                  <Button className="sidebar-button-rounded">
+                    <MdOutlineExplore size={25} />
+                  </Button>
+                </div>
+              </div>
+              <div>
+                <Link to="/profile" className="center-flex pb-2">
+                  <Button className="sidebar-button-rounded">
+                    <CgProfile size={25} />
+                  </Button>
+                </Link>
+              </div>
+              <hr className="text-light mx-2 me-2" />
+              <div>
+                <Link to="/settings" className="center-flex pb-2">
+                  <Button className="sidebar-button-rounded">
+                    <FiSettings size={25} />
+                  </Button>
+                </Link>
+              </div>
+
+              <div className="d-flex justify-content-center">
+                <Button
+                  className="gradient-button center-flex"
+                  onClick={() => setModalShow(true)}
+                >
+                  <MdOutlineEdit size={25} />
+                </Button>
+              </div>
+            </div>
+            <div className="w-100 h-100" id="left-sidebar-content-xl">
+              <div className="d-flex flex-column justify-content-center align-items-center position-relative">
+                <img
+                  id="pfp-left-sidebar"
+                  src={LoggedInUser?.pfp}
+                  onClick={(e) => {
+                    setIsOptions(isOptions ? false : true);
+                  }}
                   style={{
                     borderRadius: "50%",
                     objectFit: "cover",
-                    width: "170px",
-                    height: "170px",
+                    width: "150px",
+                    height: "150px",
                   }}
                 />
+                <div
+                  id="center-bottom"
+                  style={{
+                    backgroundColor: "#2a273d",
+                    height: "max-content",
+                    width: "150px",
+                    display: isOptions ? "block" : "none",
+                  }}
+                  className="rounded-2 p-1 "
+                >
+                  <Button
+                    size="sm"
+                    className="options-left-sidebar-button danger-button"
+                    onClick={Logout}
+                  >
+                    <BiLogOut size={20} className="me-2" />
+                    Sign out
+                  </Button>
+                </div>
               </div>
+
               <div>
                 <Link to="/home" className="sidebar-button-div">
                   <Button className="sidebar-button">
@@ -452,7 +546,7 @@ const Left_Sidebar = () => {
                 </div>
               </div>
               <div>
-                <Link to="/profile" className="sidebar-button-div pb-2">
+                <Link to="/profile" className="sidebar-button-div ">
                   <Button className="sidebar-button">
                     <span>Profile</span>
                   </Button>
@@ -460,24 +554,22 @@ const Left_Sidebar = () => {
               </div>
               <hr className="text-light mx-2 me-2" />
               <div>
-                <Link to="/settings" className="sidebar-button-div pb-2">
+                <Link to="/settings" className="sidebar-button-div mb-2">
                   <Button className="sidebar-button">
                     <span>Settings</span>
                   </Button>
                 </Link>
               </div>
 
-              <div className="d-flex justify-content-center">
+              <div className="center-flex">
                 <Button
-                  className="gradient-button center-flex m-11 w-75 rounded-5"
+                  className="gradient-button center-flex w-75 rounded-5"
                   onClick={() => setModalShow(true)}
                 >
                   <span className="d-flex align-items-center mx-1">
                     <MdOutlineEdit size={22} />
                   </span>
-                  <span className="d-flex align-items-center">
-                    Create a group
-                  </span>
+                  <span className="d-flex align-items-center">Post</span>
                 </Button>
               </div>
             </div>

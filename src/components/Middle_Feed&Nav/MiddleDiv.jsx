@@ -19,14 +19,13 @@ const MiddleDiv = () => {
   return (
     <>
       <div
-        className="flex-fill "
+        className="flex-fill"
         style={{
-          maxWidth: "65vw",
           width: "100%",
-          // minHeight: "150vh",
+          height: "100%",
           background: "transparent",
           backgroundColor: "#191724",
-          //added this
+          // overflow: "hidden",
         }}
       >
         <div className="h-100">
@@ -42,7 +41,7 @@ const MiddleDiv = () => {
             ) : (
               <></>
             )}
-            <Row className="mt-4 ">
+            <Row>
               {groups?.map((post, i) => {
                 return (
                   <Col

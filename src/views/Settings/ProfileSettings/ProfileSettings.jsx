@@ -139,21 +139,25 @@ const ProfileSettings = () => {
             }}
           >
             <div
-              className="position-absolute h-100 w-25 d-flex align-items-center"
-              style={{ left: 0 }}
+              className="position-absolute h-100 d-flex align-items-center"
+              style={{ left: 0, width: "max-content" }}
             >
-              <div className="d-flex flex-column justify-content-center align-items-center mx-2">
+              <div className="d-flex flex-column justify-content-center align-items-center mx-3">
                 <img
                   src={LoggedInUser.pfp}
                   style={{
                     borderRadius: "50%",
                     objectFit: "cover",
-                    width: "120px",
-                    height: "120px",
+                    width: "100px",
+                    height: "100px",
                   }}
-                  className=" pb-2"
+                  className="mb-2"
                 />
-                <Button className="edit-prof-buttons" onClick={selectPFP}>
+                <Button
+                  size="sm"
+                  className="edit-prof-buttons"
+                  onClick={selectPFP}
+                >
                   Change avatar
                 </Button>
                 <Form.Control
@@ -165,8 +169,10 @@ const ProfileSettings = () => {
                 />
               </div>
             </div>
-            <div className="position-absolute p-3" style={{ top: 0, right: 0 }}>
-              <Button className="edit-prof-buttons">Change background</Button>
+            <div className="position-absolute p-2" style={{ top: 0, right: 0 }}>
+              <Button size="sm" className="edit-prof-buttons">
+                Change background
+              </Button>
             </div>
           </div>
         </div>

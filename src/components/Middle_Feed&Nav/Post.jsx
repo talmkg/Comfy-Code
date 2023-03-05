@@ -54,9 +54,9 @@ const Post = (props) => {
   return (
     <>
       <Card
-        className="text-light mt-3 mb-3 "
+        className="text-light mt-3 mb-4"
         style={{
-          maxWidth: width ? width : "50%",
+          maxWidth: width ? width : "700px",
           width: "100%",
           cursor: "pointer",
           backgroundColor: "#232133",
@@ -157,7 +157,7 @@ const Post = (props) => {
               className="w-100"
               style={{
                 backgroundImage: `linear-gradient(180deg, rgba(255,0,0,0) 0%, rgba(25,23,36,1) 100%), url(${imageUrl})`,
-                height: "200px",
+                height: "300px",
                 backgroundPosition: "center",
                 // objectFit: "cover",
                 backgroundSize:

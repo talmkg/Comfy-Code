@@ -55,20 +55,7 @@ const Right_Sidebar = () => {
     return <div></div>;
   } else {
     return (
-      <div
-        className="position-sticky"
-        style={{
-          backgroundColor: "#191724",
-          width: "20vw",
-          height: "100vh",
-          right: 0,
-          top: 0,
-          bottom: 0,
-          borderLeft: "1px solid rgba(255, 255, 255, 0.192)",
-          zIndex: "0",
-          overflow: "hidden",
-        }}
-      >
+      <div id="right-sidebar">
         <div className="p-3 pb-2 pt-4" style={{ height: "40vh" }}>
           <Card
             className="text-light h-100"

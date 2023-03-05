@@ -5,14 +5,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
-#navbar {
-  /* From https://css.glass */
-  background: rgba(25, 23, 36, 0.84) !important;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
-  backdrop-filter: blur(5.5px) !important;
-  -webkit-backdrop-filter: blur(5.5px) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.192) !important;
-}
+
 .active-button {
   color: #c4a7e7 !important;
   background: #373249 !important;
@@ -30,7 +23,6 @@
 .sidebar-button {
   color: #dbccec !important;
   background: none !important;
-  border-radius: none !important;
   border: none !important;
   padding: 0.5rem !important;
   border-radius: 15px !important;
@@ -45,14 +37,23 @@
   background: #373249 !important;
   border: none !important;
 }
+.sidebar-button-rounded {
+  color: #dbccec !important;
+  background: none !important;
+  border: none !important;
+  padding: 0.5rem !important;
+  margin: 0.25rem 0 0.25rem 0;
+  border-radius: 50% !important;
+}
+
 .danger-button {
   color: #e66666 !important;
   background: none !important;
   border-radius: none !important;
   border: none !important;
   font-size: 16px !important;
-  padding: 0.5rem !important;
 }
+
 .danger-button:hover {
   background: #493247 !important;
 }

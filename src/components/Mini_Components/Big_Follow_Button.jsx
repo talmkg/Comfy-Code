@@ -23,8 +23,8 @@ const Big_Follow_Button = (id) => {
           className="gradient-button p-1 d-flex align-items-center justify-content-center me-2"
           style={{
             borderRadius: "10px",
-            width: "120px",
-            height: "40px",
+            width: "110px",
+            height: "35px",
           }}
           onClick={Unfollow}
         >
@@ -38,8 +38,8 @@ const Big_Follow_Button = (id) => {
           className="gradient-button p-1 d-flex align-items-center justify-content-center me-2"
           style={{
             borderRadius: "10px",
-            width: "120px",
-            height: "40px",
+            width: "110px",
+            height: "35px",
           }}
           onClick={Follow}
         >

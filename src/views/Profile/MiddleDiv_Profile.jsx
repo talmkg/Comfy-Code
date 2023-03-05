@@ -53,7 +53,6 @@ const MiddleDiv_Profile = (userProps) => {
       <div
         className="flex-fill text-color"
         style={{
-          maxWidth: "65vw",
           width: "100%",
           backgroundColor: "#191724",
         }}
@@ -95,33 +94,34 @@ const MiddleDiv_Profile = (userProps) => {
                 }}
               >
                 <div
-                  className="mx-4 d-flex align-items-center"
+                  className="mx-3 d-flex align-items-center"
                   style={{ position: "absolute", bottom: "-10%" }}
                 >
                   <img
                     src={user?.pfp}
                     style={{
-                      width: "170px",
                       aspectRatio: 1 / 1,
+                      width: "25%",
                       objectFit: "cover",
                     }}
-                    className="rounded-circle me-3"
+                    className="rounded-circle me-2"
                   />
                   <div className="text-light">
-                    <div style={{ fontSize: "20px" }}>
+                    <div style={{ fontSize: "18px" }}>
                       {user?.name} {user?.surname}
                     </div>
-                    <div className="text-light" style={{ fontSize: "18px" }}>
+                    <div className="text-light" style={{ fontSize: "17px" }}>
                       @{user?.username}
                     </div>
                   </div>
                 </div>
                 {params.userId ? (
                   <div
+                    className="mx-3"
                     style={{
                       position: "absolute",
-                      bottom: "-20px",
-                      right: "50px",
+                      bottom: "-15px",
+                      right: 0,
                     }}
                   >
                     <Big_Follow_Button id={user._id} />
@@ -146,7 +146,9 @@ const MiddleDiv_Profile = (userProps) => {
                     {user.bio}
                   </div>
                 ) : (
-                  "Nothing here... yet."
+                  <div className="center-flex h-100 w-100">
+                    "Nothing here... yet."
+                  </div>
                 )}
               </div>
               <div
@@ -169,26 +171,21 @@ const MiddleDiv_Profile = (userProps) => {
               </div>
               <div className="" style={{ height: "20%" }}>
                 <Row className="h-100 g-0">
-                  <Col xs={12} lg={3} className="center-flex text-color">
-                    <div>
-                      <div className="text-center">
+                  <Col xs={4} className="center-flex text-color">
+                    <div className="w-100">
+                      <div className="w-100 text-center">
                         Member of {myGroups?.memberOf?.length} group('s)
                       </div>
                     </div>
                   </Col>
-                  <Col xs={12} lg={3} className="center-flex text-color">
-                    <div>
-                      <div className="text-center"></div>Leader of{" "}
-                      {myGroups.leaderOf?.length} group('s)
-                    </div>
-                  </Col>
-                  <Col xs={12} lg={3} className="center-flex text-color">
+
+                  <Col xs={4} className="center-flex text-color">
                     <div>
                       <div className="text-center"></div>
                       {user.follows?.length} Following<div></div>
                     </div>
                   </Col>
-                  <Col xs={12} lg={3} className="center-flex text-color">
+                  <Col xs={4} className="center-flex text-color">
                     <div>
                       <div className="text-center"></div>
                       {user.followers?.length} Followers<div></div>

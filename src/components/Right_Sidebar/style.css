@@ -6,3 +6,21 @@
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+#right-sidebar {
+  position: sticky;
+  background-color: #191724;
+  width: 350px;
+  min-width: 350px;
+  height: 100vh;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  border-left: 1px solid rgba(255, 255, 255, 0.192);
+  z-index: 0;
+  overflow: hidden;
+}
+@media only screen and (max-width: 1090px) {
+  #right-sidebar {
+    display: none;
+  }
+}

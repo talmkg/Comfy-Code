@@ -1,6 +1,6 @@
 import { Dropdown, Navbar } from "react-bootstrap";
 import { IoEarthSharp, IoPeople } from "react-icons/io5";
-
+import "./styles.css";
 const GlobalTopNav = () => {
   return (
     <div
@@ -8,6 +8,8 @@ const GlobalTopNav = () => {
       style={{
         position: "sticky",
         top: "0",
+        right: "0",
+        left: "0",
         zIndex: 1,
       }}
     >
@@ -15,26 +17,22 @@ const GlobalTopNav = () => {
         id="navbar"
         style={{
           height: "6vh",
-          padding: 0,
         }}
-        className="d-flex justify-content-between"
+        className="d-flex justify-content-between p-1 h-100 w-100"
       >
         <div className="d-flex align-items-center h-100">
           <div
-            className=" mx-3 d-flex align-items-center rounded-2 p-2"
+            className=" mx-3 d-flex align-items-center rounded-2 h-100 p-2"
             style={{ backgroundColor: "#322E4F" }}
           >
-            <IoEarthSharp size={25} className="me-1" />
+            <IoEarthSharp size={22} className="me-1" />
             Global
           </div>
-          <div
-            className="h-100 d-flex align-items-center me-3"
-            style={{ borderBottom: "3px solid pink" }}
-          >
-            <IoEarthSharp size={25} />
+          <div className="h-100 d-flex align-items-center me-3">
+            <IoEarthSharp size={22} />
           </div>
           <div className="h-100 d-flex align-items-center me-3">
-            <IoPeople size={25} />
+            <IoPeople size={22} />
           </div>
         </div>
 

@@ -32,13 +32,12 @@ const Settings = () => {
       <div
         className="flex-fill text-light overflow-hidden"
         style={{
-          maxWidth: "65vw",
-          width: "65vw",
+          width: "100%",
           backgroundColor: "#191724",
         }}
       >
         <div className="w-100 h-100 d-flex justify-content-center mt-4">
-          <div className="w-75 h-100 rounded-top">
+          <div className="h-100 rounded-top" style={{ width: "850px" }}>
             <Row className="w-100 h-100 g-0 position-relative ">
               <Col xs={4} className=" rounded-top flex-column p-2">
                 <Button
