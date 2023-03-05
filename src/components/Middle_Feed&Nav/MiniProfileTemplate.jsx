@@ -108,6 +108,28 @@ const MiniProfileTemplate = (member) => {
               <p className="m-0 text">{member.bio}</p>
             </div>
           </Col>
+          <Col xs={12} className="d-flex">
+            <div className="w-100 h-100 d-flex justify-content-start">
+              {member?.badges?.map((badge, i) => {
+                return (
+                  <div key={i} className="d-flex justify-content-start">
+                    <div
+                      className="p-1 pb-2 d-flex align-items-center"
+                      style={{
+                        cursor: "pointer",
+                      }}
+                    >
+                      <img
+                        src={badge.icon}
+                        className="me-1"
+                        style={{ width: "40px", height: "40px" }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </Col>
           <Col xs={12}>
             <Button className="w-100 rounded-0 rounded-bottom gradient-button center-flex">
               <span className="me-2">Send a message</span>

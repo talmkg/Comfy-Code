@@ -7,17 +7,14 @@ const Profile = () => {
   const LoggedInUser = useSelector((state) => state.LoggedInUser[0]);
   const [user, setUser] = useState([]);
   const dispatch = useDispatch();
-
   const params = useParams();
   let userId;
   const paramsLength = Object.keys(params).length;
-
   if (paramsLength !== 0) {
     userId = params.userId;
   }
   useEffect(() => {
     if (userId) {
-      console.log(params.userId);
       dispatch(fetchUserById(userId, setUser));
     }
   }, []);

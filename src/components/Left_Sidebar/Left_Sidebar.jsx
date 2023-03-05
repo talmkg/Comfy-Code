@@ -57,7 +57,6 @@ function MyVerticallyCenteredModal(props) {
     useState(false);
   const [customHashtagInput, setCustomHashtagInput] = useState("");
   const createAPost = () => {
-    console.log("image check: ", image);
     const formData = new FormData();
     formData.append("cover", image);
 
@@ -72,15 +71,11 @@ function MyVerticallyCenteredModal(props) {
   const onHide = props.onHide;
 
   const addHashtag = (hashtag) => {
-    console.log(hashtag);
     if (hashtags.includes(hashtag)) {
-      console.log("ALREADY EXISTS!");
       const filtered = hashtags.filter((obj) => obj._id !== hashtag._id);
       setHashtags(filtered);
-      console.log(hashtags);
     } else {
       setHashtags([...hashtags, hashtag]);
-      console.log(hashtags);
     }
   };
   const addCustomHashtag = () => {
@@ -92,7 +87,6 @@ function MyVerticallyCenteredModal(props) {
     const hashtag = { title: `#${customHashtagInput}` };
     setHashtags([...hashtags, hashtag]);
     setReduxHashtags([...Hashtags, hashtag]);
-    console.log("if its here, then its added", hashtags);
     setCustomHashtagInput("");
   };
   const changePrivacy = () => {
@@ -190,6 +184,7 @@ function MyVerticallyCenteredModal(props) {
                 } else {
                   return (
                     <div
+                      key={index}
                       className=" rounded-3 p-1 px-2 pe-2 mb-2 mx-1"
                       style={{
                         backgroundColor: "#46395b",
@@ -285,7 +280,7 @@ function MyVerticallyCenteredModal(props) {
                   {languages.map((language, index) => {
                     if (language.name === "English") {
                       return (
-                        <option key={index} value={[index]} selected>
+                        <option key={index} selected>
                           {language.name}
                         </option>
                       );
@@ -327,8 +322,7 @@ function MyVerticallyCenteredModal(props) {
               <div className="active-button flex-column">
                 <div>
                   1. Team-Leader: {LoggedInUser?.username} |{" "}
-                  {LoggedInUser?.name}
-                  {LoggedInUser?.surname}
+                  {LoggedInUser?.name} {LoggedInUser?.surname}
                 </div>
               </div>
             </div>

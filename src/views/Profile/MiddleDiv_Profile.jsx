@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { Col, Container, Row, Spinner } from "react-bootstrap";
+import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
 import { MdCalendarToday, MdOutlineCake } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Post from "../../components/Middle_Feed&Nav/Post";
 import Big_Follow_Button from "../../components/Mini_Components/Big_Follow_Button";
 import Follow_Button from "../../components/Mini_Components/Follow_Button";
@@ -19,18 +19,25 @@ import { getTokenFromStore } from "../../redux/store";
 import "./styles.css";
 const MiddleDiv_Profile = (userProps) => {
   const loading = useSelector((state) => state.loading);
+  const LoggedInUser = useSelector((state) => state.LoggedInUser[0]);
+
   const [usersGroups, setUsersGroups] = useState([]);
   const dispatch = useDispatch();
   const user = userProps;
   const myGroups = useSelector((state) => state?.usersGroups);
   const params = useParams();
 
+  //posts
+  const [posts, setPosts] = useState([]);
   useEffect(() => {
+    //if another or myself
     if (params.userId) {
       dispatch(fetchSomeonesGroups(params.userId, setUsersGroups));
+      dispatch(fetchUsersPosts(params.userId, setPosts));
     } else {
       dispatch(fetchLoginnedUser());
       dispatch(fetchUsersGroups());
+      dispatch(fetchUsersPosts(LoggedInUser._id, setPosts));
     }
   }, []);
 
@@ -38,7 +45,9 @@ const MiddleDiv_Profile = (userProps) => {
   let day = objectDate.getDate();
   let month = objectDate.getMonth();
   let year = objectDate.getFullYear();
-
+  useEffect(() => {
+    console.log(posts);
+  }, []);
   return (
     <>
       <div
@@ -171,7 +180,6 @@ const MiddleDiv_Profile = (userProps) => {
                     <div>
                       <div className="text-center"></div>Leader of{" "}
                       {myGroups.leaderOf?.length} group('s)
-                      <div></div>
                     </div>
                   </Col>
                   <Col xs={12} lg={3} className="center-flex text-color">
@@ -197,34 +205,80 @@ const MiddleDiv_Profile = (userProps) => {
           >
             <div className="d-flex justify-content-center pt-3 pb-3 w-100">
               <div className="w-75 d-flex justify-content-center">
-                <Row
-                  className="d-flex justify-content-center glass p-3 g-0 scrollbar w-100"
+                <div
+                  className=" glass p-3 g-0 scrollbar w-100"
                   style={{
                     overflow: "hidden visible",
                   }}
                 >
-                  {/* {params.userId ? (
-                    <>
-                      {usersGroups?.map((post, i) => {
-                        return (
-                          <Col xs={12} key={i}>
-                            <Post {...post} width="100%" />
-                          </Col>
-                        );
-                      })}
-                    </>
-                  ) : (
-                    <>
-                      {myGroups?.memberOf?.map((post, i) => {
-                        return (
-                          <Col xs={12} key={i}>
-                            <Post {...post} width="100%" />
-                          </Col>
-                        );
-                      })}
-                    </>
-                  )} */}
-                </Row>
+                  <div
+                    className="w-100 rounded-5 d-flex justify-content-between"
+                    style={{
+                      height: "60px",
+                      position: "sticky",
+                      top: 0,
+                      backgroundColor: "#1F1D2D",
+                    }}
+                  >
+                    <div style={{ width: "33%" }} className="center-flex">
+                      <Button className="sidebar-button w-75 h-75">
+                        <span>Posts</span>
+                      </Button>
+                    </div>
+                    <div style={{ width: "33%" }} className="center-flex">
+                      <Button className="sidebar-button w-75 h-75">
+                        <span>Groups</span>
+                      </Button>
+                    </div>
+                    <div style={{ width: "33%" }} className="center-flex">
+                      <Button className="sidebar-button w-75 h-75">
+                        <span>About Me</span>
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="d-flex justify-content-center pt-4">
+                    {posts.map((post, i) => {
+                      return (
+                        <div
+                          key={i}
+                          className="rounded-2 p-2"
+                          style={{
+                            backgroundColor: "#232133",
+                            height: "max-content",
+                            width: "100%",
+                          }}
+                        >
+                          <div className="d-flex align-items-center">
+                            <img
+                              src={post.creator.pfp}
+                              className="me-2"
+                              style={{
+                                height: "50px",
+                                width: "50px",
+                                objectFit: "cover",
+                                borderRadius: "50%",
+                              }}
+                            />
+
+                            <div className="text-color">
+                              <Link
+                                to={`/profile/${post.creator._id}`}
+                                className="text-light"
+                                style={{ textDecoration: "none" }}
+                              >
+                                <h6 className="p-0 m-0">
+                                  {post.creator.name} {post.creator.surname}
+                                </h6>
+                              </Link>
+                              @{post.creator.username}
+                            </div>
+                          </div>
+                          <div> {post.text}</div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
             </div>
           </div>

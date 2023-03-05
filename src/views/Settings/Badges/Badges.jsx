@@ -1,25 +1,33 @@
 import { useDispatch, useSelector } from "react-redux";
 import React from "react";
-
 import { useState } from "react";
 import codeIcon from "../../../Files/Badges/code.png";
 import javascriptIcon from "../../../Files/Badges/javascript.png";
 import pythonIcon from "../../../Files/Badges/python.png";
 import learningIcon from "../../../Files/Badges/learning.png";
 import { useEffect } from "react";
-import { Col, Row } from "react-bootstrap";
+import { Button, Col, Row } from "react-bootstrap";
 import { fetchBadges } from "../../../redux/actions";
 import MiniProfilePreview from "./MiniProfilePreview";
 import "./styles.css";
+import { MdDone } from "react-icons/md";
+import { updateMyProfile } from "../../../redux/actions";
 const Badges = () => {
   //get badges
-  const [selectedBadges, setSelectedBadges] = useState([]);
+  const user = useSelector((state) => state.LoggedInUser[0]);
+  const [selectedBadges, setSelectedBadges] = useState(user.badges);
   const dispatch = useDispatch();
   const badges = useSelector((state) => state.badges);
-  const user = useSelector((state) => state.LoggedInUser[0]);
+
   useEffect(() => {
     dispatch(fetchBadges());
   }, []);
+  const updateMyBadges = () => {
+    const data = {
+      badges: selectedBadges,
+    };
+    dispatch(updateMyProfile(data));
+  };
   const addBadge = (e) => {
     const alreadyExists = selectedBadges.filter((badge) => badge._id === e._id);
     if (alreadyExists.length !== 0) {
@@ -77,6 +85,18 @@ const Badges = () => {
           </Row>
         </div>
       </div>
+      {selectedBadges !== user.badges ? (
+        <div className="position-fixed bottom-center d-flex align-items-end justify-content-center">
+          <Button
+            className="gradient-button rounded-3 d-flex align-items-center"
+            onClick={updateMyBadges}
+          >
+            <span className="pe-1">Save</span> <MdDone size={20} />
+          </Button>
+        </div>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

@@ -119,6 +119,10 @@ export const fetchUserById = (userid, setUser) => {
         .then((user) => {
           if (user) {
             setUser(user);
+            dispatch({
+              type: LOADING,
+              payload: false,
+            });
           } else {
             console.log("Error fetching user.");
           }
@@ -459,9 +463,7 @@ export const follow = (userid) => {
     if (teamResponse.ok) {
       console.log("You followed this user <3");
       dispatch(fetchLoginnedUser());
-      dispatch(
-        sendNotification(userid, `${LoggedInUser.username} followed you`)
-      );
+      dispatch(sendNotification(userid, `followed you`));
     } else {
       console.log("huh?!");
     }
@@ -485,9 +487,7 @@ export const unfollow = (userid) => {
     if (teamResponse.ok) {
       console.log("You unfollowed this user <3");
       dispatch(fetchLoginnedUser());
-      dispatch(
-        sendNotification(userid, `${LoggedInUser.username} unfollowed you`)
-      );
+      dispatch(sendNotification(userid, `unfollowed you`));
     } else {
       console.log("huh?!");
     }
@@ -515,7 +515,6 @@ export const getNotifications = () => {
           type: FETCH_NOTIFICATIONS,
           payload: notifications,
         });
-        console.log(notifications);
       } else {
         console.log("Error fetching data");
       }
@@ -611,7 +610,6 @@ export const sendNotification = (userid, text) => {
     const toSockedIdFilter = socket_users_list.filter(
       (user) => user._id === userid
     );
-    console.log("right user", toSockedIdFilter);
 
     const newMessage = {
       from: socket.id,
@@ -730,6 +728,26 @@ export const updateMyProfileBackground = (data) => {
             console.log("Error fetching user.");
           }
         });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+export const fetchUsersPosts = (id, setPosts) => {
+  return async (dispatch, getState) => {
+    dispatch({
+      type: LOADING,
+      payload: true,
+    });
+    try {
+      const response = await fetch(`http://localhost:3002/posts/${id}`);
+      if (response.ok) {
+        let posts = await response.json();
+        setPosts(posts);
+        console.log("posts fetched.");
+      } else {
+        console.log("Error fetching data");
+      }
     } catch (error) {
       console.log(error);
     }
