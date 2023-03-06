@@ -117,7 +117,6 @@ function MiniProfilePreview(props) {
           </Col>
           <Col xs={12} className="d-flex">
             <div className="w-100 h-100 d-flex justify-content-start">
-              {" "}
               {props.badges.map((badge, i) => {
                 return (
                   <div key={i} className="d-flex justify-content-start">
