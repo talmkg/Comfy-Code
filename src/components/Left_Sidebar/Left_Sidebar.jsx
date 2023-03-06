@@ -29,13 +29,20 @@ import { CgProfile } from "react-icons/cg";
 import { FiSettings } from "react-icons/fi";
 import "./styles.css";
 import { useDispatch, useSelector } from "react-redux";
-import { createGroup, getHashtags, LOGIN, TOKEN } from "../../redux/actions";
+import {
+  createGroup,
+  createPost,
+  getHashtags,
+  LOGIN,
+  TOKEN,
+} from "../../redux/actions";
 import { Link, useNavigate } from "react-router-dom";
 import UsersModal from "../Mini_Components/InviteModal";
 import TeamSizeSelect from "../Mini_Components/TeamSizeSelect/TeamSizeSelect";
 import languages from "../../Data/Languages/Languages.json";
 import { BiHome, BiLogOut } from "react-icons/bi";
 import { IoChatbubblesOutline } from "react-icons/io5";
+import { RxCross2 } from "react-icons/rx";
 
 function MyVerticallyCenteredModal(props) {
   const [usersModalShow, setUsersModalShow] = React.useState(false);
@@ -56,17 +63,21 @@ function MyVerticallyCenteredModal(props) {
   const dispatch = useDispatch();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-
   const [hashtags, setHashtags] = useState([]);
   const [isPrivate, setPrivate] = useState(false);
   const [maxMembers, setMaxMembers] = useState(5);
-  const [image, setImage] = useState(undefined);
-
+  const [image, setImage] = useState(false);
+  const [postImage, setPostImage] = useState(undefined);
+  const [postType, setPostType] = useState(true);
+  const [postText, setPostText] = useState("");
+  const [postPreview, setPostPreview] = useState(undefined);
+  const [isImagePreviewOptionOn, setIsImagePreviewOptionOn] = useState(false);
   const [isCustomHashtagInputActive, setCustomHashtagInputActive] =
     useState(false);
   const [customHashtagInput, setCustomHashtagInput] = useState("");
-  const createAPost = () => {
+  const createAGroup = () => {
     const formData = new FormData();
+
     formData.append("cover", image);
 
     dispatch(createGroup(title, description, hashtags, formData, onHide));
@@ -74,11 +85,20 @@ function MyVerticallyCenteredModal(props) {
     setDescription("");
     setHashtags([]);
   };
+  const createAPost = () => {
+    const formData = new FormData();
+    formData.append("text", postText);
+    formData.append("postImage", postImage);
+
+    dispatch(createPost(formData, onHide));
+    setPostText("");
+    setPostImage(undefined);
+    setPostPreview(undefined);
+  };
   const onChangeHandler = (value, fieldToSet) => {
     fieldToSet(value);
   };
   const onHide = props.onHide;
-
   const addHashtag = (hashtag) => {
     if (hashtags.includes(hashtag)) {
       const filtered = hashtags.filter((obj) => obj._id !== hashtag._id);
@@ -90,7 +110,6 @@ function MyVerticallyCenteredModal(props) {
   const addCustomHashtag = () => {
     setCustomHashtagInputActive(true);
   };
-
   const submitNewHashtag = () => {
     setCustomHashtagInputActive(false);
     const hashtag = { title: `#${customHashtagInput}` };
@@ -101,11 +120,18 @@ function MyVerticallyCenteredModal(props) {
   const changePrivacy = () => {
     setPrivate(isPrivate === true ? false : true);
   };
-  // const openFileOption = () => {
-  //   document.getElementById("chooseImage").click();
-  // };
   const imageChangeHandler = (e) => {
     setImage(e.target.files[0]);
+  };
+  const activatePostImageInput = () => {
+    const elem = document.getElementById("chooseImagePost");
+    elem.click();
+  };
+  const postImageChangeHandler = (e) => {
+    setPostImage(e.target.files[0]);
+    const objectUrl = URL.createObjectURL(e.target.files[0]);
+    setPostPreview(objectUrl);
+    return () => URL.revokeObjectURL(objectUrl);
   };
 
   return (
@@ -127,7 +153,7 @@ function MyVerticallyCenteredModal(props) {
             <Button
               className="btn gradient-button d-flex align-items-center justify-content-around"
               style={{ borderRadius: "15px" }}
-              onClick={createAPost}
+              onClick={postType ? createAPost : createAGroup}
             >
               <span className="d-flex align-items-center me-1">Post</span>
               <span className="d-flex align-items-center">
@@ -135,226 +161,374 @@ function MyVerticallyCenteredModal(props) {
               </span>
             </Button>
           </div>
-          <Form.Group className="mb-3">
-            <Form.Control
-              type="Title"
-              className="bg-transparent"
-              style={{ border: "none" }}
-              placeholder="Enter the title of your project"
-              value={title}
-              onChange={(e) => onChangeHandler(e.target.value, setTitle)}
-            />
-          </Form.Group>
-
           <div
-            className="me-3 mx-3"
-            style={{ borderBottom: "1px solid gray" }}
-          ></div>
-          <InputGroup>
-            <Form.Control
-              as="textarea"
-              aria-label="With textarea"
-              className="bg-transparent"
-              style={{ border: "none" }}
-              placeholder="What's on your mind?"
-              value={description}
-              onChange={(e) => onChangeHandler(e.target.value, setDescription)}
-            />
-          </InputGroup>
-
-          <div className="pt-2">
-            <span className="px-2" style={{ color: "#686f7f" }}>
-              Add suitable hashtags
-            </span>
-          </div>
-          <div className="p-3 pt-2 pb-0">
-            <Row className="text-color">
-              {Hashtags.map((hashtag, index) => {
-                const addHashtagInside = function () {
-                  addHashtag(hashtag);
-                };
-
-                if (hashtags.includes(hashtag)) {
-                  return (
-                    <div
-                      key={index}
-                      className=" rounded-3 p-1 px-2 pe-2 mb-2 mx-1"
-                      style={{
-                        backgroundColor: "#362e44",
-                        cursor: "pointer",
-                        width: "max-content",
-                        height: "35px",
-                      }}
-                      onClick={addHashtagInside}
-                    >
-                      {hashtag.title}
-                    </div>
-                  );
-                } else {
-                  return (
-                    <div
-                      key={index}
-                      className=" rounded-3 p-1 px-2 pe-2 mb-2 mx-1"
-                      style={{
-                        backgroundColor: "#46395b",
-                        cursor: "pointer",
-                        width: "max-content",
-                        height: "35px",
-                      }}
-                      id={hashtag._id}
-                      onClick={addHashtagInside}
-                    >
-                      {hashtag.title}
-                    </div>
-                  );
-                }
-              })}
-              <div
-                className="d-flex align-items-center rounded-3 p-1 px-2 pe-2 mb-2 mx-1"
-                id="custom_hashtag_input"
-                style={{
-                  backgroundColor: "#46395b",
-                  cursor: "pointer",
-                  width: "200px",
-                  height: "35px",
+            className="w-100 rounded-5 d-flex justify-content-between"
+            style={{
+              height: "60px",
+              position: "sticky",
+              top: 0,
+            }}
+          >
+            <div style={{ width: "50%" }} className="center-flex">
+              <Button
+                className={`${
+                  postType ? "active-button" : "sidebar-button"
+                } w-75`}
+                onClick={(e) => {
+                  setPostType(true);
                 }}
-                onClick={addCustomHashtag}
               >
-                {isCustomHashtagInputActive === true ? (
-                  <>
-                    <div className="w-100 h-100 d-flex">
-                      <Form.Control
-                        placeholder="#"
-                        value={customHashtagInput}
-                        onChange={(e) =>
-                          onChangeHandler(e.target.value, setCustomHashtagInput)
-                        }
-                        className="bg-transparent border-0 w-75 h-100  "
-                      />
+                <span>Post</span>
+              </Button>
+            </div>
+            <div style={{ width: "50%" }} className="center-flex">
+              <Button
+                className={`${
+                  postType === false ? "active-button" : "sidebar-button"
+                } w-75`}
+                onClick={(e) => {
+                  setPostType(false);
+                }}
+              >
+                <span>Group</span>
+              </Button>
+            </div>
+          </div>
+          {/* 1.nah. true/false. create a switch and fuck it all man */}
+          {/*2. we actually can delete input of a file and leave upload icon. In settings/prof we are already using preview - se once we choose file we can preview it in a small box or in original width.*/}
+          {/*3. Private groups. Once invited, you will be added to an array of accessed-users of this group (only people from this list will be able to join if type===private). You can select people to whom invites will be sent after you create a group (say to users how invites will be sent ofc).*/}
+          {/*4. Finish implementing posting posts and create a route for user's newsfeed - basically last 10 groups + followed user's posts wont wont, since it will start repeating posts or groups in one point. But if you find all groups and needed posts, create a sorted array and then limit - its gonna be perfect.*/}
+          {}
+          {postType ? (
+            <>
+              <div className="post-post w-100 h-100 d-flex flex-column justify-content-between">
+                {" "}
+                <div>
+                  <InputGroup>
+                    <Form.Control
+                      as="textarea"
+                      aria-label="With textarea"
+                      className="bg-transparent"
+                      style={{ border: "none" }}
+                      placeholder="What's on your mind?"
+                      value={postText}
+                      onChange={(e) =>
+                        onChangeHandler(e.target.value, setPostText)
+                      }
+                    />
+                  </InputGroup>
+                </div>
+                <div
+                  className={
+                    postPreview === undefined ? "d-none" : " pe-3 px-3 pb-2"
+                  }
+                >
+                  <div
+                    style={{
+                      width: "20%",
+                      position: "relative",
+                    }}
+                  >
+                    <img
+                      src={postPreview !== undefined ? postPreview : undefined}
+                      className={
+                        postPreview !== undefined
+                          ? "rounded-2 post-image-preview w-100"
+                          : ""
+                      }
+                      onClick={(e) => {
+                        setIsImagePreviewOptionOn(
+                          isImagePreviewOptionOn ? false : true
+                        );
+                      }}
+                      style={{
+                        aspectRatio: postPreview ? "1/1" : "none",
+                        objectFit: "cover",
+                      }}
+                    />
+                    <div className={isImagePreviewOptionOn ? "" : "d-none"}>
                       <div
-                        className="flex-fill h-100 d-flex justify-content-end align-items-center "
-                        onClick={submitNewHashtag}
+                        id="center-bottom"
+                        style={{
+                          backgroundColor: "#312e47",
+                          height: "max-content",
+                          width: "150px",
+                        }}
+                        className="rounded-2 p-1 "
                       >
-                        <AiOutlinePlusCircle size={25} />
+                        <Button
+                          size="sm"
+                          className="options-left-sidebar-button danger-button center-flex"
+                          onClick={(e) => {
+                            setPostImage(undefined);
+                            setPostPreview(undefined);
+                          }}
+                        >
+                          <span>
+                            <RxCross2 size={20} className="me-1" />
+                            Delete
+                          </span>
+                        </Button>
                       </div>
                     </div>
-                  </>
-                ) : (
-                  <div className="d-flex align-items-center">
-                    <AiOutlinePlus size={18} className="me-1" /> Add custom
-                    hashtag
                   </div>
-                )}
-              </div>
-            </Row>
-          </div>
-          <div className="w-100">
-            <div
-              className="d-flex justify-content-around align-items-center w-100 pb-3"
-              // style={{ height: "4vh" }}
-            >
-              <div className="w-25 text-center">
-                <div className="p-1" style={{ color: "#686f7f" }}>
-                  Privacy
                 </div>
-                {isPrivate ? (
-                  <>
-                    <Button
-                      className="center-flex switch-button-private w-100"
-                      onClick={changePrivacy}
-                    >
-                      <span className="me-2">Private</span> <BsLock size={18} />
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <Button
-                      className="center-flex switch-button-public w-100"
-                      onClick={changePrivacy}
-                    >
-                      <span className="me-2">Public</span>{" "}
-                      <BsUnlock size={18} />
-                    </Button>
-                  </>
-                )}
-              </div>
-              <div className="w-25 text-center">
-                <div className="p-1" style={{ color: "#686f7f" }}>
-                  Language
+                <div>
+                  <div className="d-flex justify-content-between align-items-center text-color pe-2 px-2 pb-2 pt-2">
+                    <div className="">
+                      <FaUpload
+                        size={28}
+                        className="me-2"
+                        onClick={activatePostImageInput}
+                      />
+                      {/* <BsEmojiSmile size={28} className="me-2" /> */}
+                      <Form.Control
+                        type="file"
+                        id="chooseImagePost"
+                        style={{ display: "none" }}
+                        onChange={(e) => postImageChangeHandler(e)}
+                        accept=".jpg, .jpeg, .png"
+                        multiple
+                      />
+                    </div>
+
+                    <div>
+                      <AiOutlineQuestionCircle size={28} />
+                    </div>
+                  </div>
                 </div>
-                <Form.Select
+              </div>
+            </>
+          ) : (
+            <div className="post-group">
+              <Form.Group className="mb-3">
+                <Form.Control
+                  type="Title"
+                  className="bg-transparent"
                   style={{ border: "none" }}
-                  className="text-color select-language"
-                >
-                  {languages.map((language, index) => {
-                    if (language.name === "English") {
+                  placeholder="Enter the title of your group or a project"
+                  value={title}
+                  onChange={(e) => onChangeHandler(e.target.value, setTitle)}
+                />
+              </Form.Group>
+
+              <div
+                className="me-3 mx-3"
+                style={{ borderBottom: "1px solid gray" }}
+              ></div>
+              <InputGroup>
+                <Form.Control
+                  as="textarea"
+                  aria-label="With textarea"
+                  className="bg-transparent"
+                  style={{ border: "none" }}
+                  placeholder="What's on your mind?"
+                  value={description}
+                  onChange={(e) =>
+                    onChangeHandler(e.target.value, setDescription)
+                  }
+                />
+              </InputGroup>
+
+              <div className="pt-2">
+                <span className="px-2" style={{ color: "#686f7f" }}>
+                  Add suitable hashtags
+                </span>
+              </div>
+              <div className="p-3 pt-2 pb-0">
+                <Row className="text-color">
+                  {Hashtags.map((hashtag, index) => {
+                    const addHashtagInside = function () {
+                      addHashtag(hashtag);
+                    };
+
+                    if (hashtags.includes(hashtag)) {
                       return (
-                        <option key={index} selected>
-                          {language.name}
-                        </option>
+                        <div
+                          key={index}
+                          className=" rounded-3 p-1 px-2 pe-2 mb-2 mx-1"
+                          style={{
+                            backgroundColor: "#362e44",
+                            cursor: "pointer",
+                            width: "max-content",
+                            height: "35px",
+                          }}
+                          onClick={addHashtagInside}
+                        >
+                          {hashtag.title}
+                        </div>
                       );
                     } else {
                       return (
-                        <option key={index} value={[index]}>
-                          {language.name}
-                        </option>
+                        <div
+                          key={index}
+                          className=" rounded-3 p-1 px-2 pe-2 mb-2 mx-1"
+                          style={{
+                            backgroundColor: "#46395b",
+                            cursor: "pointer",
+                            width: "max-content",
+                            height: "35px",
+                          }}
+                          id={hashtag._id}
+                          onClick={addHashtagInside}
+                        >
+                          {hashtag.title}
+                        </div>
                       );
                     }
                   })}
-                </Form.Select>
+                  <div
+                    className="d-flex align-items-center rounded-3 p-1 px-2 pe-2 mb-2 mx-1"
+                    id="custom_hashtag_input"
+                    style={{
+                      backgroundColor: "#46395b",
+                      cursor: "pointer",
+                      width: "200px",
+                      height: "35px",
+                    }}
+                    onClick={addCustomHashtag}
+                  >
+                    {isCustomHashtagInputActive === true ? (
+                      <>
+                        <div className="w-100 h-100 d-flex">
+                          <Form.Control
+                            placeholder="#"
+                            value={customHashtagInput}
+                            onChange={(e) =>
+                              onChangeHandler(
+                                e.target.value,
+                                setCustomHashtagInput
+                              )
+                            }
+                            className="bg-transparent border-0 w-75 h-100  "
+                          />
+                          <div
+                            className="flex-fill h-100 d-flex justify-content-end align-items-center "
+                            onClick={submitNewHashtag}
+                          >
+                            <AiOutlinePlusCircle size={25} />
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="d-flex align-items-center">
+                        <AiOutlinePlus size={18} className="me-1" /> Add custom
+                        hashtag
+                      </div>
+                    )}
+                  </div>
+                </Row>
               </div>
-              <div className=" w-25 text-center">
-                <div className="p-1" style={{ color: "#686f7f" }}>
-                  Team Size
+              <div className="w-100">
+                <div
+                  className="d-flex justify-content-around align-items-center w-100 pb-3"
+                  // style={{ height: "4vh" }}
+                >
+                  <div className="w-25 text-center">
+                    <div className="p-1" style={{ color: "#686f7f" }}>
+                      Privacy
+                    </div>
+                    {isPrivate ? (
+                      <>
+                        <Button
+                          className="center-flex switch-button-private w-100"
+                          onClick={changePrivacy}
+                        >
+                          <span className="me-2">Private</span>{" "}
+                          <BsLock size={18} />
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <Button
+                          className="center-flex switch-button-public w-100"
+                          onClick={changePrivacy}
+                        >
+                          <span className="me-2">Public</span>{" "}
+                          <BsUnlock size={18} />
+                        </Button>
+                      </>
+                    )}
+                  </div>
+                  <div className="w-25 text-center">
+                    <div className="p-1" style={{ color: "#686f7f" }}>
+                      Language
+                    </div>
+                    <Form.Select
+                      style={{ border: "none" }}
+                      className="text-color select-language"
+                    >
+                      {languages.map((language, index) => {
+                        if (language.name === "English") {
+                          return (
+                            <option key={index} selected>
+                              {language.name}
+                            </option>
+                          );
+                        } else {
+                          return (
+                            <option key={index} value={[index]}>
+                              {language.name}
+                            </option>
+                          );
+                        }
+                      })}
+                    </Form.Select>
+                  </div>
+                  <div className=" w-25 text-center">
+                    <div className="p-1" style={{ color: "#686f7f" }}>
+                      Team Size
+                    </div>
+                    <div className="parentdiv w-100">
+                      <TeamSizeSelect min={0} max={10} />
+                    </div>
+                  </div>
                 </div>
-                <div className="parentdiv w-100">
-                  <TeamSizeSelect min={0} max={10} />
+                <div className="p-2 pt-0 pb-3 choose-image text-center">
+                  <div className="p-1" style={{ color: "#686f7f" }}>
+                    Add cover for your project
+                  </div>
+                  <Form.Control
+                    type="file"
+                    id="chooseImage"
+                    onChange={(e) => imageChangeHandler(e)}
+                    accept=".jpg, .jpeg, .png"
+                    multiple
+                  />
                 </div>
               </div>
-            </div>
-            <div className="p-2 pt-0 pb-3 choose-image text-center">
-              <div className="p-1" style={{ color: "#686f7f" }}>
-                Add cover for your project
-              </div>
-              <Form.Control
-                type="file"
-                id="chooseImage"
-                onChange={(e) => imageChangeHandler(e)}
-                accept=".jpg, .jpeg, .png"
-                multiple
-              />
-            </div>
-          </div>
-          <div className=" d-flex justify-content-center text-color">
-            <div>
-              <h5 className="text-center mb-2">Team:</h5>
-              <div className="active-button flex-column">
+              <div className=" d-flex justify-content-center text-color">
                 <div>
-                  1. Team-Leader: {LoggedInUser?.username} |{" "}
-                  {LoggedInUser?.name} {LoggedInUser?.surname}
+                  <h5 className="text-center mb-2">Team:</h5>
+                  <div className="active-button flex-column">
+                    <div>
+                      1. Team-Leader: {LoggedInUser?.username} |{" "}
+                      {LoggedInUser?.name} {LoggedInUser?.surname}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/*MINI BUTTONS */}
+              <div className="d-flex justify-content-between align-items-center text-color pe-3 px-3 pb-3 pt-1">
+                <div className="">
+                  <FaUpload size={28} className="me-2" />
+                  {/* <BsEmojiSmile size={28} className="me-2" /> */}
+                </div>
+
+                <div>
+                  <AiOutlineQuestionCircle size={28} />
                 </div>
               </div>
             </div>
-          </div>
-
-          {/*MINI BUTTONS */}
-          <div className="d-flex justify-content-between align-items-center text-color pe-3 px-3 pb-3 pt-1">
-            <div className="">
-              <FaUpload size={28} className="me-2" />
-              {/* <BsEmojiSmile size={28} className="me-2" /> */}
-            </div>
-
-            <div>
-              <AiOutlineQuestionCircle size={28} />
-            </div>
-          </div>
+          )}
         </div>
       </Modal>
 
-      <UsersModal
+      {/* <UsersModal
         show={usersModalShow}
         onHide={() => setUsersModalShow(false)}
-      />
+      /> */}
     </>
   );
 }

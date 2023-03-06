@@ -53,7 +53,9 @@
   border: none !important;
   font-size: 16px !important;
 }
-
+.danger-text {
+  color: #e66666 !important;
+}
 .danger-button:hover {
   background: #493247 !important;
 }

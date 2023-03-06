@@ -58,6 +58,20 @@
 .options-left-sidebar-button:hover {
   background-color: #3f3452 !important;
 }
+.delete-image-preview {
+  opacity: 0;
+}
+.post-image-preview:hover {
+  transition: 0.2s;
+  opacity: 0.8;
+}
+
+#top-end {
+  position: absolute;
+  top: 0%;
+  right: 0%;
+}
+
 #pfp-left-sidebar {
   margin-top: 1rem;
   margin-bottom: 1rem;

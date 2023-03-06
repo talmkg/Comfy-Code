@@ -1,6 +1,6 @@
 import {
   FETCH_ALL_USERS,
-  FETCH_GROUPS,
+  FETCH_FEED,
   LOADING,
   TOKEN,
   LOGIN,
@@ -14,7 +14,7 @@ import {
 } from "../actions";
 
 const initialState = {
-  groups: [],
+  feed: [],
   token: [],
   AllUsers: [],
   loading: false,
@@ -66,10 +66,10 @@ const mainReducer = (state = initialState, action) => {
         ...state,
         hashtags: action.payload,
       };
-    case FETCH_GROUPS:
+    case FETCH_FEED:
       return {
         ...state,
-        groups: action.payload,
+        feed: action.payload,
       };
     case LOGIN:
       return {

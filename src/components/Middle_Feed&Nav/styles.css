@@ -58,7 +58,7 @@
 #post-options {
   border-radius: 50%;
   transition: all 0.2s;
-  color: white;
+  color: #cccadf !important;
 }
 #post-options:hover {
   transition: all 0.2s;

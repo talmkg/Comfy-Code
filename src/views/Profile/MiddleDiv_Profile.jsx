@@ -233,12 +233,12 @@ const MiddleDiv_Profile = (userProps) => {
                       </Button>
                     </div>
                   </div>
-                  <div className="d-flex justify-content-center pt-4">
+                  <div>
                     {posts.map((post, i) => {
                       return (
                         <div
                           key={i}
-                          className="rounded-2 p-2"
+                          className="rounded-2 p-2 mt-2 mb-2"
                           style={{
                             backgroundColor: "#232133",
                             height: "max-content",
@@ -271,6 +271,24 @@ const MiddleDiv_Profile = (userProps) => {
                             </div>
                           </div>
                           <div> {post.text}</div>
+                          <div className="center-flex flex-fill h-75 w-100">
+                            {post.images ? (
+                              post.images.map((image) => {
+                                return (
+                                  <img
+                                    src={image}
+                                    className=" w-50"
+                                    style={{
+                                      height: "max-content",
+                                      objectFit: "cover",
+                                    }}
+                                  />
+                                );
+                              })
+                            ) : (
+                              <></>
+                            )}
+                          </div>
                         </div>
                       );
                     })}

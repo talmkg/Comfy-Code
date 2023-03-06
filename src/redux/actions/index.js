@@ -2,7 +2,7 @@ import { io } from "socket.io-client";
 
 import sound from "../../Sounds/notification.mp3";
 
-export const FETCH_GROUPS = "FETCH_GROUPS";
+export const FETCH_FEED = "FETCH_FEED";
 export const FETCH_HASHTAGS = "FETCH_HASHTAGS";
 export const TOKEN = "TOKEN";
 export const FETCH_ALL_USERS = "FETCH_ALL_USERS";
@@ -19,20 +19,35 @@ export const FETCH_BADGES = "FETCH_BADGES";
 const socket = io("http://localhost:3002", { transports: ["websocket"] });
 
 //get all groups
-export const getGroups = () => {
+export const getFeed = (limit) => {
   return async (dispatch, getState) => {
+    let local_limit = limit;
+    if (local_limit === undefined || 0 || null) {
+      local_limit = 10;
+    }
+    const token = getState().token;
+
+    const options = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
     dispatch({
       type: LOADING,
       payload: true,
     });
     try {
-      const response = await fetch("http://localhost:3002/groups");
+      const response = await fetch(
+        `http://localhost:3002/feed/${local_limit}`,
+        options
+      );
       if (response.ok) {
-        let groups = await response.json();
-        console.log("groups updated.");
+        let feed = await response.json();
+        console.log("feed updated.");
         dispatch({
-          type: FETCH_GROUPS,
-          payload: groups,
+          type: FETCH_FEED,
+          payload: feed,
         });
         dispatch({
           type: LOADING,
@@ -192,6 +207,7 @@ export const createGroup = (title, description, hashtags, formData, onHide) => {
   console.log("Fetching");
   const postUrl = `http://localhost:3002/groups/`;
   const dataToSendForPost = {
+    type: "Group",
     title: title,
     description: description,
     hashtags: hashtags,
@@ -231,14 +247,14 @@ export const createGroup = (title, description, hashtags, formData, onHide) => {
             if (cover_res) {
               console.log(cover_res);
               console.log("succ uploaded the cover");
-              dispatch(getGroups());
+              dispatch(getFeed());
               onHide();
             }
           };
           uploadCover();
           onHide();
         } else {
-          dispatch(getGroups());
+          dispatch(getFeed());
           onHide();
         }
         console.log("Succesfully posted <3");
@@ -298,7 +314,7 @@ export const joinTheGroup = (group_id, onHide) => {
     const teamResponse = await fetch(link, optionsJoinTeam);
     if (teamResponse.ok) {
       console.log("You joined <3");
-      dispatch(getGroups());
+      dispatch(getFeed());
       dispatch(getNotifications());
       dispatch(fetchUsersGroups());
       dispatch(fetchLoginnedUser(token));
@@ -325,7 +341,7 @@ export const leaveTheGroup = (group_id, onHide) => {
     const teamResponse = await fetch(link, optionsJoinTeam);
     if (teamResponse.ok) {
       console.log("You left <3");
-      dispatch(getGroups());
+      dispatch(getFeed());
       dispatch(fetchLoginnedUser());
       dispatch(fetchUsersGroups());
       dispatch(getNotifications());
@@ -428,7 +444,7 @@ export const deleteGroup = (group_id) => {
       let response = await fetch(Url, deleteOptions);
 
       if (response.ok) {
-        dispatch(getGroups());
+        dispatch(getFeed());
         console.log("DELETED");
       } else {
         console.log("en error occured while fetching the experiences");
@@ -747,6 +763,37 @@ export const fetchUsersPosts = (id, setPosts) => {
         console.log("posts fetched.");
       } else {
         console.log("Error fetching data");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+export const createPost = (formData, onHide) => {
+  console.log("Fetching");
+  const postUrl = `http://localhost:3002/posts/`;
+  console.log(formData);
+
+  return async (dispatch) => {
+    const token = dispatch(getTokenFromStore());
+
+    const optionsPost = {
+      method: "POST",
+      body: formData,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      const response = await fetch(postUrl, optionsPost);
+      if (response.ok) {
+        console.log("Succesfully posted <3");
+      } else {
+        console.log(
+          "sorry, an error occured while trying to create this post."
+        );
       }
     } catch (error) {
       console.log(error);
