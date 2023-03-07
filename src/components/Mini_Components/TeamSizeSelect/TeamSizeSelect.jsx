@@ -11,7 +11,6 @@ class TeamSizeSelect extends React.Component {
     this.increment = this.increment.bind(this);
     this.decrement = this.decrement.bind(this);
   }
-
   get value() {
     return this.state.value;
   }
@@ -20,12 +19,14 @@ class TeamSizeSelect extends React.Component {
     const { max } = this.props;
     if (typeof max === "number" && this.value >= max) return;
     this.setState({ value: this.value + 1 });
+    this.props.setMaxMembers(this.value + 1);
   }
 
   decrement() {
     const { min } = this.props;
     if (typeof min === "number" && this.value <= min) return;
     this.setState({ value: this.value - 1 });
+    this.props.setMaxMembers(this.value - 1);
   }
 
   render() {
@@ -34,6 +35,7 @@ class TeamSizeSelect extends React.Component {
         <button className="" type="button" onClick={this.decrement}>
           &minus;
         </button>
+
         <span>{this.value}</span>
         <button className="" type="button" onClick={this.increment}>
           &#43;

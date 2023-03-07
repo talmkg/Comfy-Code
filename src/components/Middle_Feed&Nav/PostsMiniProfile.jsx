@@ -1,10 +1,11 @@
+import { useEffect } from "react";
 import { Row, Col, Button } from "react-bootstrap";
 import { FaRegPaperPlane } from "react-icons/fa";
 import MiniProfileTemplate from "./MiniProfileTemplate";
 const PostsMiniProfile = (member) => {
   return (
     <>
-      <div id="profile-picture-post">
+      <div id="profile-picture-post" className="position-relative">
         <div>
           <img
             src={member.pfp}
@@ -18,7 +19,9 @@ const PostsMiniProfile = (member) => {
             className="me-2"
           />
         </div>
-        <MiniProfileTemplate {...member} />
+        <div className="position-absolute" style={{ right: "0%", top: "-50%" }}>
+          <MiniProfileTemplate {...member} />
+        </div>
       </div>
     </>
   );

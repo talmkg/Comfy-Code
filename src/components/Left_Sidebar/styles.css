@@ -44,7 +44,7 @@
   color: white;
 }
 .choose-image .form-control {
-  background-color: #3f3452 !important;
+  background: #232133 !important;
   border: none;
 }
 .options-left-sidebar-button {
@@ -79,6 +79,7 @@
 #pfp-left-sidebar:hover {
   opacity: 0.9;
 }
+
 #left-sidebar {
   position: sticky !important;
   background-color: #1f1d2d !important;
@@ -114,4 +115,20 @@
   bottom: 0%;
   left: 50%;
   transform: translate(-50%, 100%);
+}
+.accordion-button,
+.accordion-button:focus,
+.accordion-button:active {
+  outline: none !important;
+  box-shadow: none !important;
+  background-color: #3f3452 !important;
+  border: 0 !important;
+  color: #cccadf !important;
+}
+.accordion-post-group {
+  outline: none !important;
+  box-shadow: none !important;
+  background-color: #3f3452 !important;
+  border: 0 !important;
+  color: #cccadf !important;
 }

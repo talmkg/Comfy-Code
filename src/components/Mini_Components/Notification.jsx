@@ -57,17 +57,17 @@ const Notification = (props) => {
   return (
     <Col
       xs={12}
-      className="mt-2 rounded-3 p-1"
+      className="mt-1 mb-1 rounded-3 p-1"
       style={{
         height: "100%",
-
-        backgroundColor: "#2A273D",
+        backgroundColor: "transparent",
       }}
     >
       <div className="w-100 d-flex align-items-center">
         <div style={{ width: "20%" }}>
           <img
             src={from?.pfp}
+            className="me-2"
             style={{
               width: "60px",
               borderRadius: "50%",
@@ -75,8 +75,8 @@ const Notification = (props) => {
           />
         </div>
         <div style={{ width: "80%" }}>
-          <div className="d-flex justify-content-between align-items-center">
-            <div>
+          <div className="d-flex justify-content-between align-items-center text-color">
+            <div className="mx-2">
               @{from?.username} {text}
             </div>
             <div className="px-1">

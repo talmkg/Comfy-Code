@@ -32,9 +32,14 @@ const Badges = () => {
     const alreadyExists = selectedBadges.filter((badge) => badge._id === e._id);
     if (alreadyExists.length !== 0) {
       const filtered = selectedBadges.filter((badge) => badge._id !== e._id);
+
       setSelectedBadges([...filtered]);
     } else {
-      setSelectedBadges([...selectedBadges, e]);
+      if (selectedBadges.length >= 4) {
+        console.log("limit");
+      } else {
+        setSelectedBadges([...selectedBadges, e]);
+      }
     }
   };
   return (
@@ -43,9 +48,7 @@ const Badges = () => {
         <h4>Featured Badges</h4>
         <span>Choose a badge to feature at your Profile and Mini-Profile.</span>
         <div className="w-100 center-flex pt-4">
-          <div className="w-50">
-            <MiniProfilePreview {...user} badges={selectedBadges} />
-          </div>
+          <MiniProfilePreview {...user} badges={selectedBadges} />
         </div>
         <div className="p-5">
           <Row

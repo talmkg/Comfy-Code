@@ -90,6 +90,10 @@ export const getToken = (email, password, setErrorMessage) => {
                 payload: token.token,
               });
               dispatch(fetchLoginnedUser());
+              dispatch({
+                type: LOADING,
+                payload: false,
+              });
             } else {
               setErrorMessage(true);
             }
@@ -203,14 +207,28 @@ export const fetchSomeonesGroups = (userId, setSomeonesGroups) => {
     }
   };
 };
-export const createGroup = (title, description, hashtags, formData, onHide) => {
-  console.log("Fetching");
+export const createGroup = (
+  // title, description, hashtags, formData, onHide
+  title,
+  description,
+  hashtags,
+  privacySetting,
+  maxMembers,
+  language,
+  githubRepoLink,
+  formData,
+  onHide
+) => {
   const postUrl = `http://localhost:3002/groups/`;
   const dataToSendForPost = {
     type: "Group",
     title: title,
     description: description,
     hashtags: hashtags,
+    privacySetting: privacySetting,
+    teamSize: maxMembers,
+    language: language,
+    githubRepoLink: githubRepoLink,
   };
   return async (dispatch) => {
     const token = dispatch(getTokenFromStore());
@@ -235,7 +253,7 @@ export const createGroup = (title, description, hashtags, formData, onHide) => {
           console.log("uploading cover...");
           const uploadCover = async () => {
             const res = await response.json();
-            console.log("RES 217", res);
+
             const cover = fetch(
               `http://localhost:3002/groups/${res._id}/cover`,
               {
@@ -252,11 +270,16 @@ export const createGroup = (title, description, hashtags, formData, onHide) => {
             }
           };
           uploadCover();
+          dispatch(getFeed());
           onHide();
         } else {
           dispatch(getFeed());
           onHide();
         }
+        dispatch({
+          type: LOADING,
+          payload: false,
+        });
         console.log("Succesfully posted <3");
       } else {
         console.log(
@@ -315,9 +338,10 @@ export const joinTheGroup = (group_id, onHide) => {
     if (teamResponse.ok) {
       console.log("You joined <3");
       dispatch(getFeed());
-      dispatch(getNotifications());
-      dispatch(fetchUsersGroups());
-      dispatch(fetchLoginnedUser(token));
+      dispatch({
+        type: LOADING,
+        payload: false,
+      });
     } else {
       console.log("huh?!");
     }
@@ -342,9 +366,10 @@ export const leaveTheGroup = (group_id, onHide) => {
     if (teamResponse.ok) {
       console.log("You left <3");
       dispatch(getFeed());
-      dispatch(fetchLoginnedUser());
-      dispatch(fetchUsersGroups());
-      dispatch(getNotifications());
+      dispatch({
+        type: LOADING,
+        payload: false,
+      });
     } else {
       console.log("huh?!");
     }
@@ -436,15 +461,15 @@ export const deleteGroup = (group_id) => {
         Authorization: `Bearer ${token}`,
       },
     };
-    dispatch({
-      type: LOADING,
-      payload: true,
-    });
+
     try {
       let response = await fetch(Url, deleteOptions);
-
       if (response.ok) {
         dispatch(getFeed());
+        dispatch({
+          type: LOADING,
+          payload: false,
+        });
         console.log("DELETED");
       } else {
         console.log("en error occured while fetching the experiences");
@@ -530,6 +555,10 @@ export const getNotifications = () => {
         dispatch({
           type: FETCH_NOTIFICATIONS,
           payload: notifications,
+        });
+        dispatch({
+          type: LOADING,
+          payload: false,
         });
       } else {
         console.log("Error fetching data");
@@ -761,6 +790,10 @@ export const fetchUsersPosts = (id, setPosts) => {
         let posts = await response.json();
         setPosts(posts);
         console.log("posts fetched.");
+        dispatch({
+          type: LOADING,
+          payload: false,
+        });
       } else {
         console.log("Error fetching data");
       }
@@ -790,6 +823,8 @@ export const createPost = (formData, onHide) => {
       const response = await fetch(postUrl, optionsPost);
       if (response.ok) {
         console.log("Succesfully posted <3");
+        dispatch(getFeed());
+        onHide();
       } else {
         console.log(
           "sorry, an error occured while trying to create this post."

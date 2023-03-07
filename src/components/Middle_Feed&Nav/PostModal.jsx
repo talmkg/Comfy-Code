@@ -1,6 +1,6 @@
 import { Card, Row, Col, Modal, Button, Spinner } from "react-bootstrap";
 import React, { useEffect, useState } from "react";
-import { BiUserPlus } from "react-icons/bi";
+import { BiLockAlt, BiUserPlus } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { joinTheGroup, leaveTheGroup } from "../../redux/actions";
 import MiniProfileTemplate from "./MiniProfileTemplate";
@@ -11,12 +11,25 @@ function PostModal(props) {
 
   //
   const data = props.props;
+
   const dispatch = useDispatch();
   const onHide = props.onHide;
   const user_id = LoggedInUser?._id;
   const [usersModalShow, setUsersModalShow] = React.useState(false);
+  const [privacyError, setPrivacyError] = React.useState(false);
+  const [isInvited, setIsInvited] = useState(false);
+
+  useEffect(() => {
+    if (data.invitedUsers.includes(LoggedInUser._id)) {
+      setIsInvited(true);
+    }
+  });
+
   const joinTheTeamAction = () => {
     dispatch(joinTheGroup(data._id, onHide));
+    // } else {
+    //   showErrorMessage("privacy");
+    // }
   };
   //
   const leaveTheTeamAction = () => {
@@ -26,7 +39,11 @@ function PostModal(props) {
   if (data?.team.filter((e) => e._id === LoggedInUser?._id).length > 0) {
     alreadyInGroup = true;
   }
-
+  const showErrorMessage = (props) => {
+    if (props === "privacy") {
+      setPrivacyError(true);
+    }
+  };
   return (
     <>
       <Modal
@@ -97,9 +114,12 @@ function PostModal(props) {
               <Row className="row-cols-3 justify-content-star p-4">
                 {data.team.map((member, i) => {
                   return (
-                    <Col className="p-1" key={i} id="profile-picture-post">
+                    <Col className="p-1 position-relative" key={i}>
                       <div className="d-flex  align-items-center ">
-                        <div className="w-25">
+                        <div
+                          className="w-25 position-relative"
+                          id="profile-picture-post"
+                        >
                           <img
                             src={member.pfp}
                             style={{
@@ -110,6 +130,12 @@ function PostModal(props) {
                               objectFit: "cover",
                             }}
                           />
+                          <div
+                            className="position-absolute"
+                            style={{ right: "0%", top: "-50%" }}
+                          >
+                            <MiniProfileTemplate {...member} />
+                          </div>
                         </div>
                         <div className="w-75">
                           <div>
@@ -117,9 +143,6 @@ function PostModal(props) {
                           </div>
                           <div className="text-color">@{member.username}</div>
                         </div>
-                      </div>
-                      <div style={{ position: "relative" }}>
-                        <MiniProfileTemplate {...member} />
                       </div>
                     </Col>
                   );
@@ -134,7 +157,7 @@ function PostModal(props) {
                   {data.team?.map((member, i) => {
                     if (member.username === data?.leader[0]?.username) {
                       return (
-                        <div key={i} className="p-1">
+                        <div key={i} className="p-1 center-flex">
                           <img
                             src={member.pfp}
                             style={{
@@ -151,7 +174,7 @@ function PostModal(props) {
                       );
                     } else {
                       return (
-                        <div className="p-1" key={i}>
+                        <div className="p-1 center-flex" key={i}>
                           <img
                             src={member.pfp}
                             style={{
@@ -170,14 +193,26 @@ function PostModal(props) {
                   })}
 
                   <div className="d-flex justify-content-center">
-                    <Button
-                      className="btn active-button d-flex align-items-center"
-                      onClick={joinTheTeamAction}
-                    >
-                      <span>
-                        Join <BiUserPlus size={20} />
-                      </span>
-                    </Button>
+                    <div className="center-flex pt-3">
+                      {data.privacySetting === "private" &&
+                      isInvited === false ? (
+                        <>
+                          <Button className="btn active-button d-flex align-items-center">
+                            <BiLockAlt size={20} />
+                            <span>You can't join unless you are invited</span>
+                          </Button>
+                        </>
+                      ) : (
+                        <>
+                          <Button
+                            className="btn active-button d-flex align-items-center"
+                            onClick={joinTheTeamAction}
+                          >
+                            <span>Join</span> <BiUserPlus size={20} />
+                          </Button>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>

@@ -20,9 +20,8 @@ const Big_Follow_Button = (id) => {
     if (obj) {
       return (
         <Button
-          className="gradient-button p-1 d-flex align-items-center justify-content-center me-2"
+          className="gradient-button p-1 d-flex align-items-center justify-content-center  rounded-1"
           style={{
-            borderRadius: "10px",
             width: "110px",
             height: "35px",
           }}
@@ -35,9 +34,8 @@ const Big_Follow_Button = (id) => {
     } else {
       return (
         <Button
-          className="gradient-button p-1 d-flex align-items-center justify-content-center me-2"
+          className="gradient-button p-1 d-flex align-items-center justify-content-center  rounded-1"
           style={{
-            borderRadius: "10px",
             width: "110px",
             height: "35px",
           }}

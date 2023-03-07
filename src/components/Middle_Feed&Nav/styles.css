@@ -26,17 +26,37 @@
   -webkit-box-orient: vertical;
 }
 #join {
-  transition: all 0.1s;
+  transition: all 0.2s;
 }
 #join:hover {
   box-shadow: 0px 0px 10px 0px rgba(203, 124, 255, 0.178);
   transition: all 0.1s;
 }
+
 #mini-profile {
   visibility: hidden;
   opacity: 0;
-
   transition: visibility 0s, opacity 0.1s linear;
+}
+/*---------------------FETCH VERSION*/
+#mini-profile-fetch {
+  display: none;
+}
+#profile-picture-post-fetch:hover #mini-profile-fetch {
+  transition-delay: 0.2s;
+  display: block;
+  -webkit-box-shadow: 0px 0px 24px 0px rgba(223, 193, 223, 0.26);
+  -moz-box-shadow: 0px 0px 24px 0px rgba(223, 193, 223, 0.26);
+  box-shadow: 0px 0px 24px 0px rgba(223, 193, 223, 0.26);
+}
+/*---------------------FETCH VERSION END*/
+.post-icons {
+  color: #cccadf !important;
+  cursor: pointer;
+}
+.post-icons:hover {
+  transition: 0.2s;
+  color: #fcefff !important;
 }
 #profile-picture-post:hover #mini-profile {
   transition-delay: 0.3s;
@@ -62,7 +82,7 @@
 }
 #post-options:hover {
   transition: all 0.2s;
-  background-color: #524b81;
+  color: #fcefff !important;
 }
 #dropdown-window {
   background-color: #322e4f;

@@ -83,11 +83,17 @@ const Right_Sidebar = () => {
               >
                 <div>
                   <div>
-                    <Row className="g-0 pe-2 px-2">
+                    <Row className="g-0">
                       {Notifications ? (
                         Notifications?.map((notification, i) => {
                           return (
-                            <div key={i}>
+                            <div
+                              key={i}
+                              style={{
+                                borderBottom:
+                                  "1px solid rgba(255, 255, 255, 0.192)",
+                              }}
+                            >
                               <Notification
                                 {...notification}
                                 key={i}
@@ -139,8 +145,8 @@ const Right_Sidebar = () => {
                       return (
                         <ListGroup.Item
                           key={index}
-                          className="mt-1 mb-1 rounded text-color d-flex justify-content-between"
-                          style={{ backgroundColor: "#2A273D" }}
+                          className="mt-1 mb-1 rounded text-color d-flex justify-content-between bg-transparent border-0"
+                          // style={{ backgroundColor: "transparent" }}
                         >
                           <div>
                             <span
@@ -156,23 +162,14 @@ const Right_Sidebar = () => {
                                 }}
                                 className="me-2"
                               />
-                              {LoggedInUser._id === message.user_id ? (
-                                <Link
-                                  to={`/profile`}
-                                  style={{ textDecoration: "none" }}
-                                  className="text-color"
-                                >
-                                  {message.username}
-                                </Link>
-                              ) : (
-                                <Link
-                                  to={`/profile/${message.user_id}`}
-                                  style={{ textDecoration: "none" }}
-                                  className="text-color"
-                                >
-                                  {message.username}
-                                </Link>
-                              )}
+
+                              <Link
+                                to={`/profile/${message.user_id}`}
+                                style={{ textDecoration: "none" }}
+                                className="text-color"
+                              >
+                                {message.username}
+                              </Link>
 
                               <span className="me-2 mx-2">|</span>
 

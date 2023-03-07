@@ -1,16 +1,16 @@
-import { Card, Dropdown, Row } from "react-bootstrap";
-import React, { useEffect, useState } from "react";
-import "./styles.css";
-import { AiOutlinePlus, AiOutlinePlusCircle } from "react-icons/ai";
-import { FaUsers } from "react-icons/fa";
-import { MdMoreHoriz } from "react-icons/md";
-import PostsMiniProfile from "./PostsMiniProfile";
-import PostModal from "./PostModal";
-import { useDispatch, useSelector } from "react-redux";
-import { deleteGroup } from "../../redux/actions";
+import React from "react";
+import { Col, Dropdown } from "react-bootstrap";
+import { HiOutlineReply } from "react-icons/hi";
+import { MdMoreHoriz, MdRepeat } from "react-icons/md";
+import { VscReactions } from "react-icons/vsc";
+import { IoRepeat } from "react-icons/io5";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import Reply from "./Reply";
+import { useState } from "react";
+import PostsMiniProfile from "./PostsMiniProfile";
+import MiniProfileTemplate from "./MiniProfileTemplate";
 
-<PostModal />;
 const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
   <a
     href=""
@@ -25,245 +25,173 @@ const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
   </a>
 ));
 
-const Post = (props) => {
-  const [modalShow, setModalShow] = React.useState(false);
-  const LoggedInUser = useSelector((state) => state?.LoggedInUser[0]);
-  const dispatch = useDispatch();
-  const {
-    name,
-    surname,
-    leader,
-    title,
-    description,
-    imageUrl,
-    createdAt,
-    updatedAt,
-    hashtags,
-
-    team,
-    _id,
-    width,
-  } = props;
-  let alreadyInGroup = false;
-  if (team.filter((e) => e._id === LoggedInUser?._id).length > 0) {
-    alreadyInGroup = true;
-  }
-  const deleteGroupAction = () => {
-    dispatch(deleteGroup(_id));
-  };
+function Post(post) {
+  const LoggedInUser = useSelector((state) => state.LoggedInUser[0]);
+  const [modalShow, setModalShow] = useState(false);
   return (
-    <>
-      <Card
-        className="text-light mt-3 mb-4"
+    <Col
+      xs={12}
+      key={post.i}
+      className={
+        post.width === "100%"
+          ? `pb-1 pt-1 d-flex justify-content-center`
+          : `pe-4 px-4 pb-1 pt-1 d-flex justify-content-center`
+      }
+    >
+      <div
+        className="rounded-2 mt-2 mb-2"
         style={{
-          maxWidth: width ? width : "700px",
-          width: "100%",
-          cursor: "pointer",
           backgroundColor: "#232133",
+          height: "max-content",
+          width: post.width ? post.width : "700px",
         }}
       >
-        <Card.Body className="pb-5 position-relative">
-          <div className="d-flex align-items-center">
+        <div className="d-flex justify-content-between p-3">
+          <div
+            className="d-flex align-items-center position-relative"
+            id="profile-picture-post"
+          >
             <img
-              src={leader[0]?.pfp}
+              src={post.creator.pfp}
+              className="me-2"
               style={{
                 height: "50px",
                 width: "50px",
                 objectFit: "cover",
                 borderRadius: "50%",
               }}
-              className="me-2"
             />
-
-            <div className="w-100">
-              <div className="d-flex justify-content-between">
-                <div className="text-color">
-                  <Link
-                    to={`/profile/${leader[0]?._id}`}
-                    className="text-light"
-                    style={{ textDecoration: "none" }}
-                  >
-                    <h6 className="p-0 m-0">
-                      {leader[0]?.name} {leader[0]?.surname}
-                    </h6>
-                  </Link>
-                  @{leader[0]?.username}
-                </div>
-                <span>
-                  <div className="d-flex justify-content-end">
-                    <Dropdown>
-                      <Dropdown.Toggle
-                        style={{ color: "white" }}
-                        as={CustomToggle}
-                        id="dropdown-custom-components"
-                      ></Dropdown.Toggle>
-                      <Dropdown.Menu id="dropdown-window">
-                        {leader[0]?.username === LoggedInUser?.username ? (
-                          <>
-                            <Dropdown.Item
-                              className="text-light dropdown-buttons"
-                              eventKey="1"
-                            >
-                              Edit
-                            </Dropdown.Item>
-                            <Dropdown.Item
-                              className="text-light dropdown-buttons"
-                              eventKey="2"
-                              onClick={deleteGroupAction}
-                            >
-                              Delete
-                            </Dropdown.Item>
-
-                            <Dropdown.Item
-                              className="text-light dropdown-buttons"
-                              eventKey="1"
-                            >
-                              Share
-                            </Dropdown.Item>
-                          </>
-                        ) : (
-                          <>
-                            {" "}
-                            <Dropdown.Item
-                              className="text-light dropdown-buttons"
-                              eventKey="1"
-                            >
-                              Share
-                            </Dropdown.Item>
-                          </>
-                        )}
-                      </Dropdown.Menu>
-                    </Dropdown>
-                  </div>
-                  <div className="text-muted">
-                    {new Date(createdAt).toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </div>
-                </span>
-              </div>
-              <div>
-                <h6 className="p-0 m-0" style={{ fontSize: "14px" }}></h6>
-              </div>
-            </div>
-          </div>
-          <div>
-            <h5 className="m-0 pt-2 pb-2">{title}</h5>
-          </div>
-          <Card.Text className="text opacity-75">{description}</Card.Text>
-          {imageUrl ? (
             <div
-              className="w-100"
-              style={{
-                backgroundImage: `linear-gradient(180deg, rgba(255,0,0,0) 0%, rgba(25,23,36,1) 100%), url(${imageUrl})`,
-                height: "300px",
-                backgroundPosition: "center",
-                // objectFit: "cover",
-                backgroundSize:
-                  "cover" /* Resize the background image to cover the entire container */,
-              }}
+              className="position-absolute"
+              style={{ left: "50%", top: "0%" }}
             >
-              {" "}
+              <MiniProfileTemplate {...post.creator} />
             </div>
-          ) : (
-            <></>
-          )}
+            <div className="text-color">
+              <Link
+                to={`/profile/${post.creator._id}`}
+                className="text-light"
+                style={{ textDecoration: "none" }}
+              >
+                <h6 className="p-0 m-0">
+                  {post.creator.name} {post.creator.surname}
+                </h6>
+              </Link>
+              @{post.creator.username}
+            </div>
+          </div>
 
-          {/* {imageUrl ? (
-              <img
-                src={imageUrl}
-                className="w-100"
-                style={{  }}
-              />
-            ) : (
-              <></>
-            )} */}
-
-          <Row
-            className="text-color pe-1 px-1"
-            style={{ marginTop: imageUrl ? "1rem" : "0rem" }}
-          >
-            {hashtags?.map((hashtag, index) => {
-              return (
-                <div
-                  key={index}
-                  className="rounded-3 p-1 px-2 pe-2 mb-2 mx-1"
-                  style={{
-                    backgroundColor: "#46395b",
-                    cursor: "pointer",
-                    width: "max-content",
-                  }}
-                  id={hashtag._id}
-                >
-                  {hashtag.title}
-                </div>
-              );
-            })}
-          </Row>
+          <span>
+            <div className="text-muted">
+              {new Date(post.createdAt).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </div>
+          </span>
+        </div>
+        <div className="text-color pe-3 px-3 text">{post.text}</div>
+        <div className="pe-3 px-3">
           <div
-            className="position-absolute p-2 opacity-75"
+            className={
+              post.images[0]
+                ? "center-flex flex-fill w-100  mb-2 mt-2 rounded-3"
+                : "d-none"
+            }
             style={{
-              right: 0,
-              bottom: 0,
-              color: "#6bc2e5",
-              fontSize: "18px",
-              fontWeight: "600",
+              height: "400px",
+              backgroundColor: "#191724",
+              overflow: "hidden",
             }}
           >
-            {team.length ? team.length : 0}
-            /5
-          </div>
-
-          <div
-            className="position-absolute d-flex"
-            style={{ bottom: imageUrl ? "-6%" : "-10%" }}
-            //if we wrap it in one more div, we will have proper parent div
-          >
-            {team.map((member, i) => {
-              return <PostsMiniProfile {...member} key={i} />;
-            })}
-            {alreadyInGroup ? (
-              <div
-                onClick={() => setModalShow(true)}
-                className="d-flex align-items-center justify-content-center"
-                style={{
-                  width: "65px",
-                  height: "65px",
-                  border: "2px solid #5b5b5b",
-                  borderRadius: "50%",
-                  backgroundColor: "#191724",
-                }}
-                id="join"
-              >
-                <FaUsers size={30} className="text-color" />
-              </div>
+            {post.images ? (
+              post.images.map((image, i) => {
+                return (
+                  <img
+                    key={i}
+                    src={image}
+                    className=""
+                    style={{
+                      height: "100%",
+                      width: "max-content",
+                      objectFit: "cover",
+                    }}
+                  />
+                );
+              })
             ) : (
-              <div
-                onClick={() => setModalShow(true)}
-                className="d-flex align-items-center justify-content-center"
-                style={{
-                  width: "65px",
-                  height: "65px",
-                  border: "2px solid #5b5b5b",
-                  borderRadius: "50%",
-                  backgroundColor: "#191724",
-                }}
-                id="join"
-              >
-                <AiOutlinePlus size={40} style={{ color: "#aaaaaa" }} />
-              </div>
+              <></>
             )}
           </div>
-        </Card.Body>
-      </Card>
-      <PostModal
-        show={modalShow}
-        props={props}
-        onHide={() => setModalShow(false)}
-        id={_id}
-      />
-    </>
+        </div>
+        <div
+          className="w-100 rounded-bottom p-3 d-flex justify-content-start align-items-center"
+          style={{ height: "60px" }}
+        >
+          <HiOutlineReply
+            className="h-100 me-3 post-icons"
+            size={22}
+            onClick={(e) => {
+              setModalShow(true);
+            }}
+          />
+          <IoRepeat className="h-100 me-3 post-icons" size={27} />
+          <VscReactions className="h-100 me-3 post-icons" size={27} />
+
+          <Reply
+            show={modalShow}
+            props={post}
+            onHide={() => setModalShow(false)}
+          />
+          <span>
+            <div className="d-flex justify-content-end text-color">
+              <Dropdown>
+                <Dropdown.Toggle
+                  className="text-color"
+                  as={CustomToggle}
+                  id="dropdown-custom-components"
+                ></Dropdown.Toggle>
+                <Dropdown.Menu id="dropdown-window">
+                  {post.creator._id === LoggedInUser?._id ? (
+                    <>
+                      <Dropdown.Item
+                        className="text-light dropdown-buttons"
+                        eventKey="1"
+                      >
+                        Edit
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        className="text-light dropdown-buttons"
+                        eventKey="2"
+                      >
+                        Delete
+                      </Dropdown.Item>
+
+                      <Dropdown.Item
+                        className="text-light dropdown-buttons"
+                        eventKey="1"
+                      >
+                        Share
+                      </Dropdown.Item>
+                    </>
+                  ) : (
+                    <>
+                      <Dropdown.Item
+                        className="text-light dropdown-buttons"
+                        eventKey="1"
+                      >
+                        Share
+                      </Dropdown.Item>
+                    </>
+                  )}
+                </Dropdown.Menu>
+              </Dropdown>
+            </div>
+          </span>
+        </div>
+      </div>
+    </Col>
   );
-};
+}
+
 export default Post;

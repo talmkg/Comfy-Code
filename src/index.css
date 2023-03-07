@@ -37,10 +37,13 @@ body::-webkit-scrollbar-thumb {
 .btn:active,
 .form-select,
 .form-select:focus,
-.form-select:active {
+.form-select:active,
+.accordion-button:focus,
+.accordion-button:active {
   outline: none !important;
   box-shadow: none !important;
 }
+
 .prevent-select {
   -webkit-user-select: none; /* Safari */
   -ms-user-select: none; /* IE 10 and IE 11 */

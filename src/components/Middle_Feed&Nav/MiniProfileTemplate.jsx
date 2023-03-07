@@ -12,8 +12,6 @@ const MiniProfileTemplate = (member) => {
         backgroundColor: "#1F1D2D",
         zIndex: 99,
         width: "300px",
-        top: "-100%",
-        marginLeft: "65px",
       }}
     >
       <div className="position-relative ">
@@ -21,18 +19,16 @@ const MiniProfileTemplate = (member) => {
           className="g-0 rounded-top"
           style={{
             height: "75px",
+            backgroundSize: "100% 100%",
 
-            background: `linear-gradient(rgba(0,0,0,.3), rgba(0,0,0,.5)),
-              url(${
-                member.background
-                  ? member.background
-                  : "https://i.pinimg.com/736x/b3/bc/dc/b3bcdc03f02ccce591232011481580f1.jpg"
-              })`,
+            backgroundSize: "cover",
+            backgroundImage: `linear-gradient(rgba(0,0,0,.4), rgba(0,0,0,.5)),
+              url(${member.background})`,
           }}
         >
           <Row
             style={{
-              backdropFilter: "blur(2px)",
+              backdropFilter: "blur(1px)",
               borderTopRightRadius: "15px",
               borderTopLeftRadius: "15px",
             }}
@@ -43,7 +39,7 @@ const MiniProfileTemplate = (member) => {
               className="position-relative"
               style={{
                 borderTopLeftRadius: "15px",
-                backdropFilter: "blur(2px)",
+                backdropFilter: "blur(1px)",
               }}
             >
               <div

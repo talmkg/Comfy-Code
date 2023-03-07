@@ -6,11 +6,17 @@ import {
   Dropdown,
   Row,
   Col,
+  Accordion,
+  Card,
+  AccordionContext,
 } from "react-bootstrap";
-import { FaUpload, FaUsers } from "react-icons/fa";
+import { FaRegImage, FaUpload, FaUsers } from "react-icons/fa";
 import {
   MdOutlineEdit,
+  MdOutlineExpandLess,
+  MdOutlineExpandMore,
   MdOutlineExplore,
+  MdOutlineImage,
   MdOutlineNotificationsNone,
 } from "react-icons/md";
 import { useEffect, useState } from "react";
@@ -40,10 +46,32 @@ import { Link, useNavigate } from "react-router-dom";
 import UsersModal from "../Mini_Components/InviteModal";
 import TeamSizeSelect from "../Mini_Components/TeamSizeSelect/TeamSizeSelect";
 import languages from "../../Data/Languages/Languages.json";
-import { BiHome, BiLogOut } from "react-icons/bi";
+import { BiHome, BiImage, BiLogOut } from "react-icons/bi";
 import { IoChatbubblesOutline } from "react-icons/io5";
 import { RxCross2 } from "react-icons/rx";
-
+import { useAccordionButton } from "react-bootstrap/AccordionButton";
+import { useContext } from "react";
+import { DiGithubAlt } from "react-icons/di";
+function CustomToggle({ children, eventKey, callback }) {
+  const [changeIcon, setChangeIcon] = useState(false);
+  const { activeEventKey } = useContext(AccordionContext);
+  const decoratedOnClick = useAccordionButton(
+    eventKey,
+    () => callback && callback(eventKey)
+  );
+  const isCurrentEventKey = activeEventKey === eventKey;
+  return (
+    <>
+      <div>
+        {isCurrentEventKey ? (
+          <MdOutlineExpandLess size={25} onClick={decoratedOnClick} />
+        ) : (
+          <MdOutlineExpandMore size={25} onClick={decoratedOnClick} />
+        )}
+      </div>
+    </>
+  );
+}
 function MyVerticallyCenteredModal(props) {
   const [usersModalShow, setUsersModalShow] = React.useState(false);
   const LoggedInUser = useSelector((state) => state.LoggedInUser[0]);
@@ -65,22 +93,40 @@ function MyVerticallyCenteredModal(props) {
   const [description, setDescription] = useState("");
   const [hashtags, setHashtags] = useState([]);
   const [isPrivate, setPrivate] = useState(false);
-  const [maxMembers, setMaxMembers] = useState(5);
+  const [maxMembers, setMaxMembers] = useState(0);
   const [image, setImage] = useState(false);
   const [postImage, setPostImage] = useState(undefined);
   const [postType, setPostType] = useState(true);
   const [postText, setPostText] = useState("");
+  const [language, setLanguage] = useState("English");
   const [postPreview, setPostPreview] = useState(undefined);
   const [isImagePreviewOptionOn, setIsImagePreviewOptionOn] = useState(false);
+  const [githubRepoLink, setGithubRepoLink] = useState("");
   const [isCustomHashtagInputActive, setCustomHashtagInputActive] =
     useState(false);
   const [customHashtagInput, setCustomHashtagInput] = useState("");
   const createAGroup = () => {
     const formData = new FormData();
-
     formData.append("cover", image);
-
-    dispatch(createGroup(title, description, hashtags, formData, onHide));
+    let privacySetting;
+    if (isPrivate === true) {
+      privacySetting = "private";
+    } else {
+      privacySetting = "public";
+    }
+    dispatch(
+      createGroup(
+        title,
+        description,
+        hashtags,
+        privacySetting,
+        maxMembers,
+        language,
+        githubRepoLink,
+        formData,
+        onHide
+      )
+    );
     setTitle("");
     setDescription("");
     setHashtags([]);
@@ -194,11 +240,7 @@ function MyVerticallyCenteredModal(props) {
               </Button>
             </div>
           </div>
-          {/* 1.nah. true/false. create a switch and fuck it all man */}
-          {/*2. we actually can delete input of a file and leave upload icon. In settings/prof we are already using preview - se once we choose file we can preview it in a small box or in original width.*/}
-          {/*3. Private groups. Once invited, you will be added to an array of accessed-users of this group (only people from this list will be able to join if type===private). You can select people to whom invites will be sent after you create a group (say to users how invites will be sent ofc).*/}
-          {/*4. Finish implementing posting posts and create a route for user's newsfeed - basically last 10 groups + followed user's posts wont wont, since it will start repeating posts or groups in one point. But if you find all groups and needed posts, create a sorted array and then limit - its gonna be perfect.*/}
-          {}
+
           {postType ? (
             <>
               <div className="post-post w-100 h-100 d-flex flex-column justify-content-between">
@@ -274,7 +316,7 @@ function MyVerticallyCenteredModal(props) {
                   </div>
                 </div>
                 <div>
-                  <div className="d-flex justify-content-between align-items-center text-color pe-2 px-2 pb-2 pt-2">
+                  <div className="d-flex justify-content-between align-items-center text-color pe-3 px-3 pb-3 pt-2">
                     <div className="">
                       <FaUpload
                         size={28}
@@ -458,17 +500,23 @@ function MyVerticallyCenteredModal(props) {
                       style={{ border: "none" }}
                       className="text-color select-language"
                     >
-                      {languages.map((language, index) => {
-                        if (language.name === "English") {
+                      {languages.map((languageMap, index) => {
+                        if (languageMap.name === language) {
                           return (
                             <option key={index} selected>
-                              {language.name}
+                              {languageMap.name}
                             </option>
                           );
                         } else {
                           return (
-                            <option key={index} value={[index]}>
-                              {language.name}
+                            <option
+                              key={index}
+                              value={[index]}
+                              onClick={(e) => {
+                                setLanguage(languageMap.name);
+                              }}
+                            >
+                              {languageMap.name}
                             </option>
                           );
                         }
@@ -480,21 +528,55 @@ function MyVerticallyCenteredModal(props) {
                       Team Size
                     </div>
                     <div className="parentdiv w-100">
-                      <TeamSizeSelect min={0} max={10} />
+                      <TeamSizeSelect
+                        min={0}
+                        max={10}
+                        setMaxMembers={setMaxMembers}
+                      />
                     </div>
                   </div>
                 </div>
-                <div className="p-2 pt-0 pb-3 choose-image text-center">
-                  <div className="p-1" style={{ color: "#686f7f" }}>
-                    Add cover for your project
-                  </div>
-                  <Form.Control
-                    type="file"
-                    id="chooseImage"
-                    onChange={(e) => imageChangeHandler(e)}
-                    accept=".jpg, .jpeg, .png"
-                    multiple
-                  />
+                <div className="w-100 pe-3 px-3">
+                  <Accordion>
+                    <Card className="accordion-post-group">
+                      <Card.Header className="d-flex justify-content-between align-items-center">
+                        <span>Additional fields</span>
+                        <CustomToggle eventKey="1">Click me!</CustomToggle>
+                      </Card.Header>
+                      <Accordion.Collapse eventKey="1">
+                        <div className="p-2">
+                          <Form.Group className="pb-2">
+                            <Form.Label className="d-flex align-items-center">
+                              <DiGithubAlt size={25} className="me-1" />
+                              Github Repository Link
+                            </Form.Label>
+                            <Form.Control
+                              type="githubRepoLink"
+                              className="custom-input-settings"
+                              placeholder="Enter your github's repository link"
+                              value={githubRepoLink}
+                              onChange={(e) =>
+                                setGithubRepoLink(e.target.value)
+                              }
+                            />
+                          </Form.Group>
+                          <Form.Group className="choose-image pb-2">
+                            <Form.Label className="d-flex align-items-center">
+                              <BiImage size={25} className="me-1" />
+                              Group's Cover
+                            </Form.Label>
+                            <Form.Control
+                              type="file"
+                              id="chooseImage"
+                              onChange={(e) => imageChangeHandler(e)}
+                              accept=".jpg, .jpeg, .png"
+                              multiple
+                            />
+                          </Form.Group>
+                        </div>
+                      </Accordion.Collapse>
+                    </Card>
+                  </Accordion>
                 </div>
               </div>
               <div className=" d-flex justify-content-center text-color">
@@ -509,11 +591,9 @@ function MyVerticallyCenteredModal(props) {
                 </div>
               </div>
 
-              {/*MINI BUTTONS */}
               <div className="d-flex justify-content-between align-items-center text-color pe-3 px-3 pb-3 pt-1">
                 <div className="">
                   <FaUpload size={28} className="me-2" />
-                  {/* <BsEmojiSmile size={28} className="me-2" /> */}
                 </div>
 
                 <div>
@@ -524,11 +604,6 @@ function MyVerticallyCenteredModal(props) {
           )}
         </div>
       </Modal>
-
-      {/* <UsersModal
-        show={usersModalShow}
-        onHide={() => setUsersModalShow(false)}
-      /> */}
     </>
   );
 }
@@ -555,9 +630,10 @@ const Left_Sidebar = () => {
     const elem = document.getElementById("toggle");
     elem.click();
   };
-  useEffect(() => {
-    console.log(isOptions);
-  });
+
+  const openOptions = () => {
+    setIsOptions(isOptions ? false : true);
+  };
   if (!LoggedInUser) {
     return <div></div>;
   } else {
@@ -576,9 +652,7 @@ const Left_Sidebar = () => {
                     width: "60px",
                     height: "60px",
                   }}
-                  onClick={(e) => {
-                    setIsOptions(isOptions ? false : true);
-                  }}
+                  onClick={openOptions}
                 />
                 <div
                   id="center-bottom"
@@ -699,7 +773,11 @@ const Left_Sidebar = () => {
               </div>
               <div>
                 <div className="sidebar-button-div">
-                  <Button className="sidebar-button">
+                  <Button
+                    as={Link}
+                    to="/notifications"
+                    className="sidebar-button"
+                  >
                     <span>Notifications</span>
                   </Button>
                 </div>

@@ -5,13 +5,12 @@ import { AiOutlinePlus, AiOutlineUserAdd } from "react-icons/ai";
 import Follow_Button from "../../../components/Mini_Components/Follow_Button";
 import { Link } from "react-router-dom";
 function MiniProfilePreview(props) {
-  console.log(props.badges);
-
   return (
     <div
       className=" text-light rounded-3"
       style={{
         backgroundColor: "#1F1D2D",
+        width: "320px",
       }}
     >
       <div className="position-relative">
@@ -19,20 +18,18 @@ function MiniProfilePreview(props) {
           className="g-0 rounded-top"
           style={{
             height: "75px",
+            backgroundSize: "100% 100%",
 
-            background: `linear-gradient(rgba(0,0,0,.3), rgba(0,0,0,.5)),
-              url(${
-                props.background
-                  ? props.background
-                  : "https://i.pinimg.com/736x/b3/bc/dc/b3bcdc03f02ccce591232011481580f1.jpg"
-              })`,
+            backgroundSize: "cover",
+            backgroundImage: `linear-gradient(rgba(0,0,0,.4), rgba(0,0,0,.5)),
+              url(${props.background})`,
           }}
         >
           <Row
             style={{
-              backdropFilter: "blur(2px)",
-              borderTopRightRadius: "15px",
-              borderTopLeftRadius: "15px",
+              backdropFilter: "blur(1px)",
+              borderTopRightRadius: "5px",
+              borderTopLeftRadius: "5px",
             }}
             className="p-0 m-0"
           >
@@ -41,7 +38,7 @@ function MiniProfilePreview(props) {
               className="position-relative"
               style={{
                 borderTopLeftRadius: "15px",
-                backdropFilter: "blur(2px)",
+                backdropFilter: "blur(1px)",
               }}
             >
               <div
@@ -49,7 +46,7 @@ function MiniProfilePreview(props) {
                   position: "absolute",
                   bottom: "-20%",
                 }}
-                className="d-flex"
+                className="d-flex align-items-center"
               >
                 <img
                   src={props.pfp}
@@ -61,12 +58,12 @@ function MiniProfilePreview(props) {
                   }}
                   className="me-2 mx-2"
                 />
-                <div>
+                <div className="pb-1">
                   <Link
                     to={`/profile/${props._id}`}
                     className="d-flex text-truncate"
                     style={{
-                      fontSize: "20px",
+                      fontSize: "19px",
                       color: "#6BC2E5",
                       textDecoration: "none",
                     }}
@@ -86,7 +83,7 @@ function MiniProfilePreview(props) {
             >
               <div style={{ position: "absolute", bottom: "-20%" }}>
                 <Button
-                  className="gradient-button p-1 d-flex align-items-center justify-content-center me-2"
+                  className="gradient-button p-1 d-flex align-items-center justify-content-center"
                   style={{
                     borderRadius: "50%",
                     width: "40px",

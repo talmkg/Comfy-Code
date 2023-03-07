@@ -1,0 +1,23 @@
+.side-settings-button {
+  color: #dbccec !important;
+  background: none !important;
+  border-radius: none !important;
+  border: none !important;
+  border-radius: 15px !important;
+}
+
+.side-settings-button:hover {
+  color: #c4a7e7 !important;
+  background: #373249 !important;
+  border: none !important;
+}
+
+.active-side-settings-button {
+  color: #c4a7e7 !important;
+  background: #373249 !important;
+  border: none !important;
+  border-radius: 15px !important;
+}
+.rdp {
+  --rdp-background-color: #deb0e7c9 !important;
+}

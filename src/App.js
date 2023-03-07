@@ -16,6 +16,7 @@ import {
 import { io } from "socket.io-client";
 import { useEffect } from "react";
 import Settings from "./views/Settings/Settings";
+import Notifications from "./views/Notifications/Notifications";
 
 function App() {
   const LoggedInUser = useSelector((state) => state?.LoggedInUser[0]);
@@ -35,9 +36,10 @@ function App() {
             <Route path="/" element={<Identifier />} />
             <Route path="/login" element={<Login />} />
             <Route path="/home" element={<Home />} />
+            <Route path="/notifications" element={<Notifications />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/profile/:id" element={<Profile />} />
             <Route path="/settings" element={<Settings />} />
-            <Route path="/profile/:userId" element={<Profile />} />
           </Routes>
           <Right_Sidebar />
         </div>

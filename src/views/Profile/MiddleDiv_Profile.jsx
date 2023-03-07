@@ -3,6 +3,7 @@ import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
 import { MdCalendarToday, MdOutlineCake } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
+import Group from "../../components/Middle_Feed&Nav/Group";
 import Post from "../../components/Middle_Feed&Nav/Post";
 import Big_Follow_Button from "../../components/Mini_Components/Big_Follow_Button";
 import Follow_Button from "../../components/Mini_Components/Follow_Button";
@@ -12,42 +13,38 @@ import {
   fetchLoginnedUser,
   fetchMyGroups,
   fetchSomeonesGroups,
+  fetchUserById,
   fetchUsersGroups,
   fetchUsersPosts,
 } from "../../redux/actions";
 import { getTokenFromStore } from "../../redux/store";
 import "./styles.css";
-const MiddleDiv_Profile = (userProps) => {
+const MiddleDiv_Profile = () => {
   const loading = useSelector((state) => state.loading);
   const LoggedInUser = useSelector((state) => state.LoggedInUser[0]);
-
   const [usersGroups, setUsersGroups] = useState([]);
   const dispatch = useDispatch();
-  const user = userProps;
-  const myGroups = useSelector((state) => state?.usersGroups);
-  const params = useParams();
-
-  //posts
+  const [user, setUser] = useState([]);
+  // const myGroups = useSelector((state) => state?.usersGroups);
+  const paramsData = useParams();
+  const [params, setParams] = useState(paramsData);
   const [posts, setPosts] = useState([]);
+
   useEffect(() => {
-    //if another or myself
-    if (params.userId) {
-      dispatch(fetchSomeonesGroups(params.userId, setUsersGroups));
-      dispatch(fetchUsersPosts(params.userId, setPosts));
+    if (paramsData.id) {
+      dispatch(fetchUserById(paramsData.id, setUser));
+      dispatch(fetchUsersPosts(paramsData.id, setPosts));
     } else {
-      dispatch(fetchLoginnedUser());
-      dispatch(fetchUsersGroups());
+      setUser(LoggedInUser);
       dispatch(fetchUsersPosts(LoggedInUser._id, setPosts));
     }
-  }, []);
+  }, [paramsData]);
 
   let objectDate = new Date(user.createdAt);
   let day = objectDate.getDate();
   let month = objectDate.getMonth();
   let year = objectDate.getFullYear();
-  useEffect(() => {
-    console.log(posts);
-  }, []);
+
   return (
     <>
       <div
@@ -87,7 +84,6 @@ const MiddleDiv_Profile = (userProps) => {
                 style={{
                   height: "40%",
                   backgroundImage: `linear-gradient(0deg, rgba(25,25,41,0.8) 50%, rgba(255,255,255,0) 100%), url(${user?.background})`,
-
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                   backgroundRepeat: "no-repeat",
@@ -110,17 +106,42 @@ const MiddleDiv_Profile = (userProps) => {
                     <div style={{ fontSize: "18px" }}>
                       {user?.name} {user?.surname}
                     </div>
-                    <div className="text-light" style={{ fontSize: "17px" }}>
+                    <div className="text-color" style={{ fontSize: "17px" }}>
                       @{user?.username}
                     </div>
                   </div>
                 </div>
+              </div>
+              <div
+                className="position-relative "
+                style={{
+                  overflow: "hidden",
+                  borderBottom: "1px solid rgba(255, 255, 255, 0.192)",
+
+                  height: "25%",
+                }}
+              >
+                {user.bio ? (
+                  <div
+                    className="h-100 w-100 center-flex "
+                    style={{ fontSize: "16px" }}
+                  >
+                    {user.bio}
+                  </div>
+                ) : (
+                  <div
+                    className="h-100 w-100 center-flex text-muted "
+                    style={{ fontSize: "16px" }}
+                  >
+                    This user has not written their bio yet.
+                  </div>
+                )}
                 {params.userId ? (
                   <div
-                    className="mx-3"
+                    className="p-2"
                     style={{
                       position: "absolute",
-                      bottom: "-15px",
+                      top: 0,
                       right: 0,
                     }}
                   >
@@ -128,27 +149,6 @@ const MiddleDiv_Profile = (userProps) => {
                   </div>
                 ) : (
                   <></>
-                )}
-              </div>
-              <div
-                className="position-relative"
-                style={{
-                  overflow: "hidden",
-                  borderBottom: "1px solid rgba(255, 255, 255, 0.192)",
-                  height: "25%",
-                }}
-              >
-                {user.bio ? (
-                  <div
-                    className="p-3 center-flex h-100 w-100 "
-                    style={{ fontSize: "16px" }}
-                  >
-                    {user.bio}
-                  </div>
-                ) : (
-                  <div className="center-flex h-100 w-100">
-                    "Nothing here... yet."
-                  </div>
                 )}
               </div>
               <div
@@ -174,7 +174,7 @@ const MiddleDiv_Profile = (userProps) => {
                   <Col xs={4} className="center-flex text-color">
                     <div className="w-100">
                       <div className="w-100 text-center">
-                        Member of {myGroups?.memberOf?.length} group('s)
+                        {posts?.length} post('s)
                       </div>
                     </div>
                   </Col>
@@ -200,16 +200,16 @@ const MiddleDiv_Profile = (userProps) => {
             className="d-flex justify-content-center"
             style={{ maxHeight: "100%", minHeight: "35vh", overflow: "hidden" }}
           >
-            <div className="d-flex justify-content-center pt-3 pb-3 w-100">
+            <div className="d-flex justify-content-center pt-3 w-100">
               <div className="w-75 d-flex justify-content-center">
                 <div
                   className=" glass p-3 g-0 scrollbar w-100"
                   style={{
-                    overflow: "hidden visible",
+                    overflow: "hidden",
                   }}
                 >
                   <div
-                    className="w-100 rounded-5 d-flex justify-content-between"
+                    className="w-100 rounded-3 d-flex justify-content-between"
                     style={{
                       height: "60px",
                       position: "sticky",
@@ -217,6 +217,11 @@ const MiddleDiv_Profile = (userProps) => {
                       backgroundColor: "#1F1D2D",
                     }}
                   >
+                    <div style={{ width: "33%" }} className="center-flex">
+                      <Button className="sidebar-button w-75 h-75">
+                        <span>All</span>
+                      </Button>
+                    </div>
                     <div style={{ width: "33%" }} className="center-flex">
                       <Button className="sidebar-button w-75 h-75">
                         <span>Posts</span>
@@ -227,70 +232,10 @@ const MiddleDiv_Profile = (userProps) => {
                         <span>Groups</span>
                       </Button>
                     </div>
-                    <div style={{ width: "33%" }} className="center-flex">
-                      <Button className="sidebar-button w-75 h-75">
-                        <span>About Me</span>
-                      </Button>
-                    </div>
                   </div>
                   <div>
                     {posts.map((post, i) => {
-                      return (
-                        <div
-                          key={i}
-                          className="rounded-2 p-2 mt-2 mb-2"
-                          style={{
-                            backgroundColor: "#232133",
-                            height: "max-content",
-                            width: "100%",
-                          }}
-                        >
-                          <div className="d-flex align-items-center">
-                            <img
-                              src={post.creator.pfp}
-                              className="me-2"
-                              style={{
-                                height: "50px",
-                                width: "50px",
-                                objectFit: "cover",
-                                borderRadius: "50%",
-                              }}
-                            />
-
-                            <div className="text-color">
-                              <Link
-                                to={`/profile/${post.creator._id}`}
-                                className="text-light"
-                                style={{ textDecoration: "none" }}
-                              >
-                                <h6 className="p-0 m-0">
-                                  {post.creator.name} {post.creator.surname}
-                                </h6>
-                              </Link>
-                              @{post.creator.username}
-                            </div>
-                          </div>
-                          <div> {post.text}</div>
-                          <div className="center-flex flex-fill h-75 w-100">
-                            {post.images ? (
-                              post.images.map((image) => {
-                                return (
-                                  <img
-                                    src={image}
-                                    className=" w-50"
-                                    style={{
-                                      height: "max-content",
-                                      objectFit: "cover",
-                                    }}
-                                  />
-                                );
-                              })
-                            ) : (
-                              <></>
-                            )}
-                          </div>
-                        </div>
-                      );
+                      return <Post key={i} {...post} i={i} width={"100%"} />;
                     })}
                   </div>
                 </div>
