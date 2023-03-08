@@ -860,3 +860,9 @@ export const createPost = (formData, onHide) => {
     }
   };
 };
+
+//------------------ LOAD ALL DATA ----------------------//
+export const loadAllData = () => {
+  //1. fetch all data
+  //2. if all fetches, and only IF all fetches are done - use callback (via props) to mark as done
+};
