@@ -581,11 +581,12 @@ function MyVerticallyCenteredModal(props) {
               </div>
               <div className=" d-flex justify-content-center text-color">
                 <div>
-                  <h5 className="text-center mb-2">Team:</h5>
+                  <h5 className="text-center mb-2 mt-2">Team:</h5>
                   <div className="active-button flex-column">
                     <div>
                       1. Team-Leader: {LoggedInUser?.username} |{" "}
                       {LoggedInUser?.name} {LoggedInUser?.surname}
+                      {/* here we can map invited users */}
                     </div>
                   </div>
                 </div>
@@ -595,7 +596,6 @@ function MyVerticallyCenteredModal(props) {
                 <div className="">
                   <FaUpload size={28} className="me-2" />
                 </div>
-
                 <div>
                   <AiOutlineQuestionCircle size={28} />
                 </div>

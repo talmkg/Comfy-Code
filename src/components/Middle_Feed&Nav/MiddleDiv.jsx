@@ -11,7 +11,9 @@ import { FiRepeat } from "react-icons/fi";
 import { RiRepeatLine, RiReplyAllLine } from "react-icons/ri";
 import { BsReply } from "react-icons/bs";
 import { VscReactions } from "react-icons/vsc";
+import ReactDOM from "react-dom";
 import $ from "jquery";
+
 import Group from "./Group";
 import Post from "./Post";
 
@@ -24,16 +26,6 @@ const MiddleDiv = () => {
     dispatch(getFeed(number));
   }, []);
 
-  // $(window).on("scroll", function () {        WORKS BUT ITS DUMB WAY
-  //   if (
-  //     $(window).scrollTop() >=
-  //     $(".feed-div").offset().top +
-  //       $(".feed-div").outerHeight() -
-  //       window.innerHeight
-  //   ) {
-  //     alert("You reached the end of the DIV");
-  //   }
-  // });
   $(window).on("scroll", function () {
     if (
       $(window).scrollTop() >=
@@ -44,15 +36,6 @@ const MiddleDiv = () => {
       dispatch(getFeed(number + 10));
     }
   });
-
-  // $(window).on("scroll", function () {       BROKEN
-  //   if (
-  //     $(window).scrollTop() >=
-  //     $(document).height() - $(window).height() - 10
-  //   ) {
-  //     alert("end of page");
-  //   }
-  // });
 
   return (
     <>
@@ -67,7 +50,7 @@ const MiddleDiv = () => {
         }}
       >
         <div className="h-100">
-          <GlobalTopNav />
+          <GlobalTopNav identifier={"home"} />
           <div
             className="position-relative pb-3 feed-div"
             style={{ overflow: "hidden" }}

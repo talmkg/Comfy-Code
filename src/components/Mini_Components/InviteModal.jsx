@@ -5,12 +5,29 @@ import { AiOutlineQuestionCircle, AiOutlinePlus } from "react-icons/ai";
 import "../Left_Sidebar/styles.css";
 import { useDispatch, useSelector } from "react-redux";
 import { inviteToGroup } from "../../redux/actions";
+import { BsSearch } from "react-icons/bs";
+import { useEffect } from "react";
 
 function UsersModal(props) {
   const { onHide, id } = props;
   const dispatch = useDispatch();
   const [invitedUser, setInvitedUser] = useState("");
   const LoggedInUser = useSelector((state) => state?.LoggedInUser[0]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [follows, setFollows] = useState(LoggedInUser.follows);
+  useEffect(() => {
+    update();
+  }, [searchQuery]);
+  const update = () => {
+    if (searchQuery.length === 0) {
+      setFollows(LoggedInUser.follows);
+    } else {
+      const filtered = follows.filter((user) =>
+        user.name.toLowerCase().startsWith(searchQuery)
+      );
+      setFollows(filtered);
+    }
+  };
   return (
     <Modal
       id="no-border-box"
@@ -26,16 +43,25 @@ function UsersModal(props) {
           aria-label="Close"
           onClick={onHide}
         ></button>
-        <Modal.Body>
-          <h4 className="text-center text-color">Invite friends</h4>
+        <div>
+          <h5 className="text-center text-color">Invite your friends</h5>
+          <Form.Group className="mb-3">
+            <Form.Control
+              type="Title"
+              className="bg-transparent"
+              style={{ border: "none" }}
+              placeholder={`Enter the name or username of your friend`}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </Form.Group>
           <div
             className="rounded-3 w-100"
             style={{ background: "#373249", padding: "0.5rem" }}
           >
             {LoggedInUser?.follows[0] ? (
-              LoggedInUser?.follows?.map((user, index) => {
+              follows.map((user, index) => {
                 const invite_action = () => {
-                  console.log("inviting..");
                   dispatch(inviteToGroup(id, user._id));
                   setInvitedUser(user.name + " " + user.surname);
                 };
@@ -49,26 +75,27 @@ function UsersModal(props) {
                       <img
                         src={user.pfp}
                         style={{
-                          maxHeight: "30px",
+                          maxHeight: "40px",
                           borderRadius: "50%",
                           marginRight: "10px",
                         }}
                       />
-                      <h6 className="p-0 m-0">
+                      <span className="p-0 m-0">
                         {user.name} {user.surname}
-                      </h6>
+                      </span>
                     </div>
 
                     <div>
                       <Button
-                        className="gradient-button p-1 d-flex align-items-center justify-content-center"
+                        className="gradient-button d-flex align-items-center justify-content-center rounded-1"
                         style={{
-                          borderRadius: "50%",
-                          width: "30px",
-                          height: "30px",
+                          width: "max-content",
+                          height: "max-content",
                         }}
+                        onClick={invite_action}
                       >
-                        <AiOutlinePlus size={20} onClick={invite_action} />
+                        <span className="me-1"> Invite</span>
+                        <AiOutlinePlus />
                       </Button>
                     </div>
                   </div>
@@ -87,7 +114,7 @@ function UsersModal(props) {
           ) : (
             <></>
           )}
-        </Modal.Body>
+        </div>
       </div>
     </Modal>
   );

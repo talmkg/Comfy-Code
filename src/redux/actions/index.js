@@ -9,7 +9,7 @@ export const FETCH_ALL_USERS = "FETCH_ALL_USERS";
 export const JOIN_TEAM = "JOIN_TEAM";
 export const LOADING = "LOADING";
 export const LOGIN = "LOGIN";
-export const SAVE_USERS_POSTS = "SAVE_USERS_POSTS";
+export const SAVE_USERS_GROUPS = "SAVE_USERS_GROUPS";
 export const FETCH_NOTIFICATIONS = "FETCH_NOTIFICATIONS";
 export const CONNECTED_TO_SOCKET = "CONNECTED_TO_SOCKET";
 export const GENERAL_CHAT_HISTORY = "GENERAL_CHAT_HISTORY";
@@ -170,7 +170,7 @@ export const fetchUsersGroups = () => {
         .then((groups) => {
           if (groups) {
             dispatch({
-              type: SAVE_USERS_POSTS,
+              type: SAVE_USERS_GROUPS,
               payload: groups,
             });
             dispatch({
@@ -338,6 +338,7 @@ export const joinTheGroup = (group_id, onHide) => {
     if (teamResponse.ok) {
       console.log("You joined <3");
       dispatch(getFeed());
+      dispatch(fetchUsersGroups());
       dispatch({
         type: LOADING,
         payload: false,
@@ -375,7 +376,7 @@ export const leaveTheGroup = (group_id, onHide) => {
     }
   };
 };
-export const inviteToGroup = (group_id, user_id) => {
+export const inviteToGroup = (group_id, userid) => {
   return async (dispatch) => {
     const token = dispatch(getTokenFromStore());
     dispatch({
@@ -389,10 +390,12 @@ export const inviteToGroup = (group_id, user_id) => {
         Authorization: `Bearer ${token}`,
       },
     };
-    const link = `http://localhost:3002/groups/${group_id}/invite/${user_id}`;
+    const link = `http://localhost:3002/groups/${group_id}/invite/${userid}`;
     const teamResponse = await fetch(link, optionsJoinTeam);
     if (teamResponse.ok) {
-      console.log("You invited someone <3");
+      console.log("inviteToGroup done");
+      let type = "invite";
+      dispatch(sendNotification({ userid, type, group_id }));
       dispatch({
         type: LOADING,
         payload: false,
@@ -504,7 +507,9 @@ export const follow = (userid) => {
     if (teamResponse.ok) {
       console.log("You followed this user <3");
       dispatch(fetchLoginnedUser());
-      dispatch(sendNotification(userid, `followed you`));
+      const text = "followed you";
+      const type = "follow";
+      dispatch(sendNotification({ userid, text, type }));
     } else {
       console.log("huh?!");
     }
@@ -528,7 +533,6 @@ export const unfollow = (userid) => {
     if (teamResponse.ok) {
       console.log("You unfollowed this user <3");
       dispatch(fetchLoginnedUser());
-      dispatch(sendNotification(userid, `unfollowed you`));
     } else {
       console.log("huh?!");
     }
@@ -590,12 +594,8 @@ export const sendMessage = (LoggedInUser, message) => {
 export const connectToSocketFunction = (LoggedInUser) => {
   return async (dispatch, getState) => {
     const general_chat_history = getState().general_chat_history;
-    const notifications = getState().notifications;
     try {
       socket.emit("setUsername", LoggedInUser);
-
-      //
-      //
       socket.on("welcome", (welcomeMessage) => {
         socket.on("loggedIn", (onlineUsersList) => {
           dispatch({
@@ -614,9 +614,10 @@ export const connectToSocketFunction = (LoggedInUser) => {
           });
         });
         socket.on("notification", (notification) => {
+          console.log("u've got notification");
           const audio = new Audio(sound);
           audio.play();
-
+          const notifications = getState().notifications;
           dispatch({
             type: FETCH_NOTIFICATIONS,
             payload: [...notifications, notification],
@@ -646,25 +647,49 @@ export const connectToSocketFunction = (LoggedInUser) => {
   };
 };
 
-export const sendNotification = (userid, text) => {
-  console.log("sending the notification");
+export const sendNotification = (props) => {
+  const { userid, text, type, group_id } = props;
   return async (dispatch, getState) => {
     const LoggedInUser = getState().LoggedInUser[0];
     const socket_users_list = getState().socket_users_list;
-
+    // console.log("socket_users_list: ", socket_users_list);
+    //find right recipient
     const toSockedIdFilter = socket_users_list.filter(
       (user) => user._id === userid
     );
+    const identifier =
+      toSockedIdFilter[0]?.socketId === undefined ? false : true;
+    //found, if not = undefined
 
-    const newMessage = {
-      from: socket.id,
-      from_mongo: LoggedInUser,
-      to_mongo: userid,
-      to: toSockedIdFilter[0].socketId,
-      text: text,
-    };
+    if (type === "invite") {
+      console.log(userid, group_id);
+      const newMessage = {
+        from: socket.id,
+        type: type,
+        from_mongo: LoggedInUser,
+        to_mongo: userid,
+        to: identifier ? toSockedIdFilter[0].socketId : undefined,
+        text: "invited you to the group",
+        groupID: group_id,
+      };
+      console.log("newMessage", newMessage);
+      socket.emit("notification", newMessage);
+      console.log("You invited someone <3");
+    }
 
-    socket.emit("notification", newMessage);
+    //if type === "follow"
+    if (type === "follow") {
+      const newMessage = {
+        from: socket.id,
+        type: type,
+        from_mongo: LoggedInUser,
+        to_mongo: userid,
+        to: identifier ? toSockedIdFilter[0].socketId : undefined,
+        text: text,
+      };
+      console.log("newMessage", newMessage);
+      socket.emit("notification", newMessage);
+    }
   };
 };
 export const fetchBadges = () => {

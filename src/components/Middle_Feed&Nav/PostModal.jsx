@@ -78,7 +78,7 @@ function PostModal(props) {
           <div className="pt-2">
             <p>{data.description}</p>
           </div>
-          <Row className="text-color">
+          <Row className="text-color pe-2 px-2">
             {data?.hashtags?.map((hashtag, i) => {
               return (
                 <div

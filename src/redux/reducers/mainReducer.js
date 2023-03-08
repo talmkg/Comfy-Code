@@ -4,7 +4,7 @@ import {
   LOADING,
   TOKEN,
   LOGIN,
-  SAVE_USERS_POSTS,
+  SAVE_USERS_GROUPS,
   FETCH_NOTIFICATIONS,
   FETCH_HASHTAGS,
   CONNECTED_TO_SOCKET,
@@ -56,7 +56,7 @@ const mainReducer = (state = initialState, action) => {
         ...state,
         notifications: action.payload,
       };
-    case SAVE_USERS_POSTS:
+    case SAVE_USERS_GROUPS:
       return {
         ...state,
         usersGroups: action.payload,

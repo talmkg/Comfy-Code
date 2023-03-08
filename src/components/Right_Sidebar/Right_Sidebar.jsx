@@ -10,12 +10,12 @@ import {
   sendMessage,
   sendNotification,
 } from "../../redux/actions";
-import Notification from "../Mini_Components/Notification";
 import { useState } from "react";
 import { io } from "socket.io-client";
 import MiniProfileTemplate from "../Middle_Feed&Nav/MiniProfileTemplate";
 import { Link } from "react-router-dom";
 import sound from "../../Sounds/notification.mp3";
+import Notification from "../Mini_Components/Notification";
 
 const Right_Sidebar = () => {
   const dispatch = useDispatch();
@@ -84,7 +84,7 @@ const Right_Sidebar = () => {
                 <div>
                   <div>
                     <Row className="g-0">
-                      {Notifications ? (
+                      {Notifications[0] ? (
                         Notifications?.map((notification, i) => {
                           return (
                             <div
@@ -94,11 +94,7 @@ const Right_Sidebar = () => {
                                   "1px solid rgba(255, 255, 255, 0.192)",
                               }}
                             >
-                              <Notification
-                                {...notification}
-                                key={i}
-                                myGroups={myGroups}
-                              />
+                              <Notification {...notification} key={i} />
                             </div>
                           );
                         })
@@ -146,7 +142,6 @@ const Right_Sidebar = () => {
                         <ListGroup.Item
                           key={index}
                           className="mt-1 mb-1 rounded text-color d-flex justify-content-between bg-transparent border-0"
-                          // style={{ backgroundColor: "transparent" }}
                         >
                           <div>
                             <span
