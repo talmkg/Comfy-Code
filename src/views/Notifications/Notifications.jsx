@@ -8,11 +8,11 @@ import "./styles.css";
 
 const Notifications = () => {
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(fetchUsersGroups());
-  }, []);
+  // useEffect(() => {
+  //   dispatch(fetchUsersGroups());
+  // }, []);
 
-  const Notifications = useSelector((state) => state?.notifications);
+  const Notifications = useSelector((state) => state?.main.notifications);
   return (
     <>
       <div

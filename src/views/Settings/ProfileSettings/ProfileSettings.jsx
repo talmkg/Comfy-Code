@@ -35,7 +35,7 @@ const css = `
 `;
 
 const ProfileSettings = () => {
-  const LoggedInUser = useSelector((state) => state.LoggedInUser[0]);
+  const LoggedInUser = useSelector((state) => state.main.LoggedInUser[0]);
   const [username, setUsername] = useState(LoggedInUser?.username);
   const [location, setLocation] = useState(LoggedInUser?.location);
   const [birthday, setBirthday] = useState(LoggedInUser?.birthday);

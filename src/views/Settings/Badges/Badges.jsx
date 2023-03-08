@@ -14,10 +14,10 @@ import { MdDone } from "react-icons/md";
 import { updateMyProfile } from "../../../redux/actions";
 const Badges = () => {
   //get badges
-  const user = useSelector((state) => state.LoggedInUser[0]);
+  const user = useSelector((state) => state.main.LoggedInUser[0]);
   const [selectedBadges, setSelectedBadges] = useState(user.badges);
   const dispatch = useDispatch();
-  const badges = useSelector((state) => state.badges);
+  const badges = useSelector((state) => state.main.badges);
 
   useEffect(() => {
     dispatch(fetchBadges());

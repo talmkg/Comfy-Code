@@ -12,7 +12,7 @@ function UsersModal(props) {
   const { onHide, id } = props;
   const dispatch = useDispatch();
   const [invitedUser, setInvitedUser] = useState("");
-  const LoggedInUser = useSelector((state) => state?.LoggedInUser[0]);
+  const LoggedInUser = useSelector((state) => state?.main.LoggedInUser[0]);
   const [searchQuery, setSearchQuery] = useState("");
   const [follows, setFollows] = useState(LoggedInUser.follows);
   useEffect(() => {

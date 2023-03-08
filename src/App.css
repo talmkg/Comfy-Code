@@ -5,7 +5,12 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
-
+.center-fixed {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 .active-button {
   color: #c4a7e7 !important;
   background: #373249 !important;

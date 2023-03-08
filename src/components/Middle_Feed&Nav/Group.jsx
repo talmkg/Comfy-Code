@@ -36,7 +36,7 @@ const Group = (props) => {
   const [imageViewShow, setImageViewShow] = React.useState(false);
   const [isInvited, setIsInvited] = React.useState(false);
 
-  const LoggedInUser = useSelector((state) => state?.LoggedInUser[0]);
+  const LoggedInUser = useSelector((state) => state?.main.LoggedInUser[0]);
   const dispatch = useDispatch();
   const {
     leader,

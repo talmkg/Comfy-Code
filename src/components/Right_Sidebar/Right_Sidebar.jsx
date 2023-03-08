@@ -31,11 +31,13 @@ const Right_Sidebar = () => {
   const d = new Date();
   let day = options[d.getDay()];
   const [message, setMessage] = useState("");
-  const LoggedInUser = useSelector((state) => state?.LoggedInUser[0]);
-  const loggedIn = useSelector((state) => state?.socket_connected);
-  const myGroups = useSelector((state) => state?.usersGroups);
-  const Notifications = useSelector((state) => state?.notifications);
-  let realChatHistory = useSelector((state) => state?.general_chat_history[0]);
+  const LoggedInUser = useSelector((state) => state?.main.LoggedInUser[0]);
+  const loggedIn = useSelector((state) => state?.main.socket_connected);
+  const myGroups = useSelector((state) => state?.main.usersGroups);
+  const Notifications = useSelector((state) => state?.main.notifications);
+  let realChatHistory = useSelector(
+    (state) => state?.main.general_chat_history[0]
+  );
   const scrollToBottom = () => {
     const generalChat = document.getElementById("generalChat");
     generalChat.scrollTop = generalChat.scrollHeight;
@@ -48,9 +50,7 @@ const Right_Sidebar = () => {
       scrollToBottom();
     }
   });
-  useEffect(() => {
-    dispatch(getNotifications());
-  }, []);
+  useEffect(() => {}, []);
   if (!LoggedInUser) {
     return <div></div>;
   } else {

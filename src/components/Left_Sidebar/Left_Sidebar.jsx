@@ -74,7 +74,7 @@ function CustomToggle({ children, eventKey, callback }) {
 }
 function MyVerticallyCenteredModal(props) {
   const [usersModalShow, setUsersModalShow] = React.useState(false);
-  const LoggedInUser = useSelector((state) => state.LoggedInUser[0]);
+  const LoggedInUser = useSelector((state) => state.main.LoggedInUser[0]);
   const [Hashtags, setReduxHashtags] = useState([
     { title: "#react" },
     { title: "#javascript" },
@@ -266,6 +266,7 @@ function MyVerticallyCenteredModal(props) {
                   }
                 >
                   <div
+                    className="pt-1"
                     style={{
                       width: "20%",
                       position: "relative",
@@ -610,7 +611,7 @@ function MyVerticallyCenteredModal(props) {
 const Left_Sidebar = () => {
   const [modalShow, setModalShow] = React.useState(false);
   const [isOptions, setIsOptions] = useState(false);
-  const LoggedInUser = useSelector((state) => state?.LoggedInUser[0]);
+  const LoggedInUser = useSelector((state) => state?.main.LoggedInUser[0]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const Logout = () => {

@@ -26,7 +26,7 @@ const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
 ));
 
 function Post(post) {
-  const LoggedInUser = useSelector((state) => state.LoggedInUser[0]);
+  const LoggedInUser = useSelector((state) => state.main.LoggedInUser[0]);
   const [modalShow, setModalShow] = useState(false);
   return (
     <Col

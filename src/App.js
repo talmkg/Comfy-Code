@@ -14,12 +14,16 @@ import {
   SOCKET,
 } from "./redux/actions";
 import { io } from "socket.io-client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Settings from "./views/Settings/Settings";
 import Notifications from "./views/Notifications/Notifications";
-
+import { Button, Modal } from "react-bootstrap";
+import LoaderWindow from "./components/Mini_Components/LoaderWindow";
+import { loadAllData } from "./redux/actions/loaderActions";
 function App() {
-  const LoggedInUser = useSelector((state) => state?.LoggedInUser[0]);
+  const LoggedInUser = useSelector((state) => state?.main.LoggedInUser[0]);
+  //
+
   const dispatch = useDispatch();
   useEffect(() => {
     if (LoggedInUser) {
@@ -27,11 +31,37 @@ function App() {
     }
   }, [LoggedInUser]);
 
+  const loadingResultSelector = useSelector((state) => state?.loader.result);
+
+  const getAllDataFunc = () => {
+    dispatch(loadAllData());
+  };
+  useEffect(() => {
+    const pageAccessedByReload =
+      (window.performance.navigation &&
+        window.performance.navigation.type === 1) ||
+      window.performance
+        .getEntriesByType("navigation")
+        .map((nav) => nav.type)
+        .includes("reload");
+    console.log("page reloaded");
+    getAllDataFunc();
+  }, []);
+
+  // useEffect(() => {
+  //   dispatch(loadAllData());
+  // }, [check]);
+  //if true => 0. state = true 1. show modal 2. if state = true, add overflow-hidden to mega-parent div
   return (
     <>
       <Router>
-        <div className="d-flex">
+        <div className="d-flex position-relative">
           <Left_Sidebar />
+          <div
+            style={{ position: "absolute", height: "100vh", width: "100vw" }}
+          >
+            {loadingResultSelector ? <></> : <LoaderWindow />}
+          </div>
           <Routes>
             <Route path="/" element={<Identifier />} />
             <Route path="/login" element={<Login />} />

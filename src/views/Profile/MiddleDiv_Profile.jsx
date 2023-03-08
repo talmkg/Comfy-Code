@@ -20,8 +20,10 @@ import {
 import { getTokenFromStore } from "../../redux/store";
 import "./styles.css";
 const MiddleDiv_Profile = () => {
-  const loading = useSelector((state) => state.loading);
-  const LoggedInUser = useSelector((state) => state.LoggedInUser[0]);
+  const loading = useSelector((state) => state.main.loading);
+  const LoggedInUser = useSelector((state) => state.main.LoggedInUser[0]);
+  const usersPosts = useSelector((state) => state.main.usersPosts);
+
   const [usersGroups, setUsersGroups] = useState([]);
   const dispatch = useDispatch();
   const [user, setUser] = useState([]);
@@ -36,6 +38,7 @@ const MiddleDiv_Profile = () => {
       dispatch(fetchUsersPosts(paramsData.id, setPosts));
     } else {
       setUser(LoggedInUser);
+      //we are changing it
       dispatch(fetchUsersPosts(LoggedInUser._id, setPosts));
     }
   }, [paramsData]);
@@ -66,10 +69,7 @@ const MiddleDiv_Profile = () => {
             width: "100vw",
           }}
         />
-        <div
-          className=" w-100 h-100 pt-4 position-relative"
-          style={{ backdropFilter: "blur(4px)" }}
-        >
+        <div className=" w-100 h-100 pt-4 position-relative">
           {loading ? (
             <div id="center" style={{ zIndex: "99" }}>
               <Spinner className="text-light" />
@@ -78,7 +78,7 @@ const MiddleDiv_Profile = () => {
             <></>
           )}
           <div className="d-flex justify-content-center">
-            <div className="glass w-75" style={{ height: "60vh" }}>
+            <div className="glass" style={{ height: "60vh", width: "950px" }}>
               <div
                 className="rounded-top position-relative "
                 style={{
@@ -201,7 +201,10 @@ const MiddleDiv_Profile = () => {
             style={{ maxHeight: "100%", minHeight: "35vh", overflow: "hidden" }}
           >
             <div className="d-flex justify-content-center pt-3 w-100">
-              <div className="w-75 d-flex justify-content-center">
+              <div
+                className=" d-flex justify-content-center"
+                style={{ width: "950px" }}
+              >
                 <div
                   className=" glass p-3 g-0 scrollbar w-100"
                   style={{
@@ -234,9 +237,17 @@ const MiddleDiv_Profile = () => {
                     </div>
                   </div>
                   <div>
-                    {posts.map((post, i) => {
-                      return <Post key={i} {...post} i={i} width={"100%"} />;
-                    })}
+                    {paramsData.id
+                      ? posts.map((post, i) => {
+                          return (
+                            <Post key={i} {...post} i={i} width={"100%"} />
+                          );
+                        })
+                      : usersPosts.map((post, i) => {
+                          return (
+                            <Post key={i} {...post} i={i} width={"100%"} />
+                          );
+                        })}
                   </div>
                 </div>
               </div>

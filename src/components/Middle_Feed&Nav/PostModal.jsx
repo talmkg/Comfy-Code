@@ -6,10 +6,9 @@ import { joinTheGroup, leaveTheGroup } from "../../redux/actions";
 import MiniProfileTemplate from "./MiniProfileTemplate";
 import UsersModal from "../Mini_Components/InviteModal";
 function PostModal(props) {
-  const LoggedInUser = useSelector((state) => state.LoggedInUser[0]);
-  const loading = useSelector((state) => state.loading);
+  const LoggedInUser = useSelector((state) => state.main.LoggedInUser[0]);
+  const loading = useSelector((state) => state.main.loading);
 
-  //
   const data = props.props;
 
   const dispatch = useDispatch();
@@ -27,11 +26,7 @@ function PostModal(props) {
 
   const joinTheTeamAction = () => {
     dispatch(joinTheGroup(data._id, onHide));
-    // } else {
-    //   showErrorMessage("privacy");
-    // }
   };
-  //
   const leaveTheTeamAction = () => {
     dispatch(leaveTheGroup(data._id, onHide));
   };

@@ -11,6 +11,7 @@ import {
   GENERAL_CHAT_HISTORY,
   SOCKET_USERS_LIST,
   FETCH_BADGES,
+  SAVE_MY_POSTS,
 } from "../actions";
 
 const initialState = {
@@ -20,6 +21,7 @@ const initialState = {
   loading: false,
   LoggedInUser: [],
   usersGroups: [],
+  usersPosts: [],
   notifications: [],
   hashtags: [],
   socket_connected: false,
@@ -35,7 +37,6 @@ const mainReducer = (state = initialState, action) => {
         ...state,
         token: action.payload,
       };
-
     case CONNECTED_TO_SOCKET:
       return {
         ...state,
@@ -45,6 +46,11 @@ const mainReducer = (state = initialState, action) => {
       return {
         ...state,
         general_chat_history: action.payload,
+      };
+    case SAVE_MY_POSTS:
+      return {
+        ...state,
+        usersPosts: action.payload,
       };
     case SOCKET_USERS_LIST:
       return {

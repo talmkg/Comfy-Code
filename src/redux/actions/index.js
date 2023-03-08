@@ -1,6 +1,7 @@
 import { io } from "socket.io-client";
 
 import sound from "../../Sounds/notification.mp3";
+import { loadAllData, LOADING_RESULT } from "./loaderActions";
 
 export const FETCH_FEED = "FETCH_FEED";
 export const FETCH_HASHTAGS = "FETCH_HASHTAGS";
@@ -15,6 +16,7 @@ export const CONNECTED_TO_SOCKET = "CONNECTED_TO_SOCKET";
 export const GENERAL_CHAT_HISTORY = "GENERAL_CHAT_HISTORY";
 export const SOCKET_USERS_LIST = "SOCKET_USERS_LIST";
 export const FETCH_BADGES = "FETCH_BADGES";
+export const SAVE_MY_POSTS = "SAVE_MY_POSTS";
 
 const socket = io("http://localhost:3002", { transports: ["websocket"] });
 
@@ -25,7 +27,7 @@ export const getFeed = (limit) => {
     if (local_limit === undefined || 0 || null) {
       local_limit = 10;
     }
-    const token = getState().token;
+    const token = dispatch(getTokenFromStore());
 
     const options = {
       headers: {
@@ -64,10 +66,6 @@ export const getFeed = (limit) => {
 export const getToken = (email, password, setErrorMessage) => {
   console.log("Fetching");
   return async (dispatch, getState) => {
-    dispatch({
-      type: LOADING,
-      payload: true,
-    });
     const data = {
       email: email,
       password: password,
@@ -90,10 +88,7 @@ export const getToken = (email, password, setErrorMessage) => {
                 payload: token.token,
               });
               dispatch(fetchLoginnedUser());
-              dispatch({
-                type: LOADING,
-                payload: false,
-              });
+              // dispatch(loadAllData());
             } else {
               setErrorMessage(true);
             }
@@ -407,10 +402,6 @@ export const inviteToGroup = (group_id, userid) => {
 };
 export const fetchLoginnedUser = () => {
   return async (dispatch, getState) => {
-    dispatch({
-      type: LOADING,
-      payload: true,
-    });
     const token = dispatch(getTokenFromStore());
     const options = {
       headers: {
@@ -430,11 +421,6 @@ export const fetchLoginnedUser = () => {
                 type: LOGIN,
                 payload: LoggedInUser,
               });
-
-              dispatch({
-                type: LOADING,
-                payload: false,
-              });
             } else {
               console.log("Error fetching user.");
             }
@@ -452,10 +438,6 @@ export const deleteGroup = (group_id) => {
   const Url = `http://localhost:3002/groups/${group_id}/`;
 
   return async (dispatch) => {
-    dispatch({
-      type: LOADING,
-      payload: true,
-    });
     const token = dispatch(getTokenFromStore());
     const deleteOptions = {
       method: "DELETE",
@@ -469,10 +451,6 @@ export const deleteGroup = (group_id) => {
       let response = await fetch(Url, deleteOptions);
       if (response.ok) {
         dispatch(getFeed());
-        dispatch({
-          type: LOADING,
-          payload: false,
-        });
         console.log("DELETED");
       } else {
         console.log("en error occured while fetching the experiences");
@@ -485,7 +463,7 @@ export const deleteGroup = (group_id) => {
 //get the token from the store
 export function getTokenFromStore() {
   return (dispatch, getState) => {
-    const token = getState().token;
+    const token = getState().main.token;
     return token;
   };
 }
@@ -493,7 +471,7 @@ export function getTokenFromStore() {
 export const follow = (userid) => {
   return async (dispatch, getState) => {
     const token = dispatch(getTokenFromStore());
-    const LoggedInUser = getState().LoggedInUser[0];
+    const LoggedInUser = getState().main.LoggedInUser[0];
 
     const options = {
       method: "PUT",
@@ -519,7 +497,7 @@ export const follow = (userid) => {
 export const unfollow = (userid) => {
   return async (dispatch, getState) => {
     const token = dispatch(getTokenFromStore());
-    const LoggedInUser = getState().LoggedInUser[0];
+    const LoggedInUser = getState().main.LoggedInUser[0];
 
     const options = {
       method: "PUT",
@@ -541,7 +519,7 @@ export const unfollow = (userid) => {
 //get notifications
 export const getNotifications = () => {
   return async (dispatch, getState) => {
-    const token = getState().token;
+    const token = dispatch(getTokenFromStore());
     const options = {
       headers: {
         "Content-Type": "application/json",
@@ -575,7 +553,7 @@ export const getNotifications = () => {
 
 export const sendMessage = (LoggedInUser, message) => {
   return async (dispatch, getState) => {
-    const general_chat_history = getState().general_chat_history;
+    const general_chat_history = getState().main.general_chat_history;
     console.log(general_chat_history);
     const newMessage = {
       username: LoggedInUser.username,
@@ -593,7 +571,7 @@ export const sendMessage = (LoggedInUser, message) => {
 
 export const connectToSocketFunction = (LoggedInUser) => {
   return async (dispatch, getState) => {
-    const general_chat_history = getState().general_chat_history;
+    const general_chat_history = getState().main.general_chat_history;
     try {
       socket.emit("setUsername", LoggedInUser);
       socket.on("welcome", (welcomeMessage) => {
@@ -617,7 +595,7 @@ export const connectToSocketFunction = (LoggedInUser) => {
           console.log("u've got notification");
           const audio = new Audio(sound);
           audio.play();
-          const notifications = getState().notifications;
+          const notifications = getState().main.notifications;
           dispatch({
             type: FETCH_NOTIFICATIONS,
             payload: [...notifications, notification],
@@ -650,8 +628,8 @@ export const connectToSocketFunction = (LoggedInUser) => {
 export const sendNotification = (props) => {
   const { userid, text, type, group_id } = props;
   return async (dispatch, getState) => {
-    const LoggedInUser = getState().LoggedInUser[0];
-    const socket_users_list = getState().socket_users_list;
+    const LoggedInUser = getState().main.LoggedInUser[0];
+    const socket_users_list = getState().main.socket_users_list;
     // console.log("socket_users_list: ", socket_users_list);
     //find right recipient
     const toSockedIdFilter = socket_users_list.filter(
@@ -718,8 +696,8 @@ export const fetchBadges = () => {
 export const updateMyProfile = (data) => {
   console.log("Fetching");
   return async (dispatch, getState) => {
-    const token = getState().token;
-    const user = getState().LoggedInUser[0];
+    const token = getState().main.token;
+    const user = getState().main.LoggedInUser[0];
     const options = {
       method: "PUT",
       body: JSON.stringify(data),
@@ -752,8 +730,8 @@ export const updateMyProfilePicture = (data) => {
       type: LOADING,
       payload: true,
     });
-    const token = getState().token;
-    const user = getState().LoggedInUser[0];
+    const token = getState().main.token;
+    const user = getState().main.LoggedInUser[0];
     console.log("token check", token);
     const options = {
       method: "PUT",
@@ -778,7 +756,8 @@ export const updateMyProfilePicture = (data) => {
 export const updateMyProfileBackground = (data) => {
   console.log("Fetching");
   return async (dispatch, getState) => {
-    const token = getState().token;
+    const token = dispatch(getTokenFromStore());
+
     const options = {
       method: "PUT",
       body: JSON.stringify(data),
@@ -805,20 +784,12 @@ export const updateMyProfileBackground = (data) => {
 };
 export const fetchUsersPosts = (id, setPosts) => {
   return async (dispatch, getState) => {
-    dispatch({
-      type: LOADING,
-      payload: true,
-    });
     try {
       const response = await fetch(`http://localhost:3002/posts/${id}`);
       if (response.ok) {
         let posts = await response.json();
         setPosts(posts);
         console.log("posts fetched.");
-        dispatch({
-          type: LOADING,
-          payload: false,
-        });
       } else {
         console.log("Error fetching data");
       }
@@ -827,7 +798,33 @@ export const fetchUsersPosts = (id, setPosts) => {
     }
   };
 };
+export const fetchLoggedInUsersPosts = () => {
+  return async (dispatch, getState) => {
+    try {
+      const token = dispatch(getTokenFromStore());
 
+      const options = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const response = await fetch(`http://localhost:3002/posts/me`, options);
+      if (response.ok) {
+        let posts = await response.json();
+        dispatch({
+          type: SAVE_MY_POSTS,
+          payload: posts,
+        });
+        console.log("posts fetched.");
+      } else {
+        console.log("Error fetching data");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
 export const createPost = (formData, onHide) => {
   console.log("Fetching");
   const postUrl = `http://localhost:3002/posts/`;
@@ -859,10 +856,4 @@ export const createPost = (formData, onHide) => {
       console.log(error);
     }
   };
-};
-
-//------------------ LOAD ALL DATA ----------------------//
-export const loadAllData = () => {
-  //1. fetch all data
-  //2. if all fetches, and only IF all fetches are done - use callback (via props) to mark as done
 };
