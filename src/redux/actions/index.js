@@ -35,10 +35,7 @@ export const getFeed = (limit) => {
         Authorization: `Bearer ${token}`,
       },
     };
-    dispatch({
-      type: LOADING,
-      payload: true,
-    });
+
     try {
       const response = await fetch(
         `http://localhost:3002/feed/${local_limit}`,
@@ -50,10 +47,6 @@ export const getFeed = (limit) => {
         dispatch({
           type: FETCH_FEED,
           payload: feed,
-        });
-        dispatch({
-          type: LOADING,
-          payload: false,
         });
       } else {
         console.log("Error fetching data");
@@ -81,17 +74,14 @@ export const getToken = (email, password, setErrorMessage) => {
       fetch("http://localhost:3002/auth/login", options)
         .then((response) => response.json())
         .then((token) => {
+          console.log("token:", token);
           if (token.token !== undefined) {
-            if (token.token.length > 0) {
-              dispatch({
-                type: TOKEN,
-                payload: token.token,
-              });
-              dispatch(fetchLoginnedUser());
-              // dispatch(loadAllData());
-            } else {
-              setErrorMessage(true);
-            }
+            dispatch({
+              type: TOKEN,
+              payload: token.token,
+            });
+            // dispatch(fetchLoginnedUser());
+            dispatch(loadAllData());
           } else {
             setErrorMessage(true);
           }
@@ -133,10 +123,6 @@ export const fetchUserById = (userid, setUser) => {
         .then((user) => {
           if (user) {
             setUser(user);
-            dispatch({
-              type: LOADING,
-              payload: false,
-            });
           } else {
             console.log("Error fetching user.");
           }
@@ -148,10 +134,6 @@ export const fetchUserById = (userid, setUser) => {
 };
 export const fetchUsersGroups = () => {
   return async (dispatch, getState) => {
-    dispatch({
-      type: LOADING,
-      payload: true,
-    });
     const token = dispatch(getTokenFromStore());
     const options = {
       headers: {
@@ -168,10 +150,7 @@ export const fetchUsersGroups = () => {
               type: SAVE_USERS_GROUPS,
               payload: groups,
             });
-            dispatch({
-              type: LOADING,
-              payload: false,
-            });
+
             console.log("users groups are fetched <3");
           } else {
             console.log("Error fetching user.");
@@ -227,10 +206,7 @@ export const createGroup = (
   };
   return async (dispatch) => {
     const token = dispatch(getTokenFromStore());
-    dispatch({
-      type: LOADING,
-      payload: true,
-    });
+
     const optionsPost = {
       method: "POST",
       body: JSON.stringify(dataToSendForPost),
@@ -271,10 +247,7 @@ export const createGroup = (
           dispatch(getFeed());
           onHide();
         }
-        dispatch({
-          type: LOADING,
-          payload: false,
-        });
+
         console.log("Succesfully posted <3");
       } else {
         console.log(
@@ -317,10 +290,7 @@ export const joinTheGroup = (group_id, onHide) => {
   console.log("Joining");
   return async (dispatch) => {
     const token = dispatch(getTokenFromStore());
-    dispatch({
-      type: LOADING,
-      payload: true,
-    });
+
     const optionsJoinTeam = {
       method: "PUT",
       headers: {
@@ -334,10 +304,6 @@ export const joinTheGroup = (group_id, onHide) => {
       console.log("You joined <3");
       dispatch(getFeed());
       dispatch(fetchUsersGroups());
-      dispatch({
-        type: LOADING,
-        payload: false,
-      });
     } else {
       console.log("huh?!");
     }
@@ -346,10 +312,7 @@ export const joinTheGroup = (group_id, onHide) => {
 export const leaveTheGroup = (group_id, onHide) => {
   return async (dispatch) => {
     const token = dispatch(getTokenFromStore());
-    dispatch({
-      type: LOADING,
-      payload: true,
-    });
+
     const optionsJoinTeam = {
       method: "PUT",
       headers: {
@@ -362,10 +325,6 @@ export const leaveTheGroup = (group_id, onHide) => {
     if (teamResponse.ok) {
       console.log("You left <3");
       dispatch(getFeed());
-      dispatch({
-        type: LOADING,
-        payload: false,
-      });
     } else {
       console.log("huh?!");
     }
@@ -374,10 +333,7 @@ export const leaveTheGroup = (group_id, onHide) => {
 export const inviteToGroup = (group_id, userid) => {
   return async (dispatch) => {
     const token = dispatch(getTokenFromStore());
-    dispatch({
-      type: LOADING,
-      payload: true,
-    });
+
     const optionsJoinTeam = {
       method: "PUT",
       headers: {
@@ -391,10 +347,6 @@ export const inviteToGroup = (group_id, userid) => {
       console.log("inviteToGroup done");
       let type = "invite";
       dispatch(sendNotification({ userid, type, group_id }));
-      dispatch({
-        type: LOADING,
-        payload: false,
-      });
     } else {
       console.log("huh?!");
     }
@@ -538,10 +490,6 @@ export const getNotifications = () => {
           type: FETCH_NOTIFICATIONS,
           payload: notifications,
         });
-        dispatch({
-          type: LOADING,
-          payload: false,
-        });
       } else {
         console.log("Error fetching data");
       }
@@ -672,10 +620,6 @@ export const sendNotification = (props) => {
 };
 export const fetchBadges = () => {
   return async (dispatch, getState) => {
-    dispatch({
-      type: LOADING,
-      payload: true,
-    });
     try {
       const response = await fetch("http://localhost:3002/badges");
       if (response.ok) {
@@ -726,10 +670,6 @@ export const updateMyProfilePicture = (data) => {
   console.log("changing pfp");
 
   return async (dispatch, getState) => {
-    dispatch({
-      type: LOADING,
-      payload: true,
-    });
     const token = getState().main.token;
     const user = getState().main.LoggedInUser[0];
     console.log("token check", token);
@@ -851,6 +791,37 @@ export const createPost = (formData, onHide) => {
         console.log(
           "sorry, an error occured while trying to create this post."
         );
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+export const getChatMessages = (chatid, setMessages) => {
+  return async (dispatch, getState) => {
+    try {
+      const token = dispatch(getTokenFromStore());
+      const options = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const response = await fetch(
+        `http://localhost:3002/direct-messages/${chatid}`,
+        options
+      );
+      if (response.ok) {
+        let messages = await response.json();
+        setMessages(messages);
+
+        //find right chat in redux
+        const allChats = getState().main.chats;
+        console.log("chats: ", allChats)
+        //append messages to it
+        console.log("posts fetched.");
+      } else {
+        console.log("Error fetching data");
       }
     } catch (error) {
       console.log(error);

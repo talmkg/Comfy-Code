@@ -3,7 +3,10 @@ import { IoEarthSharp, IoPeople } from "react-icons/io5";
 import { useParams } from "react-router-dom";
 import { MdOutlineNotificationsNone } from "react-icons/md";
 import { FaUsers } from "react-icons/fa";
+import { IoChatbubblesOutline } from "react-icons/io5";
+
 import "./styles.css";
+import { AiOutlinePlus, AiOutlineUser } from "react-icons/ai";
 const GlobalTopNav = (data) => {
   const identifier = data.identifier;
   if (identifier === "home") {
@@ -131,6 +134,44 @@ const GlobalTopNav = (data) => {
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
+          </div>
+        </Navbar>
+      </div>
+    );
+  }
+  if (identifier === "chat") {
+    return (
+      <div
+        className="w-100 text-light sticky-top"
+        style={{
+          position: "sticky",
+          top: "0",
+          right: "0",
+          left: "0",
+          zIndex: 1,
+        }}
+      >
+        <Navbar
+          id="navbar"
+          style={{
+            height: "5.5vh",
+          }}
+          className="d-flex justify-content-between p-1 w-100"
+        >
+          <div className="d-flex align-items-center h-100">
+            <div className=" mx-3 d-flex align-items-center rounded-2 h-100 p-2">
+              <IoChatbubblesOutline size={22} className="me-1" />
+              Chat
+            </div>
+            <div className="h-100 d-flex align-items-center me-3 border-bottom">
+              <AiOutlineUser className="me-1" size={22} /> Private
+            </div>
+            <div className="h-100 d-flex align-items-center me-3 text-color">
+              <FaUsers className="me-1" size={22} /> Groups
+            </div>
+          </div>
+          <div className="pe-3">
+            <AiOutlinePlus size={25} />
           </div>
         </Navbar>
       </div>

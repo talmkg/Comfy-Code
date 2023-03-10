@@ -70,13 +70,13 @@ const MiddleDiv_Profile = () => {
           }}
         />
         <div className=" w-100 h-100 pt-4 position-relative">
-          {loading ? (
+          {/* {loading ? (
             <div id="center" style={{ zIndex: "99" }}>
               <Spinner className="text-light" />
             </div>
           ) : (
             <></>
-          )}
+          )} */}
           <div className="d-flex justify-content-center">
             <div className="glass" style={{ height: "60vh", width: "950px" }}>
               <div

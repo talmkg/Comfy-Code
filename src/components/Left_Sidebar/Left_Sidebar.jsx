@@ -41,7 +41,7 @@ import {
   getHashtags,
   LOGIN,
   TOKEN,
-} from "../../redux/actions";
+} from "../../redux/actions/index.js";
 import { Link, useNavigate } from "react-router-dom";
 import UsersModal from "../Mini_Components/InviteModal";
 import TeamSizeSelect from "../Mini_Components/TeamSizeSelect/TeamSizeSelect";
@@ -52,6 +52,7 @@ import { RxCross2 } from "react-icons/rx";
 import { useAccordionButton } from "react-bootstrap/AccordionButton";
 import { useContext } from "react";
 import { DiGithubAlt } from "react-icons/di";
+
 function CustomToggle({ children, eventKey, callback }) {
   const [changeIcon, setChangeIcon] = useState(false);
   const { activeEventKey } = useContext(AccordionContext);
@@ -72,6 +73,7 @@ function CustomToggle({ children, eventKey, callback }) {
     </>
   );
 }
+
 function MyVerticallyCenteredModal(props) {
   const [usersModalShow, setUsersModalShow] = React.useState(false);
   const LoggedInUser = useSelector((state) => state.main.LoggedInUser[0]);
@@ -611,7 +613,7 @@ function MyVerticallyCenteredModal(props) {
 const Left_Sidebar = () => {
   const [modalShow, setModalShow] = React.useState(false);
   const [isOptions, setIsOptions] = useState(false);
-  const LoggedInUser = useSelector((state) => state?.main.LoggedInUser[0]);
+  const LoggedInUser = useSelector((state) => state?.main?.LoggedInUser[0]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const Logout = () => {
@@ -691,7 +693,11 @@ const Left_Sidebar = () => {
               </div>
               <div>
                 <div className="center-flex">
-                  <Button className="sidebar-button-rounded">
+                  <Button
+                    as={Link}
+                    to="/chat"
+                    className="sidebar-button-rounded"
+                  >
                     <IoChatbubblesOutline size={25} />
                   </Button>
                 </div>
@@ -785,7 +791,7 @@ const Left_Sidebar = () => {
               </div>
               <div>
                 <div className="sidebar-button-div">
-                  <Button className="sidebar-button">
+                  <Button as={Link} to="/chat" className="sidebar-button">
                     <span>Chat</span>
                   </Button>
                 </div>

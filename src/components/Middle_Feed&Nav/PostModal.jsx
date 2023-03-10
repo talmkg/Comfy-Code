@@ -47,7 +47,7 @@ function PostModal(props) {
         aria-labelledby="contained-modal-title-vcenter"
         centered
       >
-        {loading ? (
+        {/* {loading ? (
           <div id="center">
             <Spinner animation="border" role="status" className="text-light">
               <span className="visually-hidden"></span>
@@ -55,7 +55,7 @@ function PostModal(props) {
           </div>
         ) : (
           <></>
-        )}
+        )} */}
         <div className="text-light p-3">
           <div className="d-flex justify-content-between">
             <Modal.Title id="contained-modal-title-vcenter">

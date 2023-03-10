@@ -20,7 +20,6 @@ function JoinButton(props) {
         (group, i) => group._id === props.groupID
       );
       if (result) {
-        console.log("joined");
         setAlreadyInGroup(true);
       }
     }

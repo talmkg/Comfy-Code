@@ -26,10 +26,6 @@ const Login = () => {
   const onSubmit = (e) => {
     e.preventDefault();
     dispatch(getToken(email, password, setErrorMessage));
-    dispatch({
-      type: LOADING,
-      payload: true,
-    });
   };
   const [passwordShown, setPasswordShown] = useState(false);
   const togglePassword = () => {

@@ -20,8 +20,11 @@ import Notifications from "./views/Notifications/Notifications";
 import { Button, Modal } from "react-bootstrap";
 import LoaderWindow from "./components/Mini_Components/LoaderWindow";
 import { loadAllData } from "./redux/actions/loaderActions";
+import Chat from "./views/Chat/Chat";
+
 function App() {
   const LoggedInUser = useSelector((state) => state?.main.LoggedInUser[0]);
+
   //
 
   const dispatch = useDispatch();
@@ -32,46 +35,79 @@ function App() {
   }, [LoggedInUser]);
 
   const loadingResultSelector = useSelector((state) => state?.loader.result);
-
+  console.log(loadingResultSelector);
   const getAllDataFunc = () => {
     dispatch(loadAllData());
   };
   useEffect(() => {
-    const pageAccessedByReload =
-      (window.performance.navigation &&
-        window.performance.navigation.type === 1) ||
-      window.performance
-        .getEntriesByType("navigation")
-        .map((nav) => nav.type)
-        .includes("reload");
-    console.log("page reloaded");
-    getAllDataFunc();
+    // const pageAccessedByReload =
+    //   (window.performance.navigation &&
+    //     window.performance.navigation.type === 1) ||
+    //   window.performance
+    //     .getEntriesByType("navigation")
+    //     .map((nav) => nav.type)
+    //     .includes("reload");
+    // console.log("page reloaded");
+    if (LoggedInUser) {
+      getAllDataFunc();
+    }
   }, []);
 
   // useEffect(() => {
   //   dispatch(loadAllData());
   // }, [check]);
-  //if true => 0. state = true 1. show modal 2. if state = true, add overflow-hidden to mega-parent div
+
   return (
     <>
       <Router>
-        <div className="d-flex position-relative">
-          <Left_Sidebar />
-          <div
-            style={{ position: "absolute", height: "100vh", width: "100vw" }}
-          >
-            {loadingResultSelector ? <></> : <LoaderWindow />}
-          </div>
+        <div className="d-flex position-relative" id="mainBody">
+          {loadingResultSelector ? (
+            <></>
+          ) : (
+            <>
+              <Left_Sidebar />
+            </>
+          )}
+
+          {loadingResultSelector ? (
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                bottom: 0,
+                right: 0,
+                left: 0,
+                height: "100vh",
+                width: "100vw",
+              }}
+            >
+              <LoaderWindow />
+            </div>
+          ) : (
+            <></>
+          )}
           <Routes>
             <Route path="/" element={<Identifier />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/home" element={<Home />} />
+
+            <Route
+              path="/home"
+              element={loadingResultSelector ? <></> : <Home />}
+            />
+
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/chat" element={<Chat />} />
             <Route path="/profile/:id" element={<Profile />} />
             <Route path="/settings" element={<Settings />} />
           </Routes>
-          <Right_Sidebar />
+          {loadingResultSelector ? (
+            <></>
+          ) : (
+            <>
+              <Right_Sidebar />
+            </>
+          )}
         </div>
       </Router>
     </>

@@ -13,7 +13,7 @@ import {
   FETCH_BADGES,
   SAVE_MY_POSTS,
 } from "../actions";
-
+import { SAVE_MY_CHATS } from "../actions/loaderActions";
 const initialState = {
   feed: [],
   token: [],
@@ -28,6 +28,7 @@ const initialState = {
   general_chat_history: [],
   socket_users_list: [],
   badges: [],
+  chats: [],
 };
 
 const mainReducer = (state = initialState, action) => {
@@ -97,6 +98,11 @@ const mainReducer = (state = initialState, action) => {
       return {
         ...state,
         badges: action.payload,
+      };
+    case SAVE_MY_CHATS:
+      return {
+        ...state,
+        chats: action.payload,
       };
 
     default:

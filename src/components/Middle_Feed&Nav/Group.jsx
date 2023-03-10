@@ -36,7 +36,7 @@ const Group = (props) => {
   const [imageViewShow, setImageViewShow] = React.useState(false);
   const [isInvited, setIsInvited] = React.useState(false);
 
-  const LoggedInUser = useSelector((state) => state?.main.LoggedInUser[0]);
+  const LoggedInUser = useSelector((state) => state?.main?.LoggedInUser[0]);
   const dispatch = useDispatch();
   const {
     leader,
@@ -277,7 +277,7 @@ const Group = (props) => {
                 id="join"
               >
                 {privacySetting === "private" &&
-                leader._id !== LoggedInUser._id &&
+                leader._id !== LoggedInUser?._id &&
                 isInvited === false ? (
                   <BiLockAlt size={30} style={{ color: "#aaaaaa" }} />
                 ) : (

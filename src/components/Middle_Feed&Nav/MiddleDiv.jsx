@@ -55,13 +55,13 @@ const MiddleDiv = () => {
             className="position-relative pb-3 feed-div"
             style={{ overflow: "hidden" }}
           >
-            {loading ? (
+            {/* {loading ? (
               <div id="center" style={{ zIndex: "99" }}>
                 <Spinner className="text-light" />
               </div>
             ) : (
               <></>
-            )}
+            )} */}
             <Row className="">
               {feed?.map((post, i) => {
                 return (
