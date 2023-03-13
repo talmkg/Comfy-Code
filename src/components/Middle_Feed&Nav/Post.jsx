@@ -1,5 +1,5 @@
 import React from "react";
-import { Col, Dropdown } from "react-bootstrap";
+import { Button, Col, Dropdown } from "react-bootstrap";
 import { HiOutlineReply } from "react-icons/hi";
 import { MdMoreHoriz, MdRepeat } from "react-icons/md";
 import { VscReactions } from "react-icons/vsc";
@@ -10,7 +10,29 @@ import Reply from "./Reply";
 import { useState } from "react";
 import PostsMiniProfile from "./PostsMiniProfile";
 import MiniProfileTemplate from "./MiniProfileTemplate";
+import { CustomTooltip } from "../Tooltip/CustomTooltip";
+//
+//
+//
+import { styled } from "@mui/material/styles";
+import { tooltipClasses } from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
+import { Tooltip } from "@mui/material";
+const BootstrapTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} arrow classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.arrow}`]: {
+    display: "none",
+  },
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: "#1F1D2D",
+    border: "1px solid rgba(255, 255, 255, 0.192)",
+  },
+}));
 
+//
+//
+//
 const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
   <a
     href=""
@@ -21,6 +43,7 @@ const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
     }}
   >
     {children}
+
     <MdMoreHoriz size={30} id="post-options" />
   </a>
 ));
@@ -128,15 +151,28 @@ function Post(post) {
           className="w-100 rounded-bottom p-3 d-flex justify-content-start align-items-center"
           style={{ height: "60px" }}
         >
-          <HiOutlineReply
-            className="h-100 me-3 post-icons"
-            size={22}
-            onClick={(e) => {
-              setModalShow(true);
-            }}
-          />
-          <IoRepeat className="h-100 me-3 post-icons" size={27} />
-          <VscReactions className="h-100 me-3 post-icons" size={27} />
+          <CustomTooltip title="Reply">
+            <div className="h-100 me-3">
+              <HiOutlineReply
+                as={Button}
+                className="h-100 post-icons"
+                size={22}
+                onClick={(e) => {
+                  setModalShow(true);
+                }}
+              />
+            </div>
+          </CustomTooltip>
+          <CustomTooltip title="Repost">
+            <div className="h-100 me-3">
+              <IoRepeat className="h-100 post-icons" size={27} />
+            </div>
+          </CustomTooltip>
+          <CustomTooltip title="React" placement="bottom">
+            <div className="h-100 me-3">
+              <VscReactions className="h-100 post-icons" size={27} />
+            </div>
+          </CustomTooltip>
 
           <Reply
             show={modalShow}
@@ -151,6 +187,7 @@ function Post(post) {
                   as={CustomToggle}
                   id="dropdown-custom-components"
                 ></Dropdown.Toggle>
+
                 <Dropdown.Menu id="dropdown-window">
                   {post.creator._id === LoggedInUser?._id ? (
                     <>

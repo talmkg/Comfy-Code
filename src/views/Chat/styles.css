@@ -1,0 +1,4 @@
+.chat-label:hover {
+  transition: 0.1s;
+  background-color: #222033bb !important;
+}

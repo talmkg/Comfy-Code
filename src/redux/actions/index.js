@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
 
 import sound from "../../Sounds/notification.mp3";
-import { loadAllData, LOADING_RESULT } from "./loaderActions";
+import { loadAllData, LOADING_RESULT, SAVE_MY_CHATS } from "./loaderActions";
 
 export const FETCH_FEED = "FETCH_FEED";
 export const FETCH_HASHTAGS = "FETCH_HASHTAGS";
@@ -521,7 +521,7 @@ export const connectToSocketFunction = (LoggedInUser) => {
   return async (dispatch, getState) => {
     const general_chat_history = getState().main.general_chat_history;
     try {
-      socket.emit("setUsername", LoggedInUser);
+      socket.emit("Login", LoggedInUser);
       socket.on("welcome", (welcomeMessage) => {
         socket.on("loggedIn", (onlineUsersList) => {
           dispatch({
@@ -549,6 +549,25 @@ export const connectToSocketFunction = (LoggedInUser) => {
             payload: [...notifications, notification],
           });
         });
+        socket.on("directMessage", (directMessage) => {
+          console.log("u've got directMessage", directMessage);
+          const audio = new Audio(sound);
+          audio.play();
+          let all_chats = getState().main.chats;
+          const filtered = all_chats.filter(
+            (obj) => obj.chat._id === directMessage.chat
+          );
+          const right_chat = filtered[0];
+          right_chat.messages = [...right_chat.messages, directMessage];
+          const new_all_chats = [...all_chats, right_chat];
+
+          let uniqueChars = [...new Set(new_all_chats)];
+          console.log(uniqueChars);
+          dispatch({
+            type: SAVE_MY_CHATS,
+            payload: [...uniqueChars],
+          });
+        });
       });
 
       socket.on("newMessage", (newMessage) => {
@@ -570,6 +589,47 @@ export const connectToSocketFunction = (LoggedInUser) => {
       console.log(error);
       console.log("oopsie");
     }
+  };
+};
+export const sendDirectMessage = (props) => {
+  const { chat, from, to, text } = props;
+  console.log(props);
+  return async (dispatch, getState) => {
+    //
+    const LoggedInUser = getState().main.LoggedInUser[0];
+    const socket_users_list = getState().main.socket_users_list;
+    const toSockedIdFilter = socket_users_list.filter(
+      (user) => user._id === to
+    );
+    const identifier =
+      toSockedIdFilter[0]?.socketId === undefined ? false : true;
+
+    const newMessage = {
+      from: socket.id,
+      to: identifier ? toSockedIdFilter[0].socketId : undefined,
+      from_mongo: LoggedInUser._id,
+      to_mongo: to,
+      text: text,
+      chat: chat,
+    };
+    console.log("You send a direct message <3", newMessage);
+    //append message in this session
+    let all_chats = getState().main.chats;
+    const filtered = all_chats.filter(
+      (obj) => obj.chat._id === newMessage.chat
+    );
+    const right_chat = filtered[0];
+    right_chat.messages = [...right_chat.messages, newMessage];
+    const new_all_chats = [...all_chats, right_chat];
+
+    let uniqueChars = [...new Set(new_all_chats)];
+    console.log(uniqueChars);
+    dispatch({
+      type: SAVE_MY_CHATS,
+      payload: [...uniqueChars],
+    });
+    //
+    socket.emit("directMessage", newMessage);
   };
 };
 
@@ -791,37 +851,6 @@ export const createPost = (formData, onHide) => {
         console.log(
           "sorry, an error occured while trying to create this post."
         );
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-};
-export const getChatMessages = (chatid, setMessages) => {
-  return async (dispatch, getState) => {
-    try {
-      const token = dispatch(getTokenFromStore());
-      const options = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      const response = await fetch(
-        `http://localhost:3002/direct-messages/${chatid}`,
-        options
-      );
-      if (response.ok) {
-        let messages = await response.json();
-        setMessages(messages);
-
-        //find right chat in redux
-        const allChats = getState().main.chats;
-        console.log("chats: ", allChats)
-        //append messages to it
-        console.log("posts fetched.");
-      } else {
-        console.log("Error fetching data");
       }
     } catch (error) {
       console.log(error);

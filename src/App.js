@@ -1,5 +1,10 @@
 import "./App.css";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useNavigate,
+} from "react-router-dom";
 import Home from "./views/Home/Home";
 import Login from "./views/Login/Login";
 import Identifier from "./views/Identifier";
@@ -21,6 +26,7 @@ import { Button, Modal } from "react-bootstrap";
 import LoaderWindow from "./components/Mini_Components/LoaderWindow";
 import { loadAllData } from "./redux/actions/loaderActions";
 import Chat from "./views/Chat/Chat";
+import Explore from "./views/Explore/Explore";
 
 function App() {
   const LoggedInUser = useSelector((state) => state?.main.LoggedInUser[0]);
@@ -32,10 +38,11 @@ function App() {
     if (LoggedInUser) {
       dispatch(connectToSocketFunction(LoggedInUser));
     }
-  }, [LoggedInUser]);
+  }, []);
 
   const loadingResultSelector = useSelector((state) => state?.loader.result);
-  console.log(loadingResultSelector);
+  const token = useSelector((state) => state?.main.token);
+
   const getAllDataFunc = () => {
     dispatch(loadAllData());
   };
@@ -89,16 +96,25 @@ function App() {
           <Routes>
             <Route path="/" element={<Identifier />} />
             <Route path="/login" element={<Login />} />
-
+            <Route path="/explore" element={<Explore />} />
             <Route
               path="/home"
               element={loadingResultSelector ? <></> : <Home />}
             />
 
             <Route path="/notifications" element={<Notifications />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/chat" element={<Chat />} />
-            <Route path="/profile/:id" element={<Profile />} />
+            <Route
+              path="/profile"
+              element={loadingResultSelector ? <></> : <Profile />}
+            />
+            <Route
+              path="/chat"
+              element={loadingResultSelector ? <></> : <Chat />}
+            />
+            <Route
+              path="/profile/:id"
+              element={loadingResultSelector ? <></> : <Profile />}
+            />
             <Route path="/settings" element={<Settings />} />
           </Routes>
           {loadingResultSelector ? (

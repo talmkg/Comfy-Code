@@ -143,33 +143,28 @@ const Right_Sidebar = () => {
                           key={index}
                           className="mt-1 mb-1 rounded text-color d-flex justify-content-between bg-transparent border-0"
                         >
-                          <div>
-                            <span
-                              className="text-color pe-1 position-relative"
-                              id="profile-picture-post"
+                          <div className="text-color pe-1">
+                            <img
+                              src={message.pfp}
+                              style={{
+                                width: "25px",
+                                borderRadius: "50%",
+                                position: "relative",
+                              }}
+                              className="me-2"
+                            />
+
+                            <Link
+                              to={`/profile/${message.user_id}`}
+                              style={{ textDecoration: "none" }}
+                              className="text-color"
                             >
-                              <img
-                                src={message.pfp}
-                                style={{
-                                  width: "35px",
-                                  borderRadius: "50%",
-                                  position: "relative",
-                                }}
-                                className="me-2"
-                              />
+                              {message.username}
+                            </Link>
 
-                              <Link
-                                to={`/profile/${message.user_id}`}
-                                style={{ textDecoration: "none" }}
-                                className="text-color"
-                              >
-                                {message.username}
-                              </Link>
+                            <span className="me-2 mx-2">|</span>
 
-                              <span className="me-2 mx-2">|</span>
-
-                              <span className="text-light">{message.text}</span>
-                            </span>
+                            <span className="text-light">{message.text}</span>
                           </div>
                         </ListGroup.Item>
                       );

@@ -94,3 +94,33 @@
 /* * {
   outline: 1px solid #f00 !important;
 } */
+.group-modal-repo-button {
+  background: none !important;
+  border: none !important;
+  padding: 0.5rem !important;
+  border-radius: 5px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.25rem;
+}
+.group-modal-repo-button:hover {
+  background: #392d4b !important;
+  /* border: none !important;
+  padding: 0.5rem !important;
+  border-radius: 15px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.25rem; */
+}
+.group-modal-repo-button-active {
+  background: #392d4b !important;
+  border: none !important;
+  padding: 0.5rem !important;
+  border-radius: 5px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.25rem;
+}

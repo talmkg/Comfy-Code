@@ -44,7 +44,7 @@ const GlobalTopNav = (data) => {
           <div className="me-3">
             <Dropdown id="dropdown-navbar">
               <Dropdown.Toggle className="bg-light-color">
-                Latest
+                Filter
               </Dropdown.Toggle>
 
               <Dropdown.Menu

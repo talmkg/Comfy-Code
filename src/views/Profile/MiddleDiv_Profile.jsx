@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
-import { MdCalendarToday, MdOutlineCake } from "react-icons/md";
+import { MdCalendarToday, MdMoreHoriz, MdOutlineCake } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import Group from "../../components/Middle_Feed&Nav/Group";
 import Post from "../../components/Middle_Feed&Nav/Post";
 import Big_Follow_Button from "../../components/Mini_Components/Big_Follow_Button";
 import Follow_Button from "../../components/Mini_Components/Follow_Button";
+import ProfileMore from "../../components/Mini_Components/ProfileMore";
 import User_Card from "../../components/Mini_Components/User_Card";
 
 import {
@@ -47,7 +48,10 @@ const MiddleDiv_Profile = () => {
   let day = objectDate.getDate();
   let month = objectDate.getMonth();
   let year = objectDate.getFullYear();
-
+  const outFunc = () => {
+    let tooltip = document.getElementById("myTooltip");
+    tooltip.innerHTML = "Copy to clipboard";
+  };
   return (
     <>
       <div
@@ -106,7 +110,11 @@ const MiddleDiv_Profile = () => {
                     <div style={{ fontSize: "18px" }}>
                       {user?.name} {user?.surname}
                     </div>
-                    <div className="text-color" style={{ fontSize: "17px" }}>
+                    <div
+                      className="text-color"
+                      style={{ fontSize: "17px" }}
+                      id="username"
+                    >
                       @{user?.username}
                     </div>
                   </div>
@@ -115,7 +123,7 @@ const MiddleDiv_Profile = () => {
               <div
                 className="position-relative "
                 style={{
-                  overflow: "hidden",
+                  // overflow: "hidden",
                   borderBottom: "1px solid rgba(255, 255, 255, 0.192)",
 
                   height: "25%",
@@ -136,9 +144,9 @@ const MiddleDiv_Profile = () => {
                     This user has not written their bio yet.
                   </div>
                 )}
-                {params.userId ? (
+                {params ? (
                   <div
-                    className="p-2"
+                    className="p-2 d-flex"
                     style={{
                       position: "absolute",
                       top: 0,
@@ -146,6 +154,7 @@ const MiddleDiv_Profile = () => {
                     }}
                   >
                     <Big_Follow_Button id={user._id} />
+                    <ProfileMore />
                   </div>
                 ) : (
                   <></>
