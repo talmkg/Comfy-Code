@@ -8,11 +8,11 @@ import "./styles.css";
 
 const Notifications = () => {
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(fetchUsersGroups());
-  }, []);
+  // useEffect(() => {
+  //   dispatch(fetchUsersGroups());
+  // }, []);
 
-  const Notifications = useSelector((state) => state?.notifications);
+  const Notifications = useSelector((state) => state?.main.notifications);
   return (
     <>
       <div
@@ -24,7 +24,10 @@ const Notifications = () => {
       >
         <GlobalTopNav identifier={"notifications"} />
         <div className="w-100 h-100 d-flex justify-content-center mt-4">
-          <div className="h-100 rounded-top glass" style={{ width: "850px" }}>
+          <div
+            className="h-100 rounded-top"
+            style={{ width: "850px", backgroundColor: "#1d1b2a" }}
+          >
             {Notifications[0] ? (
               Notifications?.map((notification, i) => {
                 return (

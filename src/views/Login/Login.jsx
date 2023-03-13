@@ -13,7 +13,7 @@ import { getToken } from "../../redux/actions";
 import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const LoggedInUser = useSelector((state) => state?.LoggedInUser);
+  const LoggedInUser = useSelector((state) => state?.main.LoggedInUser);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState(false);
@@ -26,10 +26,6 @@ const Login = () => {
   const onSubmit = (e) => {
     e.preventDefault();
     dispatch(getToken(email, password, setErrorMessage));
-    dispatch({
-      type: LOADING,
-      payload: true,
-    });
   };
   const [passwordShown, setPasswordShown] = useState(false);
   const togglePassword = () => {

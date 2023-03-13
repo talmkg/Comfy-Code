@@ -41,7 +41,7 @@ import {
   getHashtags,
   LOGIN,
   TOKEN,
-} from "../../redux/actions";
+} from "../../redux/actions/index.js";
 import { Link, useNavigate } from "react-router-dom";
 import UsersModal from "../Mini_Components/InviteModal";
 import TeamSizeSelect from "../Mini_Components/TeamSizeSelect/TeamSizeSelect";
@@ -52,6 +52,8 @@ import { RxCross2 } from "react-icons/rx";
 import { useAccordionButton } from "react-bootstrap/AccordionButton";
 import { useContext } from "react";
 import { DiGithubAlt } from "react-icons/di";
+import { CustomTooltip } from "../Tooltip/CustomTooltip";
+
 function CustomToggle({ children, eventKey, callback }) {
   const [changeIcon, setChangeIcon] = useState(false);
   const { activeEventKey } = useContext(AccordionContext);
@@ -72,9 +74,10 @@ function CustomToggle({ children, eventKey, callback }) {
     </>
   );
 }
+
 function MyVerticallyCenteredModal(props) {
   const [usersModalShow, setUsersModalShow] = React.useState(false);
-  const LoggedInUser = useSelector((state) => state.LoggedInUser[0]);
+  const LoggedInUser = useSelector((state) => state.main.LoggedInUser[0]);
   const [Hashtags, setReduxHashtags] = useState([
     { title: "#react" },
     { title: "#javascript" },
@@ -105,6 +108,10 @@ function MyVerticallyCenteredModal(props) {
   const [isCustomHashtagInputActive, setCustomHashtagInputActive] =
     useState(false);
   const [customHashtagInput, setCustomHashtagInput] = useState("");
+  const [languageIndex, setLanguageIndex] = useState(36);
+  //
+  //
+  //
   const createAGroup = () => {
     const formData = new FormData();
     formData.append("cover", image);
@@ -130,6 +137,8 @@ function MyVerticallyCenteredModal(props) {
     setTitle("");
     setDescription("");
     setHashtags([]);
+    setGithubRepoLink("");
+    setPrivate(false);
   };
   const createAPost = () => {
     const formData = new FormData();
@@ -266,6 +275,7 @@ function MyVerticallyCenteredModal(props) {
                   }
                 >
                   <div
+                    className="pt-1"
                     style={{
                       width: "20%",
                       position: "relative",
@@ -499,27 +509,23 @@ function MyVerticallyCenteredModal(props) {
                     <Form.Select
                       style={{ border: "none" }}
                       className="text-color select-language"
+                      value={languageIndex}
+                      onChange={(e) => {
+                        setLanguage(languages[e.target.value].name);
+                      }}
                     >
                       {languages.map((languageMap, index) => {
-                        if (languageMap.name === language) {
-                          return (
-                            <option key={index} selected>
-                              {languageMap.name}
-                            </option>
-                          );
-                        } else {
-                          return (
-                            <option
-                              key={index}
-                              value={[index]}
-                              onClick={(e) => {
-                                setLanguage(languageMap.name);
-                              }}
-                            >
-                              {languageMap.name}
-                            </option>
-                          );
-                        }
+                        return (
+                          <option
+                            key={index}
+                            value={[index]}
+                            onClick={(e) => {
+                              setLanguageIndex(index);
+                            }}
+                          >
+                            {languageMap.name}
+                          </option>
+                        );
                       })}
                     </Form.Select>
                   </div>
@@ -559,6 +565,24 @@ function MyVerticallyCenteredModal(props) {
                                 setGithubRepoLink(e.target.value)
                               }
                             />
+                            <div className="text-center small text-muted">
+                              If you submit Github Repository link users will be
+                              able to see current statistics, issues and pull
+                              requests.
+                            </div>
+                          </Form.Group>
+                          <Form.Group className="pb-2">
+                            <Form.Label className="d-flex align-items-center">
+                              <FaUsers size={25} className="me-1" />
+                              Team Management
+                            </Form.Label>
+                            <div
+                              className="p-2"
+                              style={{
+                                backgroundColor: "#232133",
+                                height: "80px",
+                              }}
+                            ></div>
                           </Form.Group>
                           <Form.Group className="choose-image pb-2">
                             <Form.Label className="d-flex align-items-center">
@@ -579,20 +603,8 @@ function MyVerticallyCenteredModal(props) {
                   </Accordion>
                 </div>
               </div>
-              <div className=" d-flex justify-content-center text-color">
-                <div>
-                  <h5 className="text-center mb-2 mt-2">Team:</h5>
-                  <div className="active-button flex-column">
-                    <div>
-                      1. Team-Leader: {LoggedInUser?.username} |{" "}
-                      {LoggedInUser?.name} {LoggedInUser?.surname}
-                      {/* here we can map invited users */}
-                    </div>
-                  </div>
-                </div>
-              </div>
 
-              <div className="d-flex justify-content-between align-items-center text-color pe-3 px-3 pb-3 pt-1">
+              <div className="d-flex justify-content-between align-items-center text-color pe-3 px-3 pb-3 pt-3">
                 <div className="">
                   <FaUpload size={28} className="me-2" />
                 </div>
@@ -610,7 +622,7 @@ function MyVerticallyCenteredModal(props) {
 const Left_Sidebar = () => {
   const [modalShow, setModalShow] = React.useState(false);
   const [isOptions, setIsOptions] = useState(false);
-  const LoggedInUser = useSelector((state) => state?.LoggedInUser[0]);
+  const LoggedInUser = useSelector((state) => state?.main?.LoggedInUser[0]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const Logout = () => {
@@ -690,7 +702,11 @@ const Left_Sidebar = () => {
               </div>
               <div>
                 <div className="center-flex">
-                  <Button className="sidebar-button-rounded">
+                  <Button
+                    as={Link}
+                    to="/chat"
+                    className="sidebar-button-rounded"
+                  >
                     <IoChatbubblesOutline size={25} />
                   </Button>
                 </div>
@@ -698,7 +714,11 @@ const Left_Sidebar = () => {
 
               <div>
                 <div className="center-flex">
-                  <Button className="sidebar-button-rounded">
+                  <Button
+                    as={Link}
+                    to="/explore"
+                    className="sidebar-button-rounded"
+                  >
                     <MdOutlineExplore size={25} />
                   </Button>
                 </div>
@@ -766,63 +786,77 @@ const Left_Sidebar = () => {
 
               <div>
                 <Link to="/home" className="sidebar-button-div">
-                  <Button className="sidebar-button">
-                    <span>Home</span>
-                  </Button>
+                  <CustomTooltip title="Home" placement="right">
+                    <Button className="sidebar-button">
+                      <span>Home</span>
+                    </Button>
+                  </CustomTooltip>
                 </Link>
               </div>
               <div>
                 <div className="sidebar-button-div">
-                  <Button
-                    as={Link}
-                    to="/notifications"
-                    className="sidebar-button"
-                  >
-                    <span>Notifications</span>
-                  </Button>
+                  <CustomTooltip title="Notifications" placement="right">
+                    <Button
+                      as={Link}
+                      to="/notifications"
+                      className="sidebar-button"
+                    >
+                      <span>Notifications</span>
+                    </Button>
+                  </CustomTooltip>
                 </div>
               </div>
               <div>
                 <div className="sidebar-button-div">
-                  <Button className="sidebar-button">
-                    <span>Chat</span>
-                  </Button>
+                  <CustomTooltip title="Chat" placement="right">
+                    <Button as={Link} to="/chat" className="sidebar-button">
+                      <span>Chat</span>
+                    </Button>
+                  </CustomTooltip>
                 </div>
               </div>
 
               <div>
                 <div className="sidebar-button-div">
-                  <Button className="sidebar-button">
-                    <span>Explore</span>
-                  </Button>
+                  <CustomTooltip title="Explore" placement="right">
+                    <Button as={Link} to="/explore" className="sidebar-button">
+                      <span>Explore</span>
+                    </Button>
+                  </CustomTooltip>
                 </div>
               </div>
               <div>
                 <Link to="/profile" className="sidebar-button-div ">
-                  <Button className="sidebar-button">
-                    <span>Profile</span>
-                  </Button>
+                  <CustomTooltip title="Profile" placement="right">
+                    <Button className="sidebar-button">
+                      <span>Profile</span>
+                    </Button>
+                  </CustomTooltip>
                 </Link>
               </div>
               <hr className="text-light mx-2 me-2" />
               <div>
                 <Link to="/settings" className="sidebar-button-div mb-2">
-                  <Button className="sidebar-button">
-                    <span>Settings</span>
-                  </Button>
+                  <CustomTooltip title="Settings" placement="right">
+                    <Button className="sidebar-button">
+                      <span>Settings</span>
+                    </Button>
+                  </CustomTooltip>
                 </Link>
               </div>
 
               <div className="center-flex">
-                <Button
-                  className="gradient-button center-flex w-75 rounded-5"
-                  onClick={() => setModalShow(true)}
-                >
-                  <span className="d-flex align-items-center mx-1">
-                    <MdOutlineEdit size={22} />
-                  </span>
-                  <span className="d-flex align-items-center">Post</span>
-                </Button>
+                <CustomTooltip title="Post" placement="right">
+                  <Button
+                    className="gradient-button center-flex w-75 rounded-5"
+                    onClick={() => setModalShow(true)}
+                  >
+                    <span className="d-flex align-items-center mx-1">
+                      <MdOutlineEdit size={22} />
+                    </span>
+                    <span className="d-flex align-items-center">Post</span>
+                  </Button>
+                </CustomTooltip>
               </div>
             </div>
             <MyVerticallyCenteredModal

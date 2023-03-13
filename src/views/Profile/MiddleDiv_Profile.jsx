@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
-import { MdCalendarToday, MdOutlineCake } from "react-icons/md";
+import { MdCalendarToday, MdMoreHoriz, MdOutlineCake } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import Group from "../../components/Middle_Feed&Nav/Group";
 import Post from "../../components/Middle_Feed&Nav/Post";
 import Big_Follow_Button from "../../components/Mini_Components/Big_Follow_Button";
 import Follow_Button from "../../components/Mini_Components/Follow_Button";
+import ProfileMore from "../../components/Mini_Components/ProfileMore";
 import User_Card from "../../components/Mini_Components/User_Card";
 
 import {
@@ -20,8 +21,10 @@ import {
 import { getTokenFromStore } from "../../redux/store";
 import "./styles.css";
 const MiddleDiv_Profile = () => {
-  const loading = useSelector((state) => state.loading);
-  const LoggedInUser = useSelector((state) => state.LoggedInUser[0]);
+  const loading = useSelector((state) => state.main.loading);
+  const LoggedInUser = useSelector((state) => state.main.LoggedInUser[0]);
+  const usersPosts = useSelector((state) => state.main.usersPosts);
+
   const [usersGroups, setUsersGroups] = useState([]);
   const dispatch = useDispatch();
   const [user, setUser] = useState([]);
@@ -36,6 +39,7 @@ const MiddleDiv_Profile = () => {
       dispatch(fetchUsersPosts(paramsData.id, setPosts));
     } else {
       setUser(LoggedInUser);
+      //we are changing it
       dispatch(fetchUsersPosts(LoggedInUser._id, setPosts));
     }
   }, [paramsData]);
@@ -44,7 +48,10 @@ const MiddleDiv_Profile = () => {
   let day = objectDate.getDate();
   let month = objectDate.getMonth();
   let year = objectDate.getFullYear();
-
+  const outFunc = () => {
+    let tooltip = document.getElementById("myTooltip");
+    tooltip.innerHTML = "Copy to clipboard";
+  };
   return (
     <>
       <div
@@ -66,19 +73,16 @@ const MiddleDiv_Profile = () => {
             width: "100vw",
           }}
         />
-        <div
-          className=" w-100 h-100 pt-4 position-relative"
-          style={{ backdropFilter: "blur(4px)" }}
-        >
-          {loading ? (
+        <div className=" w-100 h-100 pt-4 position-relative">
+          {/* {loading ? (
             <div id="center" style={{ zIndex: "99" }}>
               <Spinner className="text-light" />
             </div>
           ) : (
             <></>
-          )}
+          )} */}
           <div className="d-flex justify-content-center">
-            <div className="glass w-75" style={{ height: "60vh" }}>
+            <div className="glass" style={{ height: "60vh", width: "950px" }}>
               <div
                 className="rounded-top position-relative "
                 style={{
@@ -106,7 +110,11 @@ const MiddleDiv_Profile = () => {
                     <div style={{ fontSize: "18px" }}>
                       {user?.name} {user?.surname}
                     </div>
-                    <div className="text-color" style={{ fontSize: "17px" }}>
+                    <div
+                      className="text-color"
+                      style={{ fontSize: "17px" }}
+                      id="username"
+                    >
                       @{user?.username}
                     </div>
                   </div>
@@ -115,7 +123,7 @@ const MiddleDiv_Profile = () => {
               <div
                 className="position-relative "
                 style={{
-                  overflow: "hidden",
+                  // overflow: "hidden",
                   borderBottom: "1px solid rgba(255, 255, 255, 0.192)",
 
                   height: "25%",
@@ -136,9 +144,9 @@ const MiddleDiv_Profile = () => {
                     This user has not written their bio yet.
                   </div>
                 )}
-                {params.userId ? (
+                {params ? (
                   <div
-                    className="p-2"
+                    className="p-2 d-flex"
                     style={{
                       position: "absolute",
                       top: 0,
@@ -146,6 +154,7 @@ const MiddleDiv_Profile = () => {
                     }}
                   >
                     <Big_Follow_Button id={user._id} />
+                    <ProfileMore />
                   </div>
                 ) : (
                   <></>
@@ -201,7 +210,10 @@ const MiddleDiv_Profile = () => {
             style={{ maxHeight: "100%", minHeight: "35vh", overflow: "hidden" }}
           >
             <div className="d-flex justify-content-center pt-3 w-100">
-              <div className="w-75 d-flex justify-content-center">
+              <div
+                className=" d-flex justify-content-center"
+                style={{ width: "950px" }}
+              >
                 <div
                   className=" glass p-3 g-0 scrollbar w-100"
                   style={{
@@ -234,9 +246,17 @@ const MiddleDiv_Profile = () => {
                     </div>
                   </div>
                   <div>
-                    {posts.map((post, i) => {
-                      return <Post key={i} {...post} i={i} width={"100%"} />;
-                    })}
+                    {paramsData.id
+                      ? posts.map((post, i) => {
+                          return (
+                            <Post key={i} {...post} i={i} width={"100%"} />
+                          );
+                        })
+                      : usersPosts.map((post, i) => {
+                          return (
+                            <Post key={i} {...post} i={i} width={"100%"} />
+                          );
+                        })}
                   </div>
                 </div>
               </div>

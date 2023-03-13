@@ -19,23 +19,23 @@ import Post from "./Post";
 
 const MiddleDiv = () => {
   const dispatch = useDispatch();
-  const feed = useSelector((state) => state.feed);
-  const loading = useSelector((state) => state.loading);
+  const feed = useSelector((state) => state.main.feed);
+  const loading = useSelector((state) => state.main.loading);
   let number = 10;
-  useEffect(() => {
-    dispatch(getFeed(number));
-  }, []);
+  // useEffect(() => {
+  //   dispatch(getFeed(number));
+  // }, []);
 
-  $(window).on("scroll", function () {
-    if (
-      $(window).scrollTop() >=
-      $(".feed-div").offset().top +
-        $(".feed-div").outerHeight() -
-        window.innerHeight
-    ) {
-      dispatch(getFeed(number + 10));
-    }
-  });
+  // $(window).on("scroll", function () {
+  //   if (
+  //     $(window).scrollTop() >=
+  //     $(".feed-div").offset().top +
+  //       $(".feed-div").outerHeight() -
+  //       window.innerHeight
+  //   ) {
+  //     dispatch(getFeed(number + 10));
+  //   }
+  // });
 
   return (
     <>
@@ -55,13 +55,13 @@ const MiddleDiv = () => {
             className="position-relative pb-3 feed-div"
             style={{ overflow: "hidden" }}
           >
-            {loading ? (
+            {/* {loading ? (
               <div id="center" style={{ zIndex: "99" }}>
                 <Spinner className="text-light" />
               </div>
             ) : (
               <></>
-            )}
+            )} */}
             <Row className="">
               {feed?.map((post, i) => {
                 return (

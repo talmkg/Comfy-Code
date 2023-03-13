@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 const Identifier = () => {
   const navigate = useNavigate();
-  const LoggedInUser = useSelector((state) => state?.LoggedInUser[0]);
+  const LoggedInUser = useSelector((state) => state?.main.LoggedInUser[0]);
   useEffect(() => {
     navigate(LoggedInUser?._id ? "/home" : "/login");
   }, []);

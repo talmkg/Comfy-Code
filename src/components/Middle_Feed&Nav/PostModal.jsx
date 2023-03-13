@@ -5,11 +5,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { joinTheGroup, leaveTheGroup } from "../../redux/actions";
 import MiniProfileTemplate from "./MiniProfileTemplate";
 import UsersModal from "../Mini_Components/InviteModal";
+import { Octokit } from "octokit";
+import Code_info from "../Git/Code_info";
+import { BsCode } from "react-icons/bs";
+import { VscIssues } from "react-icons/vsc";
+import { AiOutlinePullRequest } from "react-icons/ai";
 function PostModal(props) {
-  const LoggedInUser = useSelector((state) => state.LoggedInUser[0]);
-  const loading = useSelector((state) => state.loading);
+  const LoggedInUser = useSelector((state) => state.main.LoggedInUser[0]);
+  const loading = useSelector((state) => state.main.loading);
 
-  //
   const data = props.props;
 
   const dispatch = useDispatch();
@@ -18,20 +22,17 @@ function PostModal(props) {
   const [usersModalShow, setUsersModalShow] = React.useState(false);
   const [privacyError, setPrivacyError] = React.useState(false);
   const [isInvited, setIsInvited] = useState(false);
-
+  const [wrongGit, setWrongGit] = useState(false);
   useEffect(() => {
     if (data.invitedUsers.includes(LoggedInUser._id)) {
       setIsInvited(true);
     }
+    console.log(wrongGit);
   });
 
   const joinTheTeamAction = () => {
     dispatch(joinTheGroup(data._id, onHide));
-    // } else {
-    //   showErrorMessage("privacy");
-    // }
   };
-  //
   const leaveTheTeamAction = () => {
     dispatch(leaveTheGroup(data._id, onHide));
   };
@@ -44,6 +45,51 @@ function PostModal(props) {
       setPrivacyError(true);
     }
   };
+  // const fetchGit = async () => {
+  //   const data = await octokit.request("GET /repos/{owner}/{repo}", {
+  //     owner: "zmb3",
+  //     repo: "spotify",
+  //     per_page: 1,
+  //   });
+  //   console.log(data);
+  // };
+  const [activeGitButton, setActiveGitButton] = useState();
+  const [prevGitButton, setPrevGitButton] = useState();
+
+  useEffect(() => {
+    // if (activeGitButton) {
+    //   fetchGit();
+    // }
+    if (prevGitButton) {
+      if (activeGitButton === "") {
+        const elem = document.getElementById(prevGitButton);
+        elem.classList.remove("active-button");
+        elem.classList.add("sidebar-button");
+        setPrevGitButton(activeGitButton);
+      } else {
+        console.log("1");
+        const elem = document.getElementById(activeGitButton);
+        const elem2 = document.getElementById(prevGitButton);
+        elem.classList.remove("sidebar-button");
+        elem.classList.add("active-button");
+        elem2.classList.remove("active-button");
+        elem2.classList.add("sidebar-button");
+        setPrevGitButton(activeGitButton);
+      }
+
+      //if first time
+    } else {
+      console.log("!prevGitButton");
+      const elem = document.getElementById(activeGitButton);
+      if (elem) {
+        console.log("here");
+        elem.classList.remove("sidebar-button");
+        elem.classList.add("active-button");
+        setPrevGitButton(activeGitButton);
+      }
+    }
+  }, [activeGitButton]);
+
   return (
     <>
       <Modal
@@ -52,7 +98,7 @@ function PostModal(props) {
         aria-labelledby="contained-modal-title-vcenter"
         centered
       >
-        {loading ? (
+        {/* {loading ? (
           <div id="center">
             <Spinner animation="border" role="status" className="text-light">
               <span className="visually-hidden"></span>
@@ -60,13 +106,13 @@ function PostModal(props) {
           </div>
         ) : (
           <></>
-        )}
+        )} */}
         <div className="text-light p-3">
           <div className="d-flex justify-content-between">
             <Modal.Title id="contained-modal-title-vcenter">
               {data.title}
             </Modal.Title>
-            <span className="text-muted">
+            <span className="text-secondary">
               Posted at:{" "}
               {new Date(data.createdAt).toLocaleTimeString([], {
                 hour: "2-digit",
@@ -108,6 +154,85 @@ function PostModal(props) {
               <></>
             )}
           </div>
+          <div
+            className={
+              data.githubRepoLink
+                ? `w-100 mt-2 d-flex justify-content-between p-1`
+                : "d-none"
+            }
+            style={{
+              height: "50px",
+              position: "sticky",
+
+              borderRadius: activeGitButton
+                ? "5px 5px 0px 0px"
+                : "5px 5px 5px 5px",
+
+              top: 0,
+            }}
+          >
+            <div style={{ width: "33%" }} className="center-flex">
+              <Button
+                className="sidebar-button  w-100 h-100"
+                id="button_code"
+                onClick={(e) => {
+                  setActiveGitButton(
+                    activeGitButton === "button_code" ? "" : "button_code"
+                  );
+                }}
+              >
+                <div className="center-flex">
+                  <BsCode size={25} className="me-1" /> Code
+                </div>
+              </Button>
+            </div>
+            <div style={{ width: "33%" }} className="center-flex">
+              <Button
+                className="sidebar-button active-button w-100 h-100"
+                id="button_issues"
+                onClick={(e) => {
+                  setActiveGitButton(
+                    activeGitButton === "button_issues" ? "" : "button_issues"
+                  );
+                }}
+              >
+                <div className="center-flex">
+                  <VscIssues size={25} className="me-1" /> Issues
+                </div>
+              </Button>
+            </div>
+            <div style={{ width: "33%" }} className="center-flex">
+              <Button
+                className="sidebar-button w-100 h-100"
+                id="button_pull"
+                onClick={(e) => {
+                  setActiveGitButton(
+                    activeGitButton === "button_pull" ? "" : "button_pull"
+                  );
+                }}
+              >
+                <div className="center-flex">
+                  <AiOutlinePullRequest size={25} className="me-1" /> Pull
+                  Requests
+                </div>
+              </Button>
+            </div>
+          </div>
+
+          {activeGitButton === "button_code" ? (
+            <>
+              {data.githubRepoLink ? (
+                <Code_info
+                  link={data.githubRepoLink}
+                  setWrongGit={setWrongGit}
+                />
+              ) : (
+                <></>
+              )}
+            </>
+          ) : (
+            <></>
+          )}
 
           {alreadyInGroup ? (
             <>

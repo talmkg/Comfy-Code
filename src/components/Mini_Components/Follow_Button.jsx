@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { follow, unfollow } from "../../redux/actions";
 
 const Follow_Button = (id) => {
-  const LoggedInUser = useSelector((state) => state?.LoggedInUser[0]);
+  const LoggedInUser = useSelector((state) => state?.main.LoggedInUser[0]);
   const dispatch = useDispatch();
   const Follow = () => {
     dispatch(follow(id.id));

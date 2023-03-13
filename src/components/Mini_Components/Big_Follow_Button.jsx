@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { follow, unfollow } from "../../redux/actions";
 
 const Big_Follow_Button = (id) => {
-  const LoggedInUser = useSelector((state) => state?.LoggedInUser[0]);
+  const LoggedInUser = useSelector((state) => state?.main.LoggedInUser[0]);
   const dispatch = useDispatch();
   const Follow = () => {
     dispatch(follow(id.id));
@@ -20,7 +20,7 @@ const Big_Follow_Button = (id) => {
     if (obj) {
       return (
         <Button
-          className="gradient-button p-1 d-flex align-items-center justify-content-center  rounded-1"
+          className="gradient-button p-1 d-flex align-items-center justify-content-center  rounded-5"
           style={{
             width: "110px",
             height: "35px",
@@ -34,7 +34,7 @@ const Big_Follow_Button = (id) => {
     } else {
       return (
         <Button
-          className="gradient-button p-1 d-flex align-items-center justify-content-center  rounded-1"
+          className="gradient-button p-1 d-flex align-items-center justify-content-center  rounded-5"
           style={{
             width: "110px",
             height: "35px",

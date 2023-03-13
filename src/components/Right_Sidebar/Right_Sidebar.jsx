@@ -31,11 +31,13 @@ const Right_Sidebar = () => {
   const d = new Date();
   let day = options[d.getDay()];
   const [message, setMessage] = useState("");
-  const LoggedInUser = useSelector((state) => state?.LoggedInUser[0]);
-  const loggedIn = useSelector((state) => state?.socket_connected);
-  const myGroups = useSelector((state) => state?.usersGroups);
-  const Notifications = useSelector((state) => state?.notifications);
-  let realChatHistory = useSelector((state) => state?.general_chat_history[0]);
+  const LoggedInUser = useSelector((state) => state?.main.LoggedInUser[0]);
+  const loggedIn = useSelector((state) => state?.main.socket_connected);
+  const myGroups = useSelector((state) => state?.main.usersGroups);
+  const Notifications = useSelector((state) => state?.main.notifications);
+  let realChatHistory = useSelector(
+    (state) => state?.main.general_chat_history[0]
+  );
   const scrollToBottom = () => {
     const generalChat = document.getElementById("generalChat");
     generalChat.scrollTop = generalChat.scrollHeight;
@@ -48,9 +50,7 @@ const Right_Sidebar = () => {
       scrollToBottom();
     }
   });
-  useEffect(() => {
-    dispatch(getNotifications());
-  }, []);
+  useEffect(() => {}, []);
   if (!LoggedInUser) {
     return <div></div>;
   } else {
@@ -143,33 +143,28 @@ const Right_Sidebar = () => {
                           key={index}
                           className="mt-1 mb-1 rounded text-color d-flex justify-content-between bg-transparent border-0"
                         >
-                          <div>
-                            <span
-                              className="text-color pe-1 position-relative"
-                              id="profile-picture-post"
+                          <div className="text-color pe-1">
+                            <img
+                              src={message.pfp}
+                              style={{
+                                width: "25px",
+                                borderRadius: "50%",
+                                position: "relative",
+                              }}
+                              className="me-2"
+                            />
+
+                            <Link
+                              to={`/profile/${message.user_id}`}
+                              style={{ textDecoration: "none" }}
+                              className="text-color"
                             >
-                              <img
-                                src={message.pfp}
-                                style={{
-                                  width: "35px",
-                                  borderRadius: "50%",
-                                  position: "relative",
-                                }}
-                                className="me-2"
-                              />
+                              {message.username}
+                            </Link>
 
-                              <Link
-                                to={`/profile/${message.user_id}`}
-                                style={{ textDecoration: "none" }}
-                                className="text-color"
-                              >
-                                {message.username}
-                              </Link>
+                            <span className="me-2 mx-2">|</span>
 
-                              <span className="me-2 mx-2">|</span>
-
-                              <span className="text-light">{message.text}</span>
-                            </span>
+                            <span className="text-light">{message.text}</span>
                           </div>
                         </ListGroup.Item>
                       );

@@ -11,8 +11,9 @@ import {
   GENERAL_CHAT_HISTORY,
   SOCKET_USERS_LIST,
   FETCH_BADGES,
+  SAVE_MY_POSTS,
 } from "../actions";
-
+import { SAVE_MY_CHATS } from "../actions/loaderActions";
 const initialState = {
   feed: [],
   token: [],
@@ -20,12 +21,14 @@ const initialState = {
   loading: false,
   LoggedInUser: [],
   usersGroups: [],
+  usersPosts: [],
   notifications: [],
   hashtags: [],
   socket_connected: false,
   general_chat_history: [],
   socket_users_list: [],
   badges: [],
+  chats: [],
 };
 
 const mainReducer = (state = initialState, action) => {
@@ -35,7 +38,6 @@ const mainReducer = (state = initialState, action) => {
         ...state,
         token: action.payload,
       };
-
     case CONNECTED_TO_SOCKET:
       return {
         ...state,
@@ -45,6 +47,11 @@ const mainReducer = (state = initialState, action) => {
       return {
         ...state,
         general_chat_history: action.payload,
+      };
+    case SAVE_MY_POSTS:
+      return {
+        ...state,
+        usersPosts: action.payload,
       };
     case SOCKET_USERS_LIST:
       return {
@@ -91,6 +98,11 @@ const mainReducer = (state = initialState, action) => {
       return {
         ...state,
         badges: action.payload,
+      };
+    case SAVE_MY_CHATS:
+      return {
+        ...state,
+        chats: action.payload,
       };
 
     default:
