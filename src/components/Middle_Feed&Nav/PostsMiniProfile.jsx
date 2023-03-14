@@ -10,7 +10,7 @@ const PostsMiniProfile = (member) => {
           <img
             src={member.pfp}
             style={{
-              border: "2px solid #f7a3b1",
+              border: "2px solid #5b5b5b",
               borderRadius: "50%",
               width: "65px",
               height: "65px",

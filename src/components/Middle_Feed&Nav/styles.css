@@ -45,9 +45,9 @@
 #profile-picture-post-fetch:hover #mini-profile-fetch {
   transition-delay: 0.2s;
   display: block;
-  -webkit-box-shadow: 0px 0px 24px 0px rgba(223, 193, 223, 0.26);
+  /* -webkit-box-shadow: 0px 0px 24px 0px rgba(223, 193, 223, 0.26);
   -moz-box-shadow: 0px 0px 24px 0px rgba(223, 193, 223, 0.26);
-  box-shadow: 0px 0px 24px 0px rgba(223, 193, 223, 0.26);
+  box-shadow: 0px 0px 24px 0px rgba(223, 193, 223, 0.26); */
 }
 /*---------------------FETCH VERSION END*/
 .post-icons {
@@ -63,9 +63,9 @@
   visibility: visible;
   opacity: 1;
 
-  -webkit-box-shadow: 0px 0px 24px 0px rgba(223, 193, 223, 0.26);
+  /* -webkit-box-shadow: 0px 0px 24px 0px rgba(223, 193, 223, 0.26);
   -moz-box-shadow: 0px 0px 24px 0px rgba(223, 193, 223, 0.26);
-  box-shadow: 0px 0px 24px 0px rgba(223, 193, 223, 0.26);
+  box-shadow: 0px 0px 24px 0px rgba(223, 193, 223, 0.26); */
 }
 #gradient {
   background: rgb(31, 29, 45);
@@ -85,10 +85,16 @@
   color: #fcefff !important;
 }
 #dropdown-window {
-  background-color: #322e4f;
+  padding-left: 0.3rem;
+  padding-right: 0.3rem;
+  background-color: #1f1d2d;
+  border: 1px solid rgba(255, 255, 255, 0.192) !important;
+}
+.dropdown-buttons {
+  border-radius: 5px;
 }
 .dropdown-buttons:hover {
-  background-color: #454163 !important;
+  background-color: #2b273d !important;
 }
 
 /* * {

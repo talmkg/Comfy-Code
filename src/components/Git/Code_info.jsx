@@ -11,6 +11,7 @@ import { RxDotFilled } from "react-icons/rx";
 import { RiBookMarkLine } from "react-icons/ri";
 import { TbNotebook } from "react-icons/tb";
 import { Alert, AlertTitle } from "@mui/material";
+import { useSelector } from "react-redux";
 const Code_info = (props) => {
   const [fetchData, setFetchData] = useState([]);
   const [contributors, setContributors] = useState([]);
@@ -19,11 +20,12 @@ const Code_info = (props) => {
   const [error, serError] = useState(false);
   let localLanguages = [];
   const [languagesPerc, setLanguagesPerc] = useState([]);
-
+  const git_token = useSelector((state) => state.git.git_token);
   const data = props.link.replace("https://github.com/", "");
   const usernameAndRepo = data.split("/");
+  console.log(usernameAndRepo);
   const octokit = new Octokit({
-    auth: process.env.REACT_APP_GIT_TOKEN,
+    auth: git_token,
   });
   const fetchGit = async () => {
     let fetch;
@@ -48,8 +50,8 @@ const Code_info = (props) => {
     const fetchContributors = await octokit.request(
       "GET /repos/{owner}/{repo}/contributors",
       {
-        owner: "MrGreensWorkshop",
-        repo: "MrGreen-JekyllTheme",
+        owner: usernameAndRepo[0],
+        repo: usernameAndRepo[1],
       }
     );
 
@@ -289,7 +291,7 @@ const Code_info = (props) => {
           </Row>
         ) : (
           <div id="center">
-            {error ? (
+            {error === true ? (
               <>
                 <Alert severity="error">
                   <AlertTitle>Error</AlertTitle>

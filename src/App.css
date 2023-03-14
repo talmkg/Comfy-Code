@@ -79,12 +79,9 @@
 .gradient-button {
   color: rgb(52, 0, 59) !important;
   background-image: linear-gradient(
-    to right,
-    #edbbff,
-    #ffb7e0,
-    #ffbdbc,
-    #ffcda1,
-    #ffe099
+    90deg,
+    rgba(198, 168, 229, 1) 0%,
+    rgba(235, 188, 187, 1) 80%
   );
   border: none !important;
   font-size: 18px !important;
@@ -133,6 +130,15 @@ img.background {
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
   backdrop-filter: blur(8.9px) !important;
   -webkit-backdrop-filter: blur(8.9px) !important;
+}
+.glass-light {
+  /* From https://css.glass */
+  border: 1px solid rgba(255, 255, 255, 0.19);
+  background: rgba(43, 40, 68, 0.8);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(14.7px);
+  -webkit-backdrop-filter: blur(14.7px);
 }
 .glass-card {
   /* From https://css.glass */

@@ -28,7 +28,7 @@ import {
   AiOutlinePlusCircle,
   AiFillLock,
 } from "react-icons/ai";
-import { BsLock, BsUnlock } from "react-icons/bs";
+import { BsCodeSlash, BsLock, BsUnlock } from "react-icons/bs";
 import { FaRegPaperPlane } from "react-icons/fa";
 import { GrHomeRounded } from "react-icons/gr";
 import { CgProfile } from "react-icons/cg";
@@ -48,7 +48,7 @@ import TeamSizeSelect from "../Mini_Components/TeamSizeSelect/TeamSizeSelect";
 import languages from "../../Data/Languages/Languages.json";
 import { BiHome, BiImage, BiLogOut } from "react-icons/bi";
 import { IoChatbubblesOutline } from "react-icons/io5";
-import { RxCross2 } from "react-icons/rx";
+import { RxCode, RxCross2 } from "react-icons/rx";
 import { useAccordionButton } from "react-bootstrap/AccordionButton";
 import { useContext } from "react";
 import { DiGithubAlt } from "react-icons/di";
@@ -582,7 +582,15 @@ function MyVerticallyCenteredModal(props) {
                                 backgroundColor: "#232133",
                                 height: "80px",
                               }}
-                            ></div>
+                            >
+                              {/* {maxMembers?.map((placeholder) => {
+                                return (
+                                  <>
+                                    <div> </div>
+                                  </>
+                                );
+                              })} */}
+                            </div>
                           </Form.Group>
                           <Form.Group className="choose-image pb-2">
                             <Form.Label className="d-flex align-items-center">
@@ -646,6 +654,14 @@ const Left_Sidebar = () => {
   const openOptions = () => {
     setIsOptions(isOptions ? false : true);
   };
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://buttons.github.io/buttons.js";
+    script.async = true;
+    // script.onload = () => this.scriptLoaded();
+
+    document.body.appendChild(script);
+  }, []);
   if (!LoggedInUser) {
     return <div></div>;
   } else {
@@ -748,21 +764,29 @@ const Left_Sidebar = () => {
                 </Button>
               </div>
             </div>
-            <div className="w-100 h-100" id="left-sidebar-content-xl">
+            <div
+              className="w-100 h-100 position-relative"
+              id="left-sidebar-content-xl"
+            >
               <div className="d-flex flex-column justify-content-center align-items-center position-relative">
-                <img
-                  id="pfp-left-sidebar"
-                  src={LoggedInUser?.pfp}
-                  onClick={(e) => {
-                    setIsOptions(isOptions ? false : true);
-                  }}
-                  style={{
-                    borderRadius: "50%",
-                    objectFit: "cover",
-                    width: "150px",
-                    height: "150px",
-                  }}
-                />
+                <CustomTooltip
+                  title={`Account: @${LoggedInUser.username}`}
+                  placement="right"
+                >
+                  <img
+                    id="pfp-left-sidebar"
+                    src={LoggedInUser?.pfp}
+                    onClick={(e) => {
+                      setIsOptions(isOptions ? false : true);
+                    }}
+                    style={{
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                      width: "150px",
+                      height: "150px",
+                    }}
+                  />
+                </CustomTooltip>
                 <div
                   id="center-bottom"
                   style={{
@@ -857,6 +881,42 @@ const Left_Sidebar = () => {
                     <span className="d-flex align-items-center">Post</span>
                   </Button>
                 </CustomTooltip>
+              </div>
+              <div
+                className="position-absolute text-color d-flex flex-column align-items-center w-100 p-2"
+                style={{
+                  bottom: 0,
+                  height: "max-content",
+                }}
+              >
+                <div className="p-1">
+                  <BsCodeSlash size={25} />
+                </div>
+                <h5 className="font-monospace">Comfy Code</h5>
+                <div className="d-flex justify-content-between w-75">
+                  {" "}
+                  <a
+                    class="github-button"
+                    href="https://github.com/talmkg/Comfy-Code"
+                    data-color-scheme="no-preference: dark; light: light; dark: dark;"
+                    data-icon="octicon-star"
+                    data-size="large"
+                    data-show-count="true"
+                    aria-label="Star talmkg/Comfy-Code on GitHub"
+                  >
+                    Star
+                  </a>
+                  <a
+                    class="github-button"
+                    href="https://github.com/talmkg/Comfy-Code/discussions"
+                    data-color-scheme="no-preference: dark; light: light; dark: dark;"
+                    data-icon="octicon-comment-discussion"
+                    data-size="large"
+                    aria-label="Discuss talmkg/Comfy-Code on GitHub"
+                  >
+                    Discuss
+                  </a>
+                </div>
               </div>
             </div>
             <MyVerticallyCenteredModal

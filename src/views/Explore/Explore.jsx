@@ -1,7 +1,6 @@
-import React from "react";
 import GlobalTopNav from "../../components/GlobalTopNav/GlobalTopNav";
-import { Octokit } from "octokit";
 import { useEffect } from "react";
+import React, { useCallback } from "react";
 
 const Explore = () => {
   return (
@@ -21,7 +20,9 @@ const Explore = () => {
         <div
           className="position-relative pb-3 feed-div"
           style={{ overflow: "hidden" }}
-        ></div>
+        >
+          {" "}
+        </div>
       </div>
     </div>
   );

@@ -27,7 +27,6 @@ function PostModal(props) {
     if (data.invitedUsers.includes(LoggedInUser._id)) {
       setIsInvited(true);
     }
-    console.log(wrongGit);
   });
 
   const joinTheTeamAction = () => {
@@ -108,17 +107,20 @@ function PostModal(props) {
           <></>
         )} */}
         <div className="text-light p-3">
-          <div className="d-flex justify-content-between">
-            <Modal.Title id="contained-modal-title-vcenter">
+          <div className="d-flex justify-content-between align-items-center">
+            <Modal.Title
+              id="contained-modal-title-vcenter "
+              className="d-flex align-items-start"
+            >
               {data.title}
             </Modal.Title>
-            <span className="text-secondary">
+            <div className="text-color h-100">
               Posted at:{" "}
               {new Date(data.createdAt).toLocaleTimeString([], {
                 hour: "2-digit",
                 minute: "2-digit",
               })}
-            </span>
+            </div>
           </div>
 
           <div className="pt-2">
@@ -129,11 +131,13 @@ function PostModal(props) {
               return (
                 <div
                   key={i}
-                  className="rounded-3 p-1 px-2 pe-2 mb-2 mx-1"
+                  className="rounded-3 px-2 pe-2 mb-2 mx-1"
                   style={{
-                    backgroundColor: "#55466D",
+                    padding: "0.2rem",
+                    backgroundColor: "#1F1D2D",
                     cursor: "pointer",
                     width: "max-content",
+                    border: "1px solid rgba(255, 255, 255, 0.192)",
                   }}
                   id={hashtag._id}
                 >

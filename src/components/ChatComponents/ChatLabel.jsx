@@ -24,7 +24,7 @@ function ChatLabel(props) {
       className="w-100 overflow-hidden d-flex align-items-center justify-content-between p-2 text-color"
       style={{
         height: "4rem",
-        borderBottom: "1px solid rgba(255, 255, 255, 0.2)",
+        // borderBottom: "1px solid rgba(255, 255, 255, 0.2)",
         cursor: "pointer",
       }}
     >

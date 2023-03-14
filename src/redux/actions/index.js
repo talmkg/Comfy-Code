@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 
 import sound from "../../Sounds/notification.mp3";
@@ -19,7 +20,6 @@ export const FETCH_BADGES = "FETCH_BADGES";
 export const SAVE_MY_POSTS = "SAVE_MY_POSTS";
 
 const socket = io("http://localhost:3002", { transports: ["websocket"] });
-
 //get all groups
 export const getFeed = (limit) => {
   return async (dispatch, getState) => {
@@ -81,6 +81,7 @@ export const getToken = (email, password, setErrorMessage) => {
               payload: token.token,
             });
             // dispatch(fetchLoginnedUser());
+            console.log(token.token);
             dispatch(loadAllData());
           } else {
             setErrorMessage(true);

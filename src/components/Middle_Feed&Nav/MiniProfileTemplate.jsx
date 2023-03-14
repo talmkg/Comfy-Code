@@ -3,13 +3,13 @@ import { FaRegPaperPlane } from "react-icons/fa";
 import { AiOutlinePlus } from "react-icons/ai";
 import Follow_Button from "../Mini_Components/Follow_Button";
 import { Link } from "react-router-dom";
+import { GoPrimitiveDot } from "react-icons/go";
 const MiniProfileTemplate = (member) => {
   return (
     <div
       id="mini-profile"
-      className="position-absolute text-light rounded-3"
+      className="position-absolute text-light rounded-3 glass-light"
       style={{
-        backgroundColor: "#1F1D2D",
         zIndex: 99,
         width: "300px",
       }}
@@ -20,7 +20,6 @@ const MiniProfileTemplate = (member) => {
           style={{
             height: "75px",
             backgroundSize: "100% 100%",
-
             backgroundSize: "cover",
             backgroundImage: `linear-gradient(rgba(0,0,0,.4), rgba(0,0,0,.5)),
               url(${member.background})`,
@@ -32,7 +31,7 @@ const MiniProfileTemplate = (member) => {
               borderTopRightRadius: "15px",
               borderTopLeftRadius: "15px",
             }}
-            className="p-0 m-0"
+            className="p-0 m-0 g-0"
           >
             <Col
               xs={9}
@@ -45,33 +44,36 @@ const MiniProfileTemplate = (member) => {
               <div
                 style={{
                   position: "absolute",
-                  bottom: "-20%",
+                  bottom: "-15%",
                 }}
-                className="d-flex"
+                className="d-flex align-items-center"
               >
                 <img
                   src={member.pfp}
                   style={{
                     borderRadius: "50%",
-                    width: "80px",
-                    height: "80px",
+                    width: "70px",
+                    height: "70px",
                     objectFit: "cover",
                   }}
-                  className="me-2 mx-2"
+                  className="mx-2 me-1"
                 />
                 <div>
                   <Link
                     to={`/profile/${member._id}`}
                     className="d-flex text-truncate"
                     style={{
-                      fontSize: "20px",
+                      fontSize: "18px",
                       color: "#6BC2E5",
                       textDecoration: "none",
                     }}
                   >
                     {member.name} {member.surname}
                   </Link>
-                  <div className="opacity-75">Online</div>
+                  <div className="small  d-flex align-items-center justify-content-start pb-1">
+                    <GoPrimitiveDot size={15} style={{ color: "#3ade55" }} />
+                    Online
+                  </div>
                 </div>
               </div>
             </Col>
@@ -90,18 +92,21 @@ const MiniProfileTemplate = (member) => {
         </Row>
         <Row>
           <Col xs={12}>
-            <div className="pe-2 px-2 text-light pt-3 pb-2">
+            <div className="pe-2 px-2 text-light pt-3 pb-1">
               {member.bio ? (
-                <p className="m-0 " style={{ color: "#6BC2E5" }}>
-                  About me:
-                </p>
+                <>
+                  {" "}
+                  {/* <p className="m-0 " style={{ color: "#6BC2E5" }}>
+                    About me:
+                  </p> */}
+                </>
               ) : (
                 <p className="m-0 " style={{ color: "#6BC2E5" }}>
                   No info here.. yet.
                 </p>
               )}
 
-              <p className="m-0 text">{member.bio}</p>
+              <p className="m-0 text small">{member.bio}</p>
             </div>
           </Col>
           <Col xs={12} className="d-flex">
@@ -110,7 +115,7 @@ const MiniProfileTemplate = (member) => {
                 return (
                   <div key={i} className="d-flex justify-content-start">
                     <div
-                      className="p-1 pb-2 d-flex align-items-center"
+                      className="p-1 pb-1 d-flex align-items-center"
                       style={{
                         cursor: "pointer",
                       }}
@@ -126,11 +131,29 @@ const MiniProfileTemplate = (member) => {
               })}
             </div>
           </Col>
-          <Col xs={12}>
+          {/* <Col xs={12}>
             <Button className="w-100 rounded-0 rounded-bottom gradient-button center-flex">
               <span className="me-2">Send a message</span>
               <FaRegPaperPlane />
             </Button>
+          </Col> */}
+          <Col
+            xs={12}
+            className="d-flex rounded-bottom overflow-hidden text-color"
+            style={{ height: "3rem" }}
+          >
+            <Col xs={6} className=" px-1 center-flex">
+              <div className="text-center">
+                <span>{member?.follows?.length}</span>
+                <div className="small">Following</div>
+              </div>
+            </Col>
+            <Col xs={6} className=" px-1 center-flex">
+              <div className="text-center">
+                <div>{member?.followers?.length}</div>
+                <div className="small">Followers</div>
+              </div>
+            </Col>
           </Col>
         </Row>
       </div>

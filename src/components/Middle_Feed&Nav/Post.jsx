@@ -84,10 +84,7 @@ function Post(post) {
                 borderRadius: "50%",
               }}
             />
-            <div
-              className="position-absolute"
-              style={{ left: "50%", top: "0%" }}
-            >
+            <div className="position-absolute" style={{ bottom: 0 }}>
               <MiniProfileTemplate {...post.creator} />
             </div>
             <div className="text-color">
@@ -105,7 +102,7 @@ function Post(post) {
           </div>
 
           <span>
-            <div className="text-muted">
+            <div className="text-color">
               {new Date(post.createdAt).toLocaleTimeString([], {
                 hour: "2-digit",
                 minute: "2-digit",

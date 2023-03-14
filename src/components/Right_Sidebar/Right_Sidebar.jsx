@@ -125,7 +125,7 @@ const Right_Sidebar = () => {
               </div>
 
               <div className="d-flex align-items-center">
-                <MdDone size={20} className="me-3" />
+                {/* <MdDone size={20} className="me-3" /> */}
                 <FiSettings size={20} />
               </div>
             </Card.Header>
@@ -141,13 +141,13 @@ const Right_Sidebar = () => {
                       return (
                         <ListGroup.Item
                           key={index}
-                          className="mt-1 mb-1 rounded text-color d-flex justify-content-between bg-transparent border-0"
+                          className=" rounded text-color d-flex justify-content-between bg-transparent border-0"
                         >
                           <div className="text-color pe-1">
                             <img
                               src={message.pfp}
                               style={{
-                                width: "25px",
+                                width: "30px",
                                 borderRadius: "50%",
                                 position: "relative",
                               }}

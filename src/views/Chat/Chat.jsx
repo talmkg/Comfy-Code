@@ -64,7 +64,7 @@ const Chat = () => {
             >
               {chats.map((chat, i) => {
                 return (
-                  <div className="w-100 chat-label" key={i}>
+                  <div className="w-100 chat-label m-1" key={i}>
                     <ChatLabel
                       chat={chat}
                       setSelectedChat={setSelectedChat}

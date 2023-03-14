@@ -15,6 +15,7 @@ import { deleteGroup } from "../../redux/actions";
 import { Link } from "react-router-dom";
 import CoverView from "./CoverView";
 import { BiLockAlt } from "react-icons/bi";
+import MiniProfileTemplate from "./MiniProfileTemplate";
 
 <PostModal />;
 const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
@@ -77,17 +78,22 @@ const Group = (props) => {
         }}
       >
         <Card.Body className="pb-5 position-relative">
-          <div className="d-flex align-items-center">
-            <img
-              src={leader[0]?.pfp}
-              style={{
-                height: "50px",
-                width: "50px",
-                objectFit: "cover",
-                borderRadius: "50%",
-              }}
-              className="me-2"
-            />
+          <div className="d-flex align-items-center position-relative">
+            <div className="position-relative" id="profile-picture-post">
+              <img
+                src={leader[0]?.pfp}
+                style={{
+                  height: "50px",
+                  width: "50px",
+                  objectFit: "cover",
+                  borderRadius: "50%",
+                }}
+                className="me-2"
+              />
+              <div className="position-absolute" style={{ bottom: 0 }}>
+                <MiniProfileTemplate {...leader[0]} />
+              </div>
+            </div>
 
             <div className="w-100">
               <div className="d-flex justify-content-between">
@@ -104,10 +110,15 @@ const Group = (props) => {
                   @{leader[0]?.username}
                 </div>
                 <span>
-                  <div className="d-flex justify-content-end">
+                  <div className="d-flex flex-column align-items-end">
+                    <div className="text-color small ">
+                      {new Date(createdAt).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </div>
                     <Dropdown>
                       <Dropdown.Toggle
-                        style={{ color: "white" }}
                         as={CustomToggle}
                         id="dropdown-custom-components"
                       ></Dropdown.Toggle>
@@ -148,12 +159,6 @@ const Group = (props) => {
                         )}
                       </Dropdown.Menu>
                     </Dropdown>
-                  </div>
-                  <div className="text-muted">
-                    {new Date(createdAt).toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
                   </div>
                 </span>
               </div>
@@ -214,11 +219,13 @@ const Group = (props) => {
               return (
                 <div
                   key={index}
-                  className="rounded-3 p-1 px-2 pe-2 mb-2 mx-1"
+                  className="rounded-3 px-2 pe-2 mb-2 mx-1"
                   style={{
-                    backgroundColor: "#46395b",
+                    padding: "0.2rem",
+                    backgroundColor: "#1F1D2D",
                     cursor: "pointer",
                     width: "max-content",
+                    border: "1px solid rgba(255, 255, 255, 0.192)",
                   }}
                   id={hashtag._id}
                 >
